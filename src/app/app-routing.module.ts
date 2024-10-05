@@ -1,7 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { FaqComponent } from './faq/faq.component';
 
-const routes: Routes = [];
+
+const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'faq', component: FaqComponent },
+  // Añade otras rutas aquí
+  { path: '**', redirectTo: '' } // Ruta comodín, redirige a home
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

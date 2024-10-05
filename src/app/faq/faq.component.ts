@@ -44,7 +44,7 @@ export class FaqComponent {
     },
     {
       question:'¿Qué debo hacer si tengo más preguntas?',
-      answer: 'Si tienes más preguntas o inquietudes, puedes contactarnos a través de un correo electrionico '
+      answer: 'Si tienes más preguntas o inquietudes, puedes contactarnos a través de un correo electrionico ' + this.mail
     }
     // Agrega más preguntas aquí
   ];
