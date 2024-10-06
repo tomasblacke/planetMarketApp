@@ -1,0 +1,46 @@
+-Footer : seria el componente para la parte de abajo del diseño que les mostre
+-Header : seria el componente para la parte de arriba, el cual tiene los botones
+-Hero : seria el componente para la imagen del planeta con el texto
+-Planet cards: seria el componente para ver los planeta en "tendencia"
+    -SEGUN GEPETO, QUE LE CONSULTE QUE ONDA, ME DIJO QUE ADEMAS DE ESTO TENDRIAMOS QUE IMPLEMENTAR
+    UN SERVICIO PARA EL MANEJO DE PLANETAS EJ. PLANET SERVICE
+    -CREE UNO PARA VER QUE QUE ONDA
+-TripIntro: seria el componente para ir a la parte de los viajes espaciales
+
+
+05/10
+Se crearon los componentes que van a ser linkeados al navbar
+    -FAQ:seccion de preguntas frecuentes
+    -HOME: Que subiria arriba de todo, ya que es una SPA
+        -aca inserte lo que vendria a ser los componentes principales que les mostre en el figma
+        serian hero, el planetcards y trip intro
+    -tienda-planets: seria donde se gestionanrian la muestra de todos los planetas.(yo diria de clavar 8 maximo
+    y ver que tanto laburo de logica hay detras)
+    -tienda-trips: donde se venderan,mostraran los viajes disponibles
+    -tienda-stars: donde se venderan esos objetos que pasan cercanos a la tienda
+
+    //----------------------------------------------------------------
+    NO SE QUE ONDA CON EL TEMA LOGIN HABRA QUE AVERIGUAR QUE ONDA
+
+    FUNCION DE ROUTER OUTLET
+    Funcionamiento del router-outlet:
+
+
+    <router-outlet></router-outlet> es un marcador de posición donde 
+    Angular insertará dinámicamente el componente correspondiente a la ruta actual.
+
+    Cuando navegas a diferentes URLs en tu aplicación, 
+    Angular reemplaza el contenido dentro de <router-outlet></router-outlet> 
+    con el componente apropiado, mientras que el resto de la estructura (header y footer en este caso) permanece constante.
+
+    Elgi esta fuente: https://fonts.google.com/specimen/Work+Sans?preview.text=space%0ASPACE%0ASpace
+    La podemos cambiar a una que les guste mas, lo puse para que varie un poco ahora
+
+
+TAREA:
+    1-ABRAN UNA RAMA Y PRUEBEN COMO CARAJO HACER PARA QUE SE MUESTREN LAS IMAGENES EN ASSETS
+        LAS MOVI PARA UN LADO Y PARA EL OTRO, PRPOBE UNA CONFIGURACION EN PUBLIC Y UNA EN SRC.
+        LA DEJO EN SRC PERO PRUEBEN COMO PODEMOS HACER PARA QUE QUEDEN.
+    2-FIJARSE COMO EMPEZAR A TRAER DATOS DE LA API, CREAR UNA RUTA PRUEBA Y FIJARSE COMO PODEMOS
+        TRAER DATOS. SI NO ME EQUIVOCO HAY QUE USAR NODE.JS, VEREMOS...
+
