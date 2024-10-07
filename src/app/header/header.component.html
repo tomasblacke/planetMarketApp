@@ -1,14 +1,19 @@
 <header>
     <nav>
-        <img src="assets/logoPM.png" alt="Logo">
+        <img src="/assets/logoPM.png" alt="Logo">
+        <div class="nav-links">
+            
+            <a routerLink="/">Home</a>
+            <a routerLink="/faq">FAQ</a>
+            <a routerLink="/trips">Trips</a>
+            <a routerLink="/tienda-planets">Planets</a>
+            <a routerLink="/tienda-stars">Estrellas y más</a>
+        </div>
         <input type="text" placeholder="Search...">
-        <a routerLink="/">Home</a>
-        <a routerLink="/faq">FAQ</a>
-        <a routerLink="/trips">Trips</a>
-        <a routerLink="/tienda-planets">Planets</a>
-        <a routerLink="/tienda-stars">Esteelaaa</a>
-        <button>Log in</button>
-        <button>Sign in</button>
+        <div class="nav-buttons">
+            <button>Log in</button>    
+            <button>Sign in</button>
+        </div>
     </nav>
 </header>
 <!--Hay una libreria de angular, creo que Angular material se llama que nos puede servir para armar los botones-->

@@ -24,3 +24,7 @@
     cursor: pointer;
     font-weight: bold;
 }
+.reserve-button :hover{
+    background:  radial-gradient(#D9D9D9, #ff5722);
+    color: #283593;
+}
