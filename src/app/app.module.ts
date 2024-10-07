@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http'; 
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +15,8 @@ import { FaqComponent } from './faq/faq.component';
 import { TiendaTripsComponent } from './tienda-trips/tienda-trips.component';
 import { TiendaPlanetsComponent } from './tienda-planets/tienda-planets.component';
 import { TiendaStarsComponent } from './tienda-stars/tienda-stars.component';
+
+import { NasaApiService } from './nasa-api-service.service';
 
 @NgModule({
   declarations: [
@@ -30,9 +34,10 @@ import { TiendaStarsComponent } from './tienda-stars/tienda-stars.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [NasaApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,26 @@
+.stellar-trips {
+    background-color: #1a237e;
+    color: white;
+    padding: 20px;
+}
+
+.trip-card {
+    background-color: #283593;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.trip-card img {
+    width: 900px;
+    border-radius: 5px;
+}
+
+.reserve-button {
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}

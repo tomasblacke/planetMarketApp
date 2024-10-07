@@ -1,1 +1,9 @@
-<p>tienda-trips works!</p>
+<div class="stellar-trips">
+    <h1>AL INFINITO Y MAS ALLÁ...</h1>
+    <div class="trip-card" *ngIf="apodData">
+        <img [src]="apodData.url" [alt]="apodData.title">
+        <h2>{{ apodData.title }}</h2>
+        <p>{{ apodData.explanation }}</p>
+        <button class="reserve-button">RESERVE NOW!</button>
+    </div>
+</div>
