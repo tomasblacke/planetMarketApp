@@ -2,7 +2,9 @@
 body{
     font-family: 'Work Sans', Arial, Helvetica, sans-serif;
     background: #020F59;
-
+}
+h2{
+    color: whitesmoke;
 }
 button{
     background-color: #ff5722;
