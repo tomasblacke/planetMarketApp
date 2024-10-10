@@ -3,9 +3,13 @@ body{
     font-family: 'Work Sans', Arial, Helvetica, sans-serif;
     background: #020F59;
 }
-h2{
+h1,h2,h3{
     color: whitesmoke;
 }
+p{
+    color: whitesmoke;
+}
+
 .card-text{
     background-color: #283593;
 
