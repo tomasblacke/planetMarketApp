@@ -12,9 +12,9 @@ export interface Planet {
 })
 export class PlanetService {
   planets: Planet[] = [
-    { name: 'Mars', image: 'assets/mars.jpg', available: true },
-    { name: 'Saturn', image: 'assets/saturn.jpg', available: true },
-    { name: 'Moon', image: 'assets/moon.jpg', available: false },
+    { name: 'Mars', image: 'assets/marte.jpeg', available: true },
+    { name: 'Saturn', image: 'assets/saturno.jpg', available: true },
+    { name: 'Moon', image: 'assets/luna.JPG', available: false },
   ];
   getPlanets() {
     return this.planets;

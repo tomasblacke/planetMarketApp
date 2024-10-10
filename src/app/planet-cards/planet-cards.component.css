@@ -1,0 +1,21 @@
+.planet-cards{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 20px;
+}
+.planet-card{
+    display: flex;
+    flex-direction: column;
+    gap:5px ;
+    background: #020F59;
+    border-radius: 10px;
+}
+.planet-img{
+    width: 150px;
+    height: 150px;
+    padding: 5px 5px 5px 5px;
+    border-image: round;
+    border-radius: 10px;
+}
+

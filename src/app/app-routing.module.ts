@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'trips', component: TiendaTripsComponent },
-  // Añade otras rutas aquí
+  // Añadir otras rutas aquí
   { path: '**', redirectTo: '' } // Ruta comodín, redirige a home
 ];
 
