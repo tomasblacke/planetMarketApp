@@ -11,7 +11,13 @@ export class PlanetCardsComponent implements OnInit {
   constructor(private planetService: PlanetService) { }
 
   ngOnInit() {
-    this.planets = this.planetService.getPlanets();
+    this.planetService.getPlanets().subscribe(
+      planets => {
+        this.planets = planets;
+      }
+    );
   }
+  
+
 
 }

@@ -1,8 +1,10 @@
-<div class="planet-cards">
+<div class="planet-grid">
     <div *ngFor="let planet of planets" class="planet-card">
-    <img class="planet-img" [src]="planet.image" [alt]="planet.name">
-    <button [disabled]="!planet.available">
-        {{planet.available ? 'BUY' : 'SOLD OUT'}}
-    </button>
+        <img class="planet-img" [src]="planet.imageUrl" [alt]="planet.name">
+        <h2>{{ planet.name }}</h2>
+        <p>Price: ${{ planet.price | number }}</p>
+        <button [disabled]="!planet.available">
+            {{ planet.available ? 'BUY' : 'SOLD OUT' }}
+        </button>
     </div>
 </div>

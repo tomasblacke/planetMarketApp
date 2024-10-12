@@ -1,0 +1,10 @@
+.planet-details {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+.planet-details img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}

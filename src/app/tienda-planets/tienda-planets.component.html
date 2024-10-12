@@ -1,1 +1,9 @@
-<p>tienda-planets works!</p>
+<div class="planet-grid">
+    <div *ngFor="let planet of planets" class="planet-card">
+        <img [src]="planet.imageUrl" [alt]="planet.name">
+        <h2>{{ planet.name }}</h2>
+        <p>Price: ${{ planet.price | number }}</p>
+        <button (click)="viewPlanetDetails(planet.id)">View Details</button>
+        <button (click)="buyPlanet(planet)">Buy Now</button>
+    </div>
+</div>

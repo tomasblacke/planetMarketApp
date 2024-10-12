@@ -1,0 +1,15 @@
+<div *ngIf="planet">
+    <h1>{{ planet.name }}</h1>
+    <img [src]="planet.imageUrl" [alt]="planet.name">
+    <p>Type: {{ planet.type }}</p>
+    <p>Diameter: {{ planet.diameter }} km</p>
+    <p>Distance from Sun: {{ planet.distanceFromSun }} million km</p>
+    <p>Price: ${{ planet.price | number }}</p>
+    <button (click)="buyPlanet()" [disabled]="!planet.available">
+        {{ planet.available ? 'Buy Now' : 'Sold Out' }}
+    </button>
+</div>
+
+  <div *ngIf="error">{{ error }}</div>
+
+  <div *ngIf="!planet && !error">Loading planet details...</div>
