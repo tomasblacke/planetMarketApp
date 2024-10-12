@@ -1,16 +1,25 @@
-.planet-cards{
+.planet-grid{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     gap: 20px;
 }
+/*
+.planet-cards{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 20px;
+}*/
 .planet-card{
     display: flex;
     flex-direction: column;
     gap:5px ;
     background: #020F59;
     border-radius: 10px;
+    align-items: center;
 }
+
 .planet-img{
     width: 150px;
     height: 150px;
