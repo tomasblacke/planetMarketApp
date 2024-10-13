@@ -4,13 +4,7 @@
     justify-content: space-around;
     gap: 20px;
 }
-/*
-.planet-cards{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    gap: 20px;
-}*/
+
 .planet-card{
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NasaApiService } from '../nasa-api-service.service';
+import { NasaApiService } from '../../Services/nasa-api-service.service';
 
 @Component({
   selector: 'app-tienda-trips',

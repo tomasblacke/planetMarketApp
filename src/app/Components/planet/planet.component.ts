@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlanetService, Planet } from '../planet.service';
+import { PlanetService, Planet } from '../../Services/planet.service';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class PlanetComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const planetId = Number(this.route.snapshot.paramMap.get('planetId'));
+    const planetId = Number(this.route.snapshot.paramMap.get('planetID'));
     console.log('Planet ID from route:', planetId);
     // Validar el ID de planeta antes de hacer la petición
     if (isNaN(planetId) || planetId < 1) {
@@ -39,16 +39,20 @@ export class PlanetComponent implements OnInit {
             },
             error => {
               console.error('Error fetching planet image:', error);
-              this.error = 'Failed to load planet image';  // Añade esta línea
+              this.error = 'Failed to load planet image';
+              return; // Añade esta línea
+              
             }
           );
         } else {
           this.error = 'Planet not found';  // Añade esta línea
+          return;
         }
       },
       error => {
         console.error('Error fetching planet details:', error);
         this.error = 'Failed to load planet details';  // Añade esta línea
+        return; 
       }
     );
   }

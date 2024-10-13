@@ -6,23 +6,23 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './Components/header/header.component';
+import { FooterComponent } from './Components/footer/footer.component';
 
-import { HomeComponent } from './home/home.component';
-import { HeroComponent } from './hero/hero.component';
-import { PlanetCardsComponent } from './planet-cards/planet-cards.component';
-import { TripIntroComponent } from './trip-intro/trip-intro.component';
+import { HomeComponent } from './Components/home/home.component';
+import { HeroComponent } from './Components/hero/hero.component';
+import { PlanetCardsComponent } from './Components/planet-cards/planet-cards.component';
+import { TripIntroComponent } from './Components/trip-intro/trip-intro.component';
 
-import { FaqComponent } from './faq/faq.component';
-import { TiendaTripsComponent } from './tienda-trips/tienda-trips.component';
-import { TiendaPlanetsComponent } from './tienda-planets/tienda-planets.component';
+import { FaqComponent } from './Components/faq/faq.component';
+import { TiendaTripsComponent } from './Components/tienda-trips/tienda-trips.component';
+import { TiendaPlanetsComponent } from './Components/tienda-planets/tienda-planets.component';
 
-import { TiendaStarsComponent } from './tienda-stars/tienda-stars.component';
-import { PlanetComponent } from './planet/planet.component';
+import { TiendaStarsComponent } from './Components/tienda-stars/tienda-stars.component';
+import { PlanetComponent } from './Components/planet/planet.component';
 
-import { NasaApiService } from './nasa-api-service.service';
-import { PlanetService } from './planet.service';
+import { NasaApiService } from './Services/nasa-api-service.service';
+import { PlanetService } from './Services/planet.service';
 
 @NgModule({
   declarations: [

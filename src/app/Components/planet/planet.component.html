@@ -1,0 +1,30 @@
+<div *ngIf="planet" class="planet-container">
+    <h1 id="planet-title">{{ planet.name }}</h1>
+    <div class="content-wrapper">
+        <div class="image-container">
+            <img [src]="planet.imageUrl" [alt]="planet.name">
+        </div>
+        <div class="oprational-container">
+
+            <div class="info-container">
+                <h2>Type: {{ planet.type }}</h2>
+                <h2>Diameter: {{ planet.diameter }} km</h2>
+                <h2>Distance from Sun: {{ planet.distanceFromSun }} million km</h2>
+                <h2>Description:</h2>
+                <p>Te tiro una descripcion sabrosona de algun lado</p>
+                <div class="price-tag">
+                    <p>Price (km2): ${{ planet.price | number }}</p>
+                </div>
+            </div>
+            <div class="button-purchase">
+                <button (click)="buyPlanet()" [disabled]="!planet.available">
+                    {{ planet.available ? 'Buy Now' : 'Sold Out' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <div *ngIf="error">{{ error }}</div>
+
+  <div *ngIf="!planet && !error">Loading planet details...</div>

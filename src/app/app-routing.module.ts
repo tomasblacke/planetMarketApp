@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { FaqComponent } from './faq/faq.component';
-import { TiendaTripsComponent } from './tienda-trips/tienda-trips.component';
-import { TiendaPlanetsComponent} from './tienda-planets/tienda-planets.component';
-import { PlanetComponent } from './planet/planet.component';
+import { HomeComponent } from './Components/home/home.component';
+import { FaqComponent } from './Components/faq/faq.component';
+import { TiendaTripsComponent } from './Components/tienda-trips/tienda-trips.component';
+import { TiendaPlanetsComponent} from './Components/tienda-planets/tienda-planets.component';
+import { PlanetComponent } from './Components/planet/planet.component';
 
 
 

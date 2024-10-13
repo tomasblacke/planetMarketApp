@@ -25,7 +25,9 @@ export class PlanetService {
   private planets: Planet[] = [
     { id: 1, name: 'Mercury', type: 'Terrestrial', diameter: 4879, distanceFromSun: 57.9, imageUrl: '', price: 1000000, available: true },
     { id: 2, name: 'Venus', type: 'Terrestrial', diameter: 12104, distanceFromSun: 108.2, imageUrl: '', price: 2000000, available: true },
-    // ... el id del sistema no va a coincidir con los de la url. En URL aparece 1 y si aca lo pones 0 lo toma a mecrurio
+    { id: 3, name: 'Mars', type: 'Terrestrial', diameter: 12178, distanceFromSun: 227.9, imageUrl: '', price: 3000000, available: true },
+    { id: 4, name: 'Earth Moon', type: 'Terrestrial', diameter: 1200, distanceFromSun: 384.4, imageUrl: '', price: 6000000, available: true },
+    // ... el id del sistema no va a coincidir con los de la url. En URL aparece 1 y si aca lo pones 0 lo toma a mecrurio. PENSAR SI LE PONESMOS EXO que agarre exoplanetas de la api exo
   ];
 
   constructor(private http: HttpClient) { }
@@ -46,7 +48,7 @@ export class PlanetService {
   }
 
   getPlanetImage(planetName: string): Observable<string> {
-    return this.http.get<any>(`${this.nasaImageApi}${planetName}&media_type=image`).pipe(
+    return this.http.get<any>(`${this.nasaImageApi}${'planet '+planetName}&media_type=image`).pipe(//aca le pide a la api que le traiga el nombre que tiene y planet adelante
       map(response => {
         if (response.collection.items.length > 0 && response.collection.items[0].links.length > 0) {
           return response.collection.items[0].links[0].href;

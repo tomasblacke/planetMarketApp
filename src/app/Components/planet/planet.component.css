@@ -1,0 +1,35 @@
+#planet-title{
+text-align: center;
+}
+.content-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;/*con space around en 100% se chocan, es este modo se repelen*/
+}
+.image-container{
+    width: 200px;
+    height: auto;
+    margin-right: 10px;
+}
+.operational-container{
+    margin-left: 100px; 
+}
+.price-tag{
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 50px;
+}
+.button-purchase{
+    font-size: 18px !important;
+    display: block;
+    margin: 0 auto; /* Centra el botón */
+    padding: 10px 20px;
+    background-color: #ff5722; /* Color del botón */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+
+
+}
