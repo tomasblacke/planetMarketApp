@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms'; // <-- Importar FormsModule
 import { HttpClientModule } from '@angular/common/http'; 
-
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +23,9 @@ import { PlanetComponent } from './Components/planet/planet.component';
 
 import { NasaApiService } from './Services/nasa-api-service.service';
 import { PlanetService } from './Services/planet.service';
+import { LoginComponent } from './Components/login/login.component';
+
+
 
 @NgModule({
   declarations: [
@@ -37,15 +40,19 @@ import { PlanetService } from './Services/planet.service';
     TiendaTripsComponent,
     TiendaPlanetsComponent,
     TiendaStarsComponent,
-    PlanetComponent
-  
+    PlanetComponent,
+    LoginComponent // <-- Agregar LoginComponent aquí
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule // <-- Asegúrate de agregar FormsModule
   ],
-  providers: [NasaApiService,PlanetService],
+  providers: [
+    NasaApiService,
+    PlanetService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
