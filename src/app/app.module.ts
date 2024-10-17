@@ -23,6 +23,7 @@ import { PlanetComponent } from './Components/planet/planet.component';
 
 import { NasaApiService } from './Services/nasa-api-service.service';
 import { PlanetService } from './Services/planet.service';
+import { SpaceTripsDisplayComponent } from './Components/space-trips-display/space-trips-display.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PlanetService } from './Services/planet.service';
     TiendaTripsComponent,
     TiendaPlanetsComponent,
     TiendaStarsComponent,
-    PlanetComponent
+    PlanetComponent,
+    SpaceTripsDisplayComponent
   
   ],
   imports: [
