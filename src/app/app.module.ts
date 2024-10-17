@@ -24,6 +24,7 @@ import { PlanetComponent } from './Components/planet/planet.component';
 import { NasaApiService } from './Services/nasa-api-service.service';
 import { PlanetService } from './Services/planet.service';
 import { LoginComponent } from './Components/login/login.component';
+import { RegisterComponent } from './Components/register/register.component';
 
 
 
@@ -41,7 +42,8 @@ import { LoginComponent } from './Components/login/login.component';
     TiendaPlanetsComponent,
     TiendaStarsComponent,
     PlanetComponent,
-    LoginComponent // <-- Agregar LoginComponent aquí
+    LoginComponent,
+    RegisterComponent // <-- Agregar LoginComponent aquí
   ],
   imports: [
     BrowserModule,
