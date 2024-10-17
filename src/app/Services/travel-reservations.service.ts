@@ -10,6 +10,7 @@ export interface SpaceTrip {
   destination: string;
   availableSeats: number;
   imageUrl: string;
+  priceByPassanger: number;
 }
 
 
@@ -26,6 +27,7 @@ export class TravelReservationsService {
       origin: "Earth",
       destination: "Mars",
       availableSeats: 5,
+      priceByPassanger: 20000,
       imageUrl: "/assets/planet-travel-mars.webp"
     },
     {
@@ -36,6 +38,7 @@ export class TravelReservationsService {
       origin: "Earth",
       destination: "Venus",
       availableSeats: 9,
+      priceByPassanger: 20000,
       imageUrl: "/assets/planet-travel-venus.png"
     },
     {
@@ -46,6 +49,7 @@ export class TravelReservationsService {
       origin: "Earth",
       destination: "Jupiter",
       availableSeats: 9,
+      priceByPassanger: 20000,
       imageUrl: "/assets/planet-travel-jupiter.webp"
     },
     {
@@ -56,6 +60,7 @@ export class TravelReservationsService {
       origin: "Earth",
       destination: "Mars",
       availableSeats: 10,
+      priceByPassanger: 20000,
       imageUrl: "/assets/planet-travel-mars.webp"
     },
     {
@@ -66,12 +71,16 @@ export class TravelReservationsService {
       origin: "Earth",
       destination: "Earth Moon", 
       availableSeats: 3,
+      priceByPassanger: 20000,
       imageUrl: "/assets/planet-travel-moon.png"
     },
     
   ];
   getTrips(): Observable<SpaceTrip[]> {
     return of(this.trips);
+  }
+  getTripById(id: number): Observable<SpaceTrip | undefined> {
+    return of(this.trips.find(trip => trip.id === id));
   }
   /*constructor() { }*/
 }

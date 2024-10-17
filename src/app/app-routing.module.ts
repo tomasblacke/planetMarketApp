@@ -6,6 +6,7 @@ import { TiendaTripsComponent } from './Components/tienda-trips/tienda-trips.com
 import { TiendaPlanetsComponent} from './Components/tienda-planets/tienda-planets.component';
 import { PlanetComponent } from './Components/planet/planet.component';
 import { SpaceTripsDisplayComponent } from './Components/space-trips-display/space-trips-display.component';
+import { TripReservaIdComponent } from './Components/trip-reserva-id/trip-reserva-id.component';
 
 
 
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'trips', component: SpaceTripsDisplayComponent },// antes esta tienda trips consumiendo apod api
+  { path: 'trips/:id', component:TripReservaIdComponent},
   { path: 'planets', component: TiendaPlanetsComponent},
   { path: 'planets/:planetID', component: PlanetComponent},// este nos va a llevar a la data de cada planeta
 

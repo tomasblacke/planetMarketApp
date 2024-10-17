@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TravelReservationsService, SpaceTrip } from '../../Services/travel-reservations.service';
 
 @Component({
@@ -9,7 +10,9 @@ import { TravelReservationsService, SpaceTrip } from '../../Services/travel-rese
 export class SpaceTripsDisplayComponent implements OnInit  {
   trips: SpaceTrip[] = [];
 
-  constructor(private travelReservationsService: TravelReservationsService) { }
+  constructor(private travelReservationsService: TravelReservationsService,
+    private router:Router
+  ) { }
 
   ngOnInit() {
     this.travelReservationsService.getTrips().subscribe(
@@ -18,8 +21,7 @@ export class SpaceTripsDisplayComponent implements OnInit  {
   }
 
   reserveTrip(tripId: number) {
-    console.log(`Reserving trip with id: ${tripId}`);
-    // Aquí implementaremos la lógica que se pueda llevar la data del id al componente del viaje...o quizas no, veremos
+    this.router.navigate(['/trips', tripId]);//en teoria aca va al viaje id
   }
 
 }

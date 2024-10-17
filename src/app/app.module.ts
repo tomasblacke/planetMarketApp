@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http'; 
+import { FormsModule } from '@angular/forms';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +25,7 @@ import { PlanetComponent } from './Components/planet/planet.component';
 import { NasaApiService } from './Services/nasa-api-service.service';
 import { PlanetService } from './Services/planet.service';
 import { SpaceTripsDisplayComponent } from './Components/space-trips-display/space-trips-display.component';
+import { TripReservaIdComponent } from './Components/trip-reserva-id/trip-reserva-id.component';
 
 @NgModule({
   declarations: [
@@ -39,13 +41,15 @@ import { SpaceTripsDisplayComponent } from './Components/space-trips-display/spa
     TiendaPlanetsComponent,
     TiendaStarsComponent,
     PlanetComponent,
-    SpaceTripsDisplayComponent
+    SpaceTripsDisplayComponent,
+    TripReservaIdComponent
   
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [NasaApiService,PlanetService],
   bootstrap: [AppComponent]
