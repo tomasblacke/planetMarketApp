@@ -27,7 +27,16 @@ export class PlanetService {
     { id: 2, name: 'Venus', type: 'Terrestrial', diameter: 12104, distanceFromSun: 108.2, imageUrl: '', price: 2000000, available: true },
     { id: 3, name: 'Mars', type: 'Terrestrial', diameter: 12178, distanceFromSun: 227.9, imageUrl: '', price: 3000000, available: true },
     { id: 4, name: 'Earth Moon', type: 'Terrestrial', diameter: 1200, distanceFromSun: 384.4, imageUrl: '', price: 6000000, available: true },
-    // ... el id del sistema no va a coincidir con los de la url. En URL aparece 1 y si aca lo pones 0 lo toma a mecrurio. PENSAR SI LE PONESMOS EXO que agarre exoplanetas de la api exo
+    { id: 5, name: 'Jupiter', type: 'Gas Giant', diameter: 139820, distanceFromSun: 778.5, imageUrl: '', price: 5000000, available: true },
+    { id: 6, name: 'Saturn', type: 'Gas Giant', diameter: 116460, distanceFromSun: 1434.0, imageUrl: '', price: 4500000, available: true },
+    { id: 7, name: 'Uranus', type: 'Ice Giant', diameter: 50724, distanceFromSun: 2871.0, imageUrl: '', price: 4000000, available: true },
+    { id: 8, name: 'Neptune', type: 'Ice Giant', diameter: 49244, distanceFromSun: 4495.1, imageUrl: '', price: 4000000, available: true },
+    { id: 9, name: 'Pluto', type: 'Dwarf Planet', diameter: 2376, distanceFromSun: 5906.4, imageUrl: '', price: 3500000, available: true },
+    { id: 10, name: 'Ganymede Moon', type: 'Moon', diameter: 5268, distanceFromSun: 778.5, imageUrl: '', price: 2500000, available: true },
+    { id: 11, name: 'Titan Moon', type: 'Moon', diameter: 5150, distanceFromSun: 1434.0, imageUrl: '', price: 2400000, available: true },
+    { id: 12, name: 'Europa Moon', type: 'Moon', diameter: 3121, distanceFromSun: 778.5, imageUrl: '', price: 2200000, available: true },
+    { id: 13, name: 'Enceladus Moon', type: 'Moon', diameter: 504, distanceFromSun: 1434.0, imageUrl: '', price: 2000000, available: true }
+
   ];
 
   constructor(private http: HttpClient) { }
