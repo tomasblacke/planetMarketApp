@@ -1,41 +1,50 @@
 <div *ngIf="trip" class="trip-details">
     <h1>{{ trip.title }}</h1>
-    <img [src]="trip.imageUrl" [alt]="trip.title">
-    <p>{{ trip.description }}</p>
-    <p>Departure: {{ trip.departure | date:'dd/MM/yyyy' }}</p>
-    <p>Origin: {{ trip.origin }}</p>
-    <p>Destination: {{ trip.destination }}</p>
-    <p>Available Seats: {{ trip.availableSeats }}</p>
-    <p>Price p/ Passanger: ${{ trip.priceByPassanger }}</p>
+    <div id="info-trip">
+        <img [src]="trip.imageUrl" [alt]="trip.title">
+        <div id="info-details">
 
-    <h2>Book this trip</h2>
-    <form (ngSubmit)="onSubmit()">
-        <h3>Main Passanger</h3>
-        <div>
-            <label for="name">Name:</label>
-            <input id="name" [(ngModel)]="mainPassenger.name" name="name" required>
-        </div>
-        <div>
-            <label for="email">Email:</label>
-            <input id="email" type="email" [(ngModel)]="mainPassenger.email" name="email" required>
-        </div>
+            <p>{{ trip.description }}</p>
+            <p>Departure: {{ trip.departure | date:'dd/MM/yyyy' }}</p>
+            <p>Origin: {{ trip.origin }}</p>
+        <p>Destination: {{ trip.destination }}</p>
+        <p>Available Seats: {{ trip.availableSeats }}</p>
+        <p>Price p/ Passanger: ${{ trip.priceByPassanger }}</p>
+        <br>
 
-        <h3>Companions</h3>
-        <div *ngFor="let companion of companions; let i = index">
-            <h4>Companion {{ i + 1 }}</h4>
+        <h2>Book this trip</h2>
+        <form (ngSubmit)="onSubmit()">
+            <h3>Main Passanger</h3>
             <div>
-                <label>Name:</label>
-                <input [(ngModel)]="companion.name" [name]="'companionName' + i" required>
+                <label for="name">Name:</label>
+                <input id="name" [(ngModel)]="mainPassenger.name" name="name" required>
             </div>
-            <div>
-                <label>Email:</label>
-                <input type="email" [(ngModel)]="companion.email" [name]="'companionEmail' + i" required>
-            </div>
-                <button type="button" (click)="removeCompanion(i)">Eliminar acompañante</button>
-        </div>
-        <button type="button" (click)="addCompanion()">Añadir acompañante</button>
 
-        <p>Total Price: ${{ totalPrice }}</p>
-        <button type="submit">Confirm Reservation</button>
-    </form>
+                <div>
+                    <label for="email">Email:</label>
+                    <input id="email" type="email" [(ngModel)]="mainPassenger.email" name="email" required>
+                </div>
+                <br>
+                <h3>Companions</h3>
+                <div *ngFor="let companion of companions; let i = index">
+                    <h4>Companion {{ i + 1 }}</h4>
+                    <div>
+                        <label>Name:</label>
+                        <input [(ngModel)]="companion.name" [name]="'companionName' + i" required>
+                    </div>
+                    <div>
+                        <label>Email:</label>
+                        <input type="email" [(ngModel)]="companion.email" [name]="'companionEmail' + i" required>
+                    </div>
+                    <br>
+                    <button type="button" (click)="removeCompanion(i)">Delete Companion</button>
+                </div>
+                <button type="button" (click)="addCompanion()">Add Companion</button>
+                
+                <p>Total Price: ${{ totalPrice }}</p>
+                <button type="submit">Confirm Reservation</button>
+
+        </form>
+        </div>
+    </div>
 </div>
