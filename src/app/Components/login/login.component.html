@@ -1,17 +1,20 @@
-<div class="login-container">
-    <h2>Iniciar Sesión</h2>
-    <form (submit)="login()">
-        <div>
-            <label for="username">Username:</label>
-            <input id="username" [(ngModel)]="credentials.username" name="username" required>
-        </div>
+<div id="big-container">
 
-        <div>
-            <label for="password">Password:</label>
-            <input id="password" type="password" [(ngModel)]="credentials.password" name="password" required>
-        </div>
-
-        <button type="submit">Login</button>
-    </form>
-
+    <div class="login-container">
+        <h2>Log In</h2>
+        <form (submit)="login()">
+            <div class="input-container">
+                <label for="username">Username:</label>
+                <input id="username" class="input-form" [(ngModel)]="credentials.username" name="username" required>
+            </div>
+            
+            <div class="data-input">
+                <label for="password">Password:</label>
+                <input id="password" class="input-form" type="password" [(ngModel)]="credentials.password" name="password" required>
+            </div>
+            
+            <button type="submit">Login</button>
+        </form>
+        
+    </div>
 </div>
