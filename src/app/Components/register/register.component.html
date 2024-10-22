@@ -1,24 +1,30 @@
-<form (submit)="register()">
-    <div>
-        <label for="username">Username:</label>
-        <input id="username" [(ngModel)]="user.username" name="username" required />
-    </div>
+<div id="big-container">
+    <div class="register-container">
+        <h2>Sign In</h2>
 
-    <div>
-        <label for="email">Email:</label>
-        <input id="email" [(ngModel)]="user.email" name="email" required type="email" />
-    </div>
+        <form (submit)="register()">
+            <div class = "input-container">
+            <label for="username">Username:</label>
+            <input id="username" class="input-form" [(ngModel)]="user.username" name="username" required />
+            </div>
+        
+            <div class="input-container">
+            <label for="email">Email:</label>
+            <input id="email" class="input-form" [(ngModel)]="user.email" name="email" required type="email" />
+            </div>
 
-    <div>
-        <label for="password">Password:</label>
-        <input id="password" type="password" [(ngModel)]="user.password" name="password" required />
-    </div>
-
-    <div>
-        <label for="confirmPassword">Confirm Password:</label>
-        <input id="confirmPassword" type="password" [(ngModel)]="user.confirmPassword" name="confirmPassword"
+            <div class="input-container">
+            <label for="password">Password:</label>
+            <input id="password" class="input-form" type="password" [(ngModel)]="user.password" name="password" required />
+            </div>
+    
+            <div class="input-container">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input id="confirmPassword" class="input-form" type="password" [(ngModel)]="user.confirmPassword" name="confirmPassword"
             required />
-    </div>
-
-    <button type="submit">Register</button>
-</form>
+            </div>
+    
+            <button type="submit">Register</button>
+        </form>
+    </div>    
+</div>
