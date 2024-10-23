@@ -1,8 +1,20 @@
-.planet-grid{
+/*.planet-grid{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     gap: 20px;
+}*/
+.planet-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+.planet-grid::-webkit-scrollbar {
+    display: none;
 }
 
 .planet-card{
