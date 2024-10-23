@@ -1,0 +1,26 @@
+<div class="comment-form">
+    <h3>Leave your comment</h3>
+    <form (ngSubmit)="onSubmit()" #commentForm="ngForm">
+        <div class="form-group">
+        <input 
+            type="text" 
+            [(ngModel)]="userName" 
+            name="userName"
+            placeholder="Place your name..."
+            required
+            class="form-control">
+        </div>
+        <div class="form-group">
+            <textarea 
+            [(ngModel)]="commentText" 
+            name="commentText"
+            placeholder="Comment..."
+            required
+            class="form-control"
+            rows="4"></textarea>
+        </div>
+    <button type="submit" [disabled]="!commentForm.form.valid">
+        Send Comment
+    </button>
+    </form>
+</div>

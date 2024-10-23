@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PlanetService, Planet } from '../../Services/planet.service';
+import { CommentListComponent } from '../../Components/comment-list/comment-list.component';
 
 
 @Component({
@@ -11,6 +12,7 @@ import { PlanetService, Planet } from '../../Services/planet.service';
 export class PlanetComponent implements OnInit {
   planet: Planet | undefined;
   error: string | undefined;
+  @ViewChild('commentsListComponent') commentListComponent!: CommentListComponent;
 
   constructor(
     private route: ActivatedRoute,

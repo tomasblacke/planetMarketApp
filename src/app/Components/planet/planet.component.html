@@ -11,7 +11,7 @@
                 <h2>Diameter: {{ planet.diameter }} km</h2>
                 <h2>Distance from Sun: {{ planet.distanceFromSun }} million km</h2>
                 <h2>Description:</h2>
-                <p>Te tiro una descripcion sabrosona de algun lado</p>
+                <p>Description que viene de la base de datos o de donde</p>
                 <div class="price-tag">
                     <p>Price (km2): ${{ planet.price | number }}</p>
                 </div>
@@ -24,6 +24,17 @@
         </div>
     </div>
 </div>
+
+    <app-comments-form
+    [itemId]="planet!.id" 
+    [itemType]="'planet'"
+    (commentAdded)="commentsListComponent.loadComments()">
+</app-comments-form>
+<app-comment-list
+    #commentsListComponent
+    [itemId]="planet!.id" 
+    [itemType]="'planet'">
+</app-comment-list>
 
   <div *ngIf="error">{{ error }}</div>
 

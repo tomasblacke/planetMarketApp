@@ -26,6 +26,8 @@ import { NasaApiService } from './Services/nasa-api-service.service';
 import { PlanetService } from './Services/planet.service';
 import { SpaceTripsDisplayComponent } from './Components/space-trips-display/space-trips-display.component';
 import { TripReservaIdComponent } from './Components/trip-reserva-id/trip-reserva-id.component';
+import { CommentsFormComponent } from './Components/comments-form/comments-form.component';
+import { CommentListComponent} from './Components/comment-list/comment-list.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { TripReservaIdComponent } from './Components/trip-reserva-id/trip-reserv
     TiendaStarsComponent,
     PlanetComponent,
     SpaceTripsDisplayComponent,
-    TripReservaIdComponent
+    TripReservaIdComponent,
+    CommentsFormComponent,
+    CommentListComponent
   
   ],
   imports: [
