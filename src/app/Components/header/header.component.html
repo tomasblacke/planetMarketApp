@@ -10,7 +10,32 @@
             <!--<a routerLink="/tienda-stars">Estrellas y más</a> -->
             
         </div>
-        <input type="text" placeholder="Search...">
+        <div class="search-container">
+            <input 
+                type="text" 
+                placeholder="Search planets or trips..." 
+                (input)="onSearch($event)"
+                (blur)="showResults = false"
+            >
+            <!-- Contenedor para los resultados de búsqueda -->
+            <div class="search-results" *ngIf="showResults">
+                <div 
+                    *ngFor="let result of searchResults" 
+                    class="search-result-item"
+                    (mousedown)="goToResult(result)"
+                >
+                    <img [src]="result.imageUrl" [alt]="result.name" class="result-thumb">
+                    <div class="result-info">
+                        <span class="result-name">{{ result.name }}</span>
+                        <span class="result-type">{{ result.type | titlecase }}</span>
+                    </div>
+                </div>
+                <!-- Mensaje cuando no hay resultados -->
+                <div *ngIf="searchResults.length === 0" class="no-results">
+                    No results found
+                </div>
+            </div>
+        </div>
         <div class="nav-buttons">
             <button>Log in</button>    
             <button>Sign in</button>

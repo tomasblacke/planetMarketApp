@@ -82,5 +82,14 @@ export class TravelReservationsService {
   getTripById(id: number): Observable<SpaceTrip | undefined> {
     return of(this.trips.find(trip => trip.id === id));
   }
+  searchTrips(term: string): Promise<any[]> {
+    return new Promise(resolve => {
+      const results = this.trips.filter(trip => 
+        trip.title.toLowerCase().includes(term.toLowerCase()) ||
+        trip.description.toLowerCase().includes(term.toLowerCase())
+      );
+      resolve(results);
+    });
+  }
   /*constructor() { }*/
 }

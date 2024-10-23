@@ -70,6 +70,15 @@ export class PlanetService {
       })
     );
   }
+  searchPlanets(term: string): Promise<any[]> {
+    return new Promise(resolve => {
+      const results = this.planets.filter(planet => 
+        planet.name.toLowerCase().includes(term.toLowerCase()) ||
+        planet.type.toLowerCase().includes(term.toLowerCase())
+      );
+      resolve(results);
+    });
+  }
 
 
 }
