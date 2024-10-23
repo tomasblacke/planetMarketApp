@@ -48,3 +48,13 @@
         </div>
     </div>
 </div>
+<app-comments-form
+[itemId]="trip!.id" 
+[itemType]="'trip'"
+(commentAdded)="commentsListComponent.loadComments()">
+</app-comments-form>
+<app-comment-list
+#commentsListComponent
+[itemId]="trip!.id" 
+[itemType]="'trip'">
+</app-comment-list>

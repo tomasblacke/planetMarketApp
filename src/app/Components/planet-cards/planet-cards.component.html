@@ -3,7 +3,7 @@
         <img class="planet-img" [src]="planet.imageUrl" [alt]="planet.name">
         <h2>{{ planet.name }}</h2>
         <p>Price: ${{ planet.price | number }}</p>
-        <button [disabled]="!planet.available">
+        <button type="button"  [disabled]="!planet.available" (click)="viewPlanetDetails(planet.id)" >
             {{ planet.available ? 'BUY' : 'SOLD OUT' }}
         </button>
     </div>
