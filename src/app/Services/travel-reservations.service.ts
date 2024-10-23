@@ -82,6 +82,7 @@ export class TravelReservationsService {
   getTripById(id: number): Observable<SpaceTrip | undefined> {
     return of(this.trips.find(trip => trip.id === id));
   }
+  /* MISMO CASO QUE EL DE PLANETAS PERO PARA TRIPS */
   searchTrips(term: string): Promise<any[]> {
     return new Promise(resolve => {
       const results = this.trips.filter(trip => 

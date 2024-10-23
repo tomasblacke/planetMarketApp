@@ -70,6 +70,7 @@ export class PlanetService {
       })
     );
   }
+  /* se buscan planetas, usado para el searchbar, filtra todo a lowercase */ 
   searchPlanets(term: string): Promise<any[]> {
     return new Promise(resolve => {
       const results = this.planets.filter(planet => 
