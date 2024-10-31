@@ -7,13 +7,13 @@
             <p>{{ trip.description }}</p>
             <p>Departure: {{ trip.departure | date:'dd/MM/yyyy' }}</p>
             <p>Origin: {{ trip.origin }}</p>
-        <p>Destination: {{ trip.destination }}</p>
-        <p>Available Seats: {{ trip.availableSeats }}</p>
-        <p>Price p/ Passanger: ${{ trip.priceByPassanger }}</p>
-        <br>
+            <p>Destination: {{ trip.destination }}</p>
+            <p>Available Seats: {{ trip.availableSeats }}</p>
+            <p>Price p/ Passanger: ${{ trip.priceByPassanger }}</p>
+            <br>
 
-        <h2>Book this trip</h2>
-        <form (ngSubmit)="onSubmit()">
+            <h2>Book this trip</h2>
+            <form (ngSubmit)="onSubmit()">
             <h3>Main Passanger</h3>
             <div>
                 <label for="name">Name:</label>
@@ -58,3 +58,4 @@
 [itemId]="trip!.id" 
 [itemType]="'trip'">
 </app-comment-list>
+<!--Hay que ver si cuando este en la API le aseguramos que la trip esta o que puede verni null. si no lo cambiamos ?-->

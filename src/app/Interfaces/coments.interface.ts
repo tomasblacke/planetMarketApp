@@ -5,5 +5,5 @@ export interface Comment {
     userName: string;
     text: string;
     date: Date;
-    rating?: number;
+    rating?: number;//Despues vemos si usamos
 }

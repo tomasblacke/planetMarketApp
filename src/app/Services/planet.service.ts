@@ -66,7 +66,7 @@ export class PlanetService {
       }),
       catchError(error => {
         console.error('Error fetching planet image:', error);
-        return of(''); // Return a default image URL or empty string
+        return of(''); //Devuelve una imagen default o el error
       })
     );
   }

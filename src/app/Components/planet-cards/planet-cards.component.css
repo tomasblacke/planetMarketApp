@@ -1,9 +1,8 @@
-/*.planet-grid{
+/* .planet-grid{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    gap: 20px;
-}*/
+    gap: 20px;} */
 .planet-grid {
     display: flex;
     flex-direction: row;
