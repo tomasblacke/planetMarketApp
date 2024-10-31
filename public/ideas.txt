@@ -60,4 +60,10 @@ TAREA:
      A LA API DE LOS DATOS DE METROS Y DEMAS...O VER ALGUNA MANERA PARA NO PERDER LOS DATOS
      CADA VEZ QUE ARRANCAMOS...VER SI VAMOS POR FIREBASE COMO BASE DE DATOS PARA GUARDAR LA INFO
      Y PODER CONSUMIRLA
-    
+/*----------------------------------------------------------------
+    REGEX PARA MALAS PALABRAS
+    ESTA ACA: https://www.npmjs.com/package/bad-words
+    SALE DE : https://stackoverflow.com/questions/42733681/bad-words-filter-with-special-characters
+/*----------------------------------------------------------------
+TEMA DE LOGEO ANGULAR - SPRINGBOOT:
+https://stackoverflow.com/questions/73630393/how-to-send-a-parameter-within-body-no-headers-from-angular-to-spring-boot
