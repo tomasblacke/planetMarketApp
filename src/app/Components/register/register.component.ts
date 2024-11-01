@@ -7,7 +7,7 @@ import { AuthService } from '../../Services/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  user = { username: '', email: '', password: '', confirmPassword: '' };
+  user = { name: '', email: '', password: '', confirmPassword: '' };
 
   constructor(private authService: AuthService) { }
 
@@ -20,13 +20,13 @@ export class RegisterComponent {
   
     // Preparar los datos del usuario para enviar
     const registrationData = {
-      username: this.user.username,
+      name: this.user.name,
       password: this.user.password,
       email: this.user.email // Si estás usando un email
     };
   
     // Llamar al servicio de autenticación para registrar al usuario
-    this.authService.register(registrationData).subscribe(
+    this.authService.register(this.user).subscribe(
       response => {
         console.log('Registro exitoso', response);
         //ACA TENGO QUE LLAMAR A LA PAGINA PRINCIPAL HELP

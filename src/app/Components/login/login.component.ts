@@ -7,13 +7,13 @@ import { AuthService } from '../../Services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  credentials = { username: '', password: '' };
+  credentials = { name: '', password: '' };
 
   constructor(private authService: AuthService) { }
 
   login() {
     // Asegura de que las credenciales no estén vaacias
-    if (!this.credentials.username || !this.credentials.password) {
+    if (!this.credentials.name || !this.credentials.password) {
       console.error("Por favor, completa ambos campos.");
       return; 
     }

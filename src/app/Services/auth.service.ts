@@ -7,18 +7,18 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private apiUrl = 'https://example.com/api/auth'; // Cambia esta URL a tu endpoint de autenticación
+  private apiUrl = 'http://localhost:8080/api/v1/clientes'; // Cambia esta URL a tu endpoint de autenticación
 
   constructor(private http: HttpClient) { }
 
   // Método para el login de usuario
-  login(credentials: { username: string, password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+  login(credentials: { name: string, password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/traer`, credentials);
   }
 
   // Método para el registro de usuario
-  register(user: { username: string, email: string, password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+  register(user: { name: string, email: string, password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/crear`, user);
   }
 }
 
