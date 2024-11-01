@@ -20,7 +20,7 @@ export class AuthService {
   })
 }
 //register method
-register(email:string,password:string)
+register(email:string,password:string, name: string, lastname: string)
 {this.fireauth.createUserWithEmailAndPassword(email,password).then(()=>{
 this.router.navigate(['/login']);
 },err=>{

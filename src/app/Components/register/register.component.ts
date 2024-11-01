@@ -9,25 +9,22 @@ import { AuthService } from '../../Services/user-auth.service';
 export class RegisterComponent implements OnInit {
   email : string = '';
   password : string = '';
+  name: string = '';
+  lastname: string = '';
 
   constructor(private auth: AuthService) { }
   ngOnInit(): void {}
   register(){
-    if (this.email == null)
-    {
-      alert("Please enter your email");
+    if (!this.email || !this.password || !this.name || !this.lastname) {
+      alert("Por favor complete todos los campos");
       return;
     }
 
-    if (this.password == null)
-      {
-        alert("Please enter your password");
-        return;
-      }
-      
-    this.auth.register(this.email, this.password);
+    this.auth.register(this.email, this.password, this.name, this.lastname);//modificar campos para poder guardarlos
     this.email='';
     this.password='';
+    this.name = '';
+    this.lastname = '';
   }
 
 }
