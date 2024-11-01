@@ -31,8 +31,8 @@ import { CommentListComponent} from './Components/comment-list/comment-list.comp
 import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { AngularFireModule } from '@angular/fire/compat';
-import { firebaseConfig } from '../Environments/environments';
-
+import { environment } from '../Environments/environments';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 
 
@@ -65,7 +65,8 @@ import { firebaseConfig } from '../Environments/environments';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    AngularFireModule.initializeApp(firebaseConfig)
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
   ],
   providers: [NasaApiService,PlanetService],
   bootstrap: [AppComponent]
