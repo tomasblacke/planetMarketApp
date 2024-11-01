@@ -131,6 +131,87 @@ nav img {
 .nav-buttons button:hover {
     background-color: #ff4108;
 }
+.user-menu-container {
+    position: relative;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.user-info:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    min-width: 200px;
+    z-index: 1000;
+    transform-origin: top;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: scaleY(0);
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu ul li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-menu ul li:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu ul li a,
+.dropdown-menu ul li button {
+    display: block;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #333;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu ul li a:hover,
+.dropdown-menu ul li button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Si estás usando el ícono de usuario */
+.user-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 /* Media queries para responsividad */
 @media (max-width: 1024px) {

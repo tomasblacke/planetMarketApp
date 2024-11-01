@@ -36,9 +36,30 @@
                 </div>
             </div>
         </div>
-        <div class="nav-buttons"><!--Clavamos un if para ver si esta logeado y decimos sim ostrar esto o el boton al usuario y log out?-->
-            <button routerLink="login">Log in</button>    
-            <button routerLink="register">Sign in</button>
+        <div class="nav-buttons">
+            <!-- Botones de login/register para usuarios no autenticados -->
+            <ng-container *ngIf="!isLoggedIn">
+                <button routerLink="login">Log in</button>    
+                <button routerLink="register">Sign in</button>
+            </ng-container>
+        
+            <!-- Menú de usuario para usuarios autenticados -->
+            <div *ngIf="isLoggedIn" class="user-menu-container">
+                <div class="user-info" (click)="toggleUserMenu()">
+                    <div class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>{{ userDisplayName }}</span>
+                </div>
+        
+                <div class="dropdown-menu" [class.show]="showUserMenu">
+                    <ul>
+                        <li><a (click)="goToProfile()">Mi Perfil</a></li>
+                        <li><a (click)="goToSettings()">Configuración</a></li>
+                        <li><button (click)="logout()">Cerrar Sesión</button></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </nav>
 </header>
