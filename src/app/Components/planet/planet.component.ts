@@ -42,18 +42,18 @@ export class PlanetComponent implements OnInit {
             error => {
               console.error('Error fetching planet image:', error);
               this.error = 'Failed to load planet image';
-              return; // Añade esta línea
+              return; 
               
             }
           );
         } else {
-          this.error = 'Planet not found';  // Añade esta línea
+          this.error = 'Planet not found'; 
           return;
         }
       },
       error => {
         console.error('Error fetching planet details:', error);
-        this.error = 'Failed to load planet details';  // Añade esta línea
+        this.error = 'Failed to load planet details';
         return; 
       }
     );
@@ -62,7 +62,7 @@ export class PlanetComponent implements OnInit {
   buyPlanet() {
     if (this.planet) {
       console.log(`Buying ${this.planet.name} for $${this.planet.price}`);
-      // Implementar lógica de compra aquí
+      // Implementar lógica de compra
     }
   }
 }
