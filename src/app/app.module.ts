@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ENVIRONMENT_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http'; 
 import { FormsModule } from '@angular/forms';
@@ -28,6 +28,15 @@ import { SpaceTripsDisplayComponent } from './Components/space-trips-display/spa
 import { TripReservaIdComponent } from './Components/trip-reserva-id/trip-reserva-id.component';
 import { CommentsFormComponent } from './Components/comments-form/comments-form.component';
 import { CommentListComponent} from './Components/comment-list/comment-list.component';
+import { LoginComponent } from './Components/login/login.component';
+import { RegisterComponent } from './Components/register/register.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { firebaseConfig } from '../Environments/environments';
+
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -46,14 +55,17 @@ import { CommentListComponent} from './Components/comment-list/comment-list.comp
     SpaceTripsDisplayComponent,
     TripReservaIdComponent,
     CommentsFormComponent,
-    CommentListComponent
+    CommentListComponent,
+    LoginComponent,
+    RegisterComponent
   
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AngularFireModule.initializeApp(firebaseConfig)
   ],
   providers: [NasaApiService,PlanetService],
   bootstrap: [AppComponent]

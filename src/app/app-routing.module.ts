@@ -7,6 +7,8 @@ import { TiendaPlanetsComponent} from './Components/tienda-planets/tienda-planet
 import { PlanetComponent } from './Components/planet/planet.component';
 import { SpaceTripsDisplayComponent } from './Components/space-trips-display/space-trips-display.component';
 import { TripReservaIdComponent } from './Components/trip-reserva-id/trip-reserva-id.component';
+import { LoginComponent } from './Components/login/login.component';
+import { RegisterComponent } from './Components/register/register.component';
 
 
 
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'trips/:id', component:TripReservaIdComponent},
   { path: 'planets', component: TiendaPlanetsComponent},
   { path: 'planets/:planetID', component: PlanetComponent},// este nos va a llevar a la data de cada planeta
+  {path: 'login',component: LoginComponent},
+  {path:'register',component: RegisterComponent},
 
   // Añadir otras rutas aca
   { path: '**', redirectTo: '' } // Ruta comodín, redirige a home
