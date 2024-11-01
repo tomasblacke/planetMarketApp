@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetService } from '../../Services/planet.service';
 import { TravelReservationsService } from '../../Services/travel-reservations.service';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AuthService } from '../../Services/user-auth.service'; 
 
 @Component({
   selector: 'app-header',
@@ -14,16 +15,19 @@ export class HeaderComponent {
   private searchTerms = new Subject<string>();
   searchResults: any[] = [];
   showResults = false;
+//USERS MANAGEMENT
+  isLoggedIn: boolean = false;
+  userDisplayName: string = '';
+  showUserMenu: boolean = false;
+
 
   constructor(
     private router: Router,
     private planetService: PlanetService,
-    private tripService: TravelReservationsService
+    private tripService: TravelReservationsService,
+    private authService: AuthService,
   ) {
-    // lo que hace el pipe en este caso es procesar los datos que le mando por html, los va a transformando,
-    //usamos el debounce para esperar 300ms de inactividad, el distincUntilChange sirve para fijarse que el termino sea diferente al anteiror
-    //si cambia hace el switchmap y realiza una nueva busqueda en base al nuevo input
-    //el trim nos eliminta espacios vacios
+   
     this.searchTerms.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -36,7 +40,13 @@ export class HeaderComponent {
     ).subscribe(results => {
       this.searchResults = results;
       this.showResults = results.length > 0;
-    });
+    });/*
+    this.authService.fireauth.onAuthStateChanged(user => {
+      this.isLoggedIn = !!user;
+      if (user) {
+        this.userDisplayName = user.displayName || 'Usuario';
+      }
+    });REVISAR*/
   }
 
   // Método que se llama cada vez que el usuario escribe
@@ -76,6 +86,36 @@ Sintaxis moderna: Es una característica estándar de ES6+
       this.router.navigate(['/trips', result.id]);
     }
     this.showResults = false;
+  }
+   // Nuevos métodos para el menú de usuario
+   toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  logout() {
+    this.authService.logout();
+    this.showUserMenu = false;
+  }
+
+  // Cerrar el menú cuando se hace clic fuera
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const userMenuElement = event.target as HTMLElement;
+    if (!userMenuElement.closest('.user-menu-container')) {
+      this.showUserMenu = false;
+    }
+  }
+
+  // Método para navegar al perfil
+  goToProfile() {
+    this.router.navigate(['/profile']);
+    this.showUserMenu = false;
+  }
+
+  // Método para navegar a configuración
+  goToSettings() {
+    this.router.navigate(['/settings']);
+    this.showUserMenu = false;
   }
 
 }
