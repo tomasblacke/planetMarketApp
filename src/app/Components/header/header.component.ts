@@ -40,13 +40,13 @@ export class HeaderComponent {
     ).subscribe(results => {
       this.searchResults = results;
       this.showResults = results.length > 0;
-    });/*
-    this.authService.fireauth.onAuthStateChanged(user => {
+    });
+    this.authService.getAuthState().subscribe(user => {
       this.isLoggedIn = !!user;
       if (user) {
         this.userDisplayName = user.displayName || 'Usuario';
       }
-    });REVISAR*/
+    });
   }
 
   // Método que se llama cada vez que el usuario escribe
@@ -88,7 +88,7 @@ Sintaxis moderna: Es una característica estándar de ES6+
     this.showResults = false;
   }
    // Nuevos métodos para el menú de usuario
-   toggleUserMenu() {
+  toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
   }
 

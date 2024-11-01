@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from '@firebase/auth-types';
-
+import { Observable } from 'rxjs';
 
 //import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -81,6 +81,16 @@ export class AuthService {
       alert(err.message);
       this.router.navigate(['']);
     })
+  }
+  //FOR STATE MANAGEMENT
+  // Nuevo método para observar el estado de autenticación
+  getAuthState(): Observable<any> {
+    return this.fireauth.authState;
+  }
+
+  // Método para obtener el usuario actual
+  getCurrentUser() {
+    return this.fireauth.currentUser;
   }
 }
 
