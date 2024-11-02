@@ -1,0 +1,29 @@
+<div id="big-container">     
+    <div class="register-container">             
+        <form>                         
+            <div class="input-container">                             
+                <h2>Register</h2>                         
+            </div>
+            <div class="input-container">                           
+                <label for="nombre">Nombre</label>                           
+                <input type="text" class="input-form" name="name" [(ngModel)]="name">                         
+            </div>
+            <div class="input-container">                           
+                <label for="apellido">Apellido</label>                           
+                <input type="text" class="input-form" name="lastname" [(ngModel)]="lastname">                         
+            </div>                         
+            <div class="input-container">                           
+                <label for="email">Email</label>                           
+                <input type="email" class="input-form" name="email" [(ngModel)]="email">                         
+            </div>                         
+            <div class="input-container">                           
+                <label for="password">Password</label>                           
+                <input type="password" class="input-form" name="password" [(ngModel)]="password">                         
+            </div>                         
+            <button type="button" (click)="register()">Register</button>                         
+            <div class="input-container">                             
+                <a href="/login">Have an account? <span>Login</span></a>                             
+            </div>                         
+        </form>                 
+    </div>         
+</div>

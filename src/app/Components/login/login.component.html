@@ -1,0 +1,38 @@
+<div id="big-container">
+    <div class="login-container">
+        <form>
+            <div class="input-container">
+                <h2>Login</h2>
+            </div>
+            
+            <div class="input-container">
+                <label for="email">Email</label>
+                <input type="email" class="input-form" name="email" [(ngModel)]="email">
+            </div>
+            
+            <div class="input-container">
+                <label for="password">Password</label>
+                <input type="password" class="input-form" name="password" [(ngModel)]="password">
+            </div>
+            
+            <button type="button" (click)="login()">Login</button>
+            
+            <div class="input-container">
+                <a href="/register">Need Account? <span>Register</span></a>
+            </div>
+            
+            <div class="input-container">
+                <a href="/forgot-password">Forgot Password?</a>
+            </div>
+            
+            <div class="input-container">
+                <a class="google-btn">
+                    <div class="login-container">
+                        <img src="../../../assets/icons8-google-48.png" alt="Google Icon" height="24px" width="24px">
+                        Sign In with Google
+                    </div>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

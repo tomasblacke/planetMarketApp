@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, catchError, tap  } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable, of, from } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
+import { AuthService} from '../Services/user-auth.service';
+import firebase from 'firebase/compat/app'
 
 export interface Planet {
   id: number;
@@ -12,52 +15,229 @@ export interface Planet {
   imageUrl: string;
   price: number;
   available: boolean;
+  totalKilometers: number;
+  availableKilometers: number;
+  description: string;
 }
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlanetService {
+  private readonly COLLECTION_NAME = 'planets';
+  
   private nasaApiKey = 'ccn605v3j7TiIR5kXUEBfOXrocFnCbQes3j1Oea1';
   private nasaImageApi = 'https://images-api.nasa.gov/search?q=';
+  
+  // Cache local de planetas
+  private planetsCache: Planet[] = [];
 
-  private planets: Planet[] = [
-    { id: 1, name: 'Mercury', type: 'Terrestrial', diameter: 4879, distanceFromSun: 57.9, imageUrl: '', price: 1000000, available: true },
-    { id: 2, name: 'Venus', type: 'Terrestrial', diameter: 12104, distanceFromSun: 108.2, imageUrl: '', price: 2000000, available: true },
-    { id: 3, name: 'Mars', type: 'Terrestrial', diameter: 12178, distanceFromSun: 227.9, imageUrl: '', price: 3000000, available: true },
-    { id: 4, name: 'Earth Moon', type: 'Terrestrial', diameter: 1200, distanceFromSun: 384.4, imageUrl: '', price: 6000000, available: true },
-    { id: 5, name: 'Jupiter', type: 'Gas Giant', diameter: 139820, distanceFromSun: 778.5, imageUrl: '', price: 5000000, available: true },
-    { id: 6, name: 'Saturn', type: 'Gas Giant', diameter: 116460, distanceFromSun: 1434.0, imageUrl: '', price: 4500000, available: true },
-    { id: 7, name: 'Uranus', type: 'Ice Giant', diameter: 50724, distanceFromSun: 2871.0, imageUrl: '', price: 4000000, available: true },
-    { id: 8, name: 'Neptune', type: 'Ice Giant', diameter: 49244, distanceFromSun: 4495.1, imageUrl: '', price: 4000000, available: true },
-    { id: 9, name: 'Pluto', type: 'Dwarf Planet', diameter: 2376, distanceFromSun: 5906.4, imageUrl: '', price: 3500000, available: true },
-    { id: 10, name: 'Ganymede Moon', type: 'Moon', diameter: 5268, distanceFromSun: 778.5, imageUrl: '', price: 2500000, available: true },
-    { id: 11, name: 'Titan Moon', type: 'Moon', diameter: 5150, distanceFromSun: 1434.0, imageUrl: '', price: 2400000, available: true },
-    { id: 12, name: 'Europa Moon', type: 'Moon', diameter: 3121, distanceFromSun: 778.5, imageUrl: '', price: 2200000, available: true },
-    { id: 13, name: 'Enceladus Moon', type: 'Moon', diameter: 504, distanceFromSun: 1434.0, imageUrl: '', price: 2000000, available: true }
+  
 
-  ];
-
-  constructor(private http: HttpClient) { }
-
-  getPlanets(): Observable<Planet[]> {
-    return of(this.planets);
+  constructor(
+    private http: HttpClient,
+    private firestore: AngularFirestore,
+    private authService: AuthService
+  ) {
+    // Inicialiazmos cache para que el usuario una vez que carga tenga en una arreglo, depaso el servicio anterior se manejaba con arreglo asi que es lo mismo solo
+    //que ahora cargamos de firebase el arreglo , lo hice asi para mantener las funcionalidades que habiamos implementado
+    this.getPlanets().subscribe(planets => {
+      this.planetsCache = planets;
+    });
   }
 
-  getPlanetById(id: number): Observable<Planet | undefined> {
-    console.log('Searching for planet with id:', id);
-    return of(this.planets.find(planet => planet.id === id)).pipe(
-      tap(planet => console.log('getPlanetById result:', planet))
-    );
-    /*return this.getPlanets().pipe(
-      map(planets => planets.find(planet => planet.id === id)),
-      tap(planet => console.log('getPlanetById result:', planet))
-    );*/
+  // Se uso ya para cargar los planetas a firebase
+  async loadDefaultPlanets(): Promise<void> {
+    const snapshot = await this.firestore.collection(this.COLLECTION_NAME).get().toPromise();
+    
+    if (!snapshot?.empty) {
+      console.log('Ya existen planetas en la base de datos');
+      return;
+    }
+
+    const defaultPlanets: Omit<Planet, 'id'>[] = [
+      { 
+        name: 'Mercury', 
+        type: 'Terrestrial', 
+        diameter: 4879, 
+        distanceFromSun: 57.9, 
+        imageUrl: '', 
+        price: 1000000, 
+        available: true,
+        totalKilometers: 74800000,
+        availableKilometers: 74800000,
+        description: 'The closest planet to the Sun and the smallest in the solar system.'
+      },
+      { 
+        name: 'Venus', 
+        type: 'Terrestrial', 
+        diameter: 12104, 
+        distanceFromSun: 108.2, 
+        imageUrl: '', 
+        price: 2000000, 
+        available: true,
+        totalKilometers: 460200000,
+        availableKilometers: 460200000,
+        description: 'Known for its thick atmosphere and extreme greenhouse effect.'
+      },
+      { 
+        name: 'Mars', 
+        type: 'Terrestrial', 
+        diameter: 12178, 
+        distanceFromSun: 227.9, 
+        imageUrl: '', 
+        price: 3000000, 
+        available: true,
+        totalKilometers: 144800000,
+        availableKilometers: 144800000,
+        description: 'The Red Planet, famous for its iron oxide surface and potential for past life.'
+      },
+      { 
+        name: 'Earth Moon', 
+        type: 'Terrestrial', 
+        diameter: 1200, 
+        distanceFromSun: 384.4, 
+        imageUrl: '', 
+        price: 6000000, 
+        available: true,
+        totalKilometers: 37900000,
+        availableKilometers: 37900000,
+        description: 'Earth’s only natural satellite, with a unique influence on ocean tides.'
+      },
+      { 
+        name: 'Jupiter', 
+        type: 'Gas Giant', 
+        diameter: 139820, 
+        distanceFromSun: 778.5, 
+        imageUrl: '', 
+        price: 5000000, 
+        available: true,
+        totalKilometers: 61419000000,
+        availableKilometers: 61419000000,
+        description: 'The largest planet in the solar system, with a famous Great Red Spot storm.'
+      },
+      { 
+        name: 'Saturn', 
+        type: 'Gas Giant', 
+        diameter: 116460, 
+        distanceFromSun: 1434.0, 
+        imageUrl: '', 
+        price: 4500000, 
+        available: true,
+        totalKilometers: 42700000000,
+        availableKilometers: 42700000000,
+        description: 'Famous for its extensive ring system and large number of moons.'
+      },
+      { 
+        name: 'Uranus', 
+        type: 'Ice Giant', 
+        diameter: 50724, 
+        distanceFromSun: 2871.0, 
+        imageUrl: '', 
+        price: 4000000, 
+        available: true,
+        totalKilometers: 8083000000,
+        availableKilometers: 8083000000,
+        description: 'An ice giant with a unique tilted axis, giving it extreme seasonal changes.'
+      },
+      { 
+        name: 'Neptune', 
+        type: 'Ice Giant', 
+        diameter: 49244, 
+        distanceFromSun: 4495.1, 
+        imageUrl: '', 
+        price: 4000000, 
+        available: true,
+        totalKilometers: 7618000000,
+        availableKilometers: 7618000000,
+        description: 'Known for its striking blue color and strong winds, the farthest planet from the Sun.'
+      },
+      { 
+        name: 'Pluto', 
+        type: 'Dwarf Planet', 
+        diameter: 2376, 
+        distanceFromSun: 5906.4, 
+        imageUrl: '', 
+        price: 3500000, 
+        available: true,
+        totalKilometers: 17000000,
+        availableKilometers: 17000000,
+        description: 'A dwarf planet in the Kuiper Belt, once considered the ninth planet.'
+      },
+      { 
+        name: 'Ganymede Moon', 
+        type: 'Moon', 
+        diameter: 5268, 
+        distanceFromSun: 778.5, 
+        imageUrl: '', 
+        price: 2500000, 
+        available: true,
+        totalKilometers: 87000000,
+        availableKilometers: 87000000,
+        description: 'Jupiter’s largest moon and the largest in the solar system, even bigger than Mercury.'
+      },
+      { 
+        name: 'Titan Moon', 
+        type: 'Moon', 
+        diameter: 5150, 
+        distanceFromSun: 1434.0, 
+        imageUrl: '', 
+        price: 2400000, 
+        available: true,
+        totalKilometers: 83000000,
+        availableKilometers: 83000000,
+        description: 'Saturn’s largest moon, known for its thick atmosphere and lakes of methane.'
+      },
+      { 
+        name: 'Europa Moon', 
+        type: 'Moon', 
+        diameter: 3121, 
+        distanceFromSun: 778.5, 
+        imageUrl: '', 
+        price: 2200000, 
+        available: true,
+        totalKilometers: 30500000,
+        availableKilometers: 30500000,
+        description: 'Jupiter’s icy moon, speculated to have a subsurface ocean that may harbor life.'
+      },
+      { 
+        name: 'Enceladus Moon', 
+        type: 'Moon', 
+        diameter: 504, 
+        distanceFromSun: 1434.0, 
+        imageUrl: '', 
+        price: 2000000, 
+        available: true,
+        totalKilometers: 800000,
+        availableKilometers: 800000,
+        description: 'One of Saturn’s moons, known for geysers ejecting water into space.'
+      }
+    ];
+
+    const batch = this.firestore.firestore.batch();
+    for (let i = 0; i < defaultPlanets.length; i++) {
+      const planet = defaultPlanets[i];
+      const docRef = this.firestore.collection(this.COLLECTION_NAME).doc((i + 1).toString());
+      
+      // Obtiene la imagen de la NASA antes de guardar
+      try {
+        const imageUrl = await this.getPlanetImage(planet.name).toPromise();
+        planet.imageUrl = imageUrl || '';
+      } catch (error) {
+        console.error(`Error obteniendo imagen para ${planet.name}:`, error);
+        planet.imageUrl = '';
+      }
+      
+      batch.set(docRef.ref, planet);
+    }
+
+    await batch.commit();
+    console.log('Planetas por defecto cargados exitosamente');
   }
 
+  // Pedido de imagen
   getPlanetImage(planetName: string): Observable<string> {
-    return this.http.get<any>(`${this.nasaImageApi}${'planet '+planetName}&media_type=image`).pipe(//aca le pide a la api que le traiga el nombre que tiene y planet adelante
+    return this.http.get<any>(`${this.nasaImageApi}planet ${planetName}&media_type=image`).pipe(
       map(response => {
         if (response.collection.items.length > 0 && response.collection.items[0].links.length > 0) {
           return response.collection.items[0].links[0].href;
@@ -66,20 +246,385 @@ export class PlanetService {
       }),
       catchError(error => {
         console.error('Error fetching planet image:', error);
-        return of(''); //Devuelve una imagen default o el error
+        return of('');
       })
     );
   }
-  /* se buscan planetas, usado para el searchbar, filtra todo a lowercase */ 
-  searchPlanets(term: string): Promise<any[]> {
-    return new Promise(resolve => {
-      const results = this.planets.filter(planet => 
-        planet.name.toLowerCase().includes(term.toLowerCase()) ||
-        planet.type.toLowerCase().includes(term.toLowerCase())
+
+  // Obtiene datos de los planetas
+  getPlanets(): Observable<Planet[]> {
+    return this.firestore.collection<Planet>(this.COLLECTION_NAME, ref => ref.orderBy('name'))
+      .valueChanges({ idField: 'id' }).pipe(
+        tap(planets => this.planetsCache = planets)
       );
-      resolve(results);
-    });
   }
 
+  // Aca se implmeneto la buscqueda del id del planeta, para que sea mas rapido va primero al cache si no vuevle a firebase
+  getPlanetById(id: number): Observable<Planet | undefined> {
 
+    const cachedPlanet = this.planetsCache.find(p => p.id === id);
+    if (cachedPlanet) {
+      return of(cachedPlanet);
+    }
+
+
+    return this.firestore
+      .collection<Planet>(this.COLLECTION_NAME)
+      .doc(id.toString())
+      .valueChanges()
+      .pipe(
+        tap(planet => console.log('getPlanetById result:', planet))
+      );
+  }
+
+  // Funcion para admin que aregue planeta a mano
+  async addNewPlanet(planet: Omit<Planet, 'id'>): Promise<string> {
+    try {
+      const planets = await this.firestore.collection(this.COLLECTION_NAME)
+        .get().toPromise();
+      const nextId = (planets?.docs.length || 0) + 1;
+      
+      // Obtener imagen de la NASA
+      const imageUrl = await this.getPlanetImage(planet.name).toPromise();
+      
+      const newPlanet = {
+        name: planet.name,
+        type: planet.type,
+        diameter: planet.diameter,
+        distanceFromSun: planet.distanceFromSun,
+        price: planet.price,
+        available: planet.available,
+        totalKilometers: planet.totalKilometers,
+        imageUrl: imageUrl || '',
+        availableKilometers: planet.totalKilometers
+      };
+  
+      await this.firestore.collection(this.COLLECTION_NAME)
+        .doc(nextId.toString())
+        .set(newPlanet);
+  
+      return 'Planet succesfully added';
+    } catch (error) {
+      console.error('Error al agregar planeta:', error);
+      throw new Error('Error adding planet');
+    }
+  }
+
+  // Buscar planetas (usando el cache)
+  searchPlanets(term: string): Promise<Planet[]> {
+    return Promise.resolve(
+      this.planetsCache.filter(planet => 
+        planet.name.toLowerCase().includes(term.toLowerCase()) ||
+        planet.type.toLowerCase().includes(term.toLowerCase())
+      )
+    );
+  }
+
+  //************************************************************************************************************************* */
+  //***************************************** Metodos de modificacion, procesos de compra de km y administrativos ***************** */
+  //************************************************************************************************************************* */
+  // Actualizar planeta
+  async updatePlanet(id: number, updates: Partial<Planet>): Promise<void> {
+    try {
+      const planetRef = this.firestore
+        .collection(this.COLLECTION_NAME)
+        .doc(id.toString());
+      
+      // Si se está actualizando el nombre, actualizamos también la imagen
+      if (updates.name) {
+        const imageUrl = await this.getPlanetImage(updates.name).toPromise();
+        updates.imageUrl = imageUrl || '';
+      }
+  
+      await planetRef.update(updates);
+      console.log(`Planeta ${id} actualizado exitosamente`);
+    } catch (error) {
+      console.error('Error actualizando planeta:', error);
+      throw new Error('Error updating the planets');
+    }
+  }
+// elimina planeta
+async deletePlanet(id: number): Promise<void> {
+  try {
+    await this.firestore
+      .collection(this.COLLECTION_NAME)
+      .doc(id.toString())
+      .delete();
+    console.log(`Planeta ${id} eliminado exitosamente`);
+  } catch (error) {
+    console.error('Error eliminando planeta:', error);
+    throw new Error('Error al eliminar el planeta');
+  }
 }
+
+// Comprar kilómetros cuadrados, no se si poner mas datos, lo vemos
+async purchaseKilometers(
+  planetId: number, 
+  kilometersToPurchase: number, 
+  buyerInfo?: { //obligamos a que no pueda estar vacio?
+    userId: string, 
+    email: string 
+  }
+): Promise<{ 
+  success: boolean, 
+  transaction?: any, 
+  message: string 
+}> {
+  try {
+    const planetRef = this.firestore
+      .collection(this.COLLECTION_NAME)
+      .doc(planetId.toString());
+
+    return await this.firestore.firestore.runTransaction(async transaction => {
+      const planetDoc = await transaction.get(planetRef.ref);
+
+      if (!planetDoc.exists) {
+        return {
+          success: false,
+          message: 'Planet not found'
+        };
+      }
+
+      const planetData = planetDoc.data() as Planet;
+
+
+
+      // Verificar disponibilidad
+      if (!planetData.available) {
+        return {
+          success: false,
+          message: 'Planet not available for purchase'
+        };
+      }
+
+
+
+      // Verificacion de kilometros disponibles
+      if (planetData.availableKilometers < kilometersToPurchase) {
+        return {
+          success: false,
+          message: `Just ${planetData.availableKilometers} km² available`
+        };
+      }
+
+      const newAvailableKilometers = planetData.availableKilometers - kilometersToPurchase;
+
+
+
+
+      // Actualizar planeta
+      transaction.update(planetRef.ref, {
+        availableKilometers: newAvailableKilometers,
+        available: newAvailableKilometers > 0
+      });
+
+
+
+
+      // Si se proporcionó información del comprador, registrar la transacción, esto va de la mane con el comentario al principio, creo que tendriamos que hacerlo obligatorio
+      if (buyerInfo) {
+        const purchaseRecord = {
+          planetId,
+          planetName: planetData.name,
+          kilometersPurchased: kilometersToPurchase,
+          purchaseDate: new Date(),
+          buyerId: buyerInfo.userId,
+          buyerEmail: buyerInfo.email,
+          pricePerKilometer: planetData.price,
+          totalPrice: planetData.price * kilometersToPurchase
+        };
+
+        const purchaseRef = this.firestore.collection('purchases').doc();
+        transaction.set(purchaseRef.ref, purchaseRecord);
+      }
+
+      return {
+        success: true,
+        transaction: {
+          planetId,
+          kilometersPurchased: kilometersToPurchase,
+          remainingKilometers: newAvailableKilometers,
+          timestamp: new Date()
+        },
+        message: 'Successful purchase'
+      };
+    });
+
+  } catch (error) {
+    console.error('Error on purchase transaction', error);
+    return {
+      success: false,
+      message: 'Error on purchase transaction'
+    };
+  }
+}
+
+
+
+// Verificar disponibilidad
+async checkAvailability(
+  planetId: number, 
+  kilometersRequested: number
+): Promise<{
+  available: boolean,
+  currentAvailable: number,
+  message: string
+}> {
+  try {
+    const planetDoc = await this.firestore
+      .collection(this.COLLECTION_NAME)
+      .doc(planetId.toString())
+      .get()
+      .toPromise();
+
+    if (!planetDoc?.exists) {
+      return {
+        available: false,
+        currentAvailable: 0,
+        message: 'Planeta not found'
+      };
+    }
+
+    const planetData = planetDoc.data() as Planet;
+    const available = planetData.availableKilometers >= kilometersRequested;
+
+    return {
+      available,
+      currentAvailable: planetData.availableKilometers,
+      message: available 
+        ? `There´re available (${planetData.availableKilometers} km²)`
+        : `Not enough kilometers available (just ${planetData.availableKilometers} km²)`
+    };
+  } catch (error) {
+    console.error('Error verificando disponibilidad:', error);
+    return {
+      available: false,
+      currentAvailable: 0,
+      message: 'Error checking availabilty'
+    };
+  }
+}
+
+
+
+
+  //PROCESO DE COMPRA
+  async processPurchase(planetId: number, kilometersToBuy: number): Promise<{
+    success: boolean;
+    message: string;
+    transaction?: any;
+  }> {
+    try {
+      // 1. Verificar que el usuario esté logueado
+      const currentUser = await this.authService.getCurrentUser();
+      if (!currentUser) {
+        return {
+          success: false,
+          message: 'Debes estar logueado para realizar una compra'
+        };
+      }
+
+      // 2. Obtener y verificar el planeta
+      const planetDoc = this.firestore
+        .collection(this.COLLECTION_NAME)
+        .doc(planetId.toString());
+      
+      const planetSnapshot = await planetDoc.get().toPromise();
+      
+      if (!planetSnapshot?.exists) {
+        return {
+          success: false,
+          message: 'Planeta no encontrado'
+        };
+      }
+
+      const planetData = planetSnapshot.data() as any;
+
+      // 3. Verificar disponibilidad de kilómetros
+      if (!planetData.available || planetData.availableKilometers < kilometersToBuy) {
+        return {
+          success: false,
+          message: `Solo hay ${planetData.availableKilometers} km² disponibles`
+        };
+      }
+
+      // 4. Ejecutar la transacción de compra
+      return await this.firestore.firestore.runTransaction(async transaction => {
+        // 4.1 Actualizar kilómetros disponibles del planeta
+        const newAvailableKilometers = planetData.availableKilometers - kilometersToBuy;
+        transaction.update(planetDoc.ref, {
+          availableKilometers: newAvailableKilometers,
+          available: newAvailableKilometers > 0
+        });
+
+        // 4.2 Crear el registro de compra
+        const purchaseData = {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          planetId: planetId,
+          planetName: planetData.name,
+          kilometersPurchased: kilometersToBuy,
+          pricePerKilometer: planetData.price,
+          totalPrice: planetData.price * kilometersToBuy,
+          purchaseDate: firebase.firestore.Timestamp.now()
+        };
+
+        // 4.3 Guardar en la colección de compras
+        const purchaseRef = this.firestore.collection('purchases').doc();
+        transaction.set(purchaseRef.ref, purchaseData);
+
+        // 4.4 Actualizar los kilómetros del usuario
+        const userPlanetRef = this.firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('purchasedPlanets')
+        .doc(planetId.toString());
+
+        // Obtener datos previos si existen
+        const userPlanetDoc = await transaction.get(userPlanetRef.ref);
+        let currentTotalKilometers = 0;
+        let currentPurchases: any[] = [];
+
+        if (userPlanetDoc.exists) {
+        const data = userPlanetDoc.data() as {
+          totalKilometers: number;
+          purchases: any[];
+        };
+        // Accedemos a las propiedades usando notación de corchetes
+        currentTotalKilometers = data['totalKilometers'] || 0;
+        currentPurchases = data['purchases'] || [];
+        }
+
+        // 4.5 Actualizar el documento del planeta del usuario
+        transaction.set(userPlanetRef.ref, {
+        planetId: planetId,
+        planetName: planetData.name,
+        totalKilometers: currentTotalKilometers + kilometersToBuy,
+        lastPurchase: purchaseData,
+        purchases: [...currentPurchases, purchaseData]
+        }, { merge: true });
+
+        // 4.6 Actualizar el documento principal del usuario
+        const userRef = this.firestore.collection('users').doc(currentUser.uid);
+        transaction.update(userRef.ref, {
+          totalInvestment: firebase.firestore.FieldValue.increment(purchaseData.totalPrice),
+          lastPurchase: purchaseData
+        });
+
+        return {
+          success: true,
+          message: 'Compra realizada exitosamente',
+          transaction: purchaseData
+        };
+      });
+
+    } catch (error) {
+      console.error('Error en el proceso de compra:', error);
+      return {
+        success: false,
+        message: 'Error procesando la compra: ' + (error instanceof Error ? error.message : 'Error desconocido')
+      };
+    }
+  }
+}
+

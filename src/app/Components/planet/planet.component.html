@@ -4,38 +4,69 @@
         <div class="image-container">
             <img [src]="planet.imageUrl" [alt]="planet.name">
         </div>
-        <div class="oprational-container">
-
+        <div class="operational-container">
             <div class="info-container">
                 <h2>Type: {{ planet.type }}</h2>
                 <h2>Diameter: {{ planet.diameter }} km</h2>
                 <h2>Distance from Sun: {{ planet.distanceFromSun }} million km</h2>
+                <h2>Available Surface: {{ planet.availableKilometers | number }} km²</h2>
+                <h2>Total Surface: {{ planet.totalKilometers | number }} km²</h2>
                 <h2>Description:</h2>
-                <p>Description que viene de la base de datos o de donde</p>
+                <p>{{ planet.description}}</p>
                 <div class="price-tag">
-                    <p>Price (km2): ${{ planet.price | number }}</p>
+                    <p>Price per km²: ${{ planet.price | number }}</p>
+                    <p>Total Available: {{ planet.availableKilometers | number }} km²</p>
                 </div>
             </div>
-            <div class="button-purchase">
-                <button (click)="buyPlanet()" [disabled]="!planet.available">
-                    {{ planet.available ? 'Buy Now' : 'Sold Out' }}
-                </button>
+            
+            <!-- Formulario de compra -->
+            <div class="purchase-form" *ngIf="planet?.available">
+                <div class="input-group">
+                    <label for="kmInput">Kilometers to purchase:</label>
+                    <input 
+                        type="number" 
+                        id="kmInput"
+                        [(ngModel)]="kilometersInput"
+                        [attr.max]="planet.availableKilometers"
+                        [attr.min]="1"
+                        (ngModelChange)="calculateTotalPrice()">
+                </div>
+            
+                <div class="price-summary" *ngIf="kilometersInput > 0">
+                    <p>Total Price: ${{ calculatedPrice | number }}</p>
+                    <p>Selected Area: {{ kilometersInput | number }} km²</p>
+                </div>
+            
+                <div class="button-purchase">
+                    <button 
+                        (click)="buyPlanet()"
+                        [disabled]="!canPurchase"
+                        class="purchase-button">
+                        {{ purchaseButtonText }}
+                    </button>
+                </div>
+
+                <!-- Mensaje si no está dis ponible -->
+            <div class="sold-out" *ngIf="!planet.available">
+                <p class="error-message">This planet is currently sold out!</p>
             </div>
         </div>
     </div>
 </div>
 
     <app-comments-form
-    [itemId]="planet!.id" 
-    [itemType]="'planet'"
-    (commentAdded)="commentsListComponent.loadComments()">
-</app-comments-form>
-<app-comment-list
-    #commentsListComponent
-    [itemId]="planet!.id" 
-    [itemType]="'planet'">
-</app-comment-list>
+        [itemId]="planet.id" 
+        [itemType]="'planet'"
+        (commentAdded)="commentsListComponent.onCommentAdded($event)">
+    </app-comments-form>
 
-  <div *ngIf="error">{{ error }}</div>
+    <app-comment-list
+        #commentsListComponent
+        [itemId]="planet.id" 
+        [itemType]="'planet'">
+    </app-comment-list>
+</div>
 
-  <div *ngIf="!planet && !error">Loading planet details...</div>
+<div *ngIf="error">{{ error }}</div>
+<div *ngIf="!planet && !error">Loading planet details...</div>
+

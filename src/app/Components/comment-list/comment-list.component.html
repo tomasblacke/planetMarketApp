@@ -1,13 +1,15 @@
-<div class="comments-list">
-    <h3>Comements</h3>
-    <div *ngFor="let comment of comments" class="comment">
-        <div class="comment-header">
-            <strong>{{ comment.userName }}</strong>
-            <span class="date">{{ comment.date | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-        <p>{{ comment.text }}</p>
-    </div>
-    <div *ngIf="comments.length === 0" class="no-comments">
-        No comments yet. Be the frist one!
-    </div>
+<div *ngIf="comments.length > 0; else noComments">
+    <h2>Comentarios:</h2>
+    <ul>
+        <li *ngFor="let comment of comments">
+            <strong>{{ comment.userName }}</strong>: {{ comment.text }}
+            <br>
+            <small>{{ formatDate(comment.date) }}</small>
+        </li>
+    </ul>
 </div>
+
+<ng-template #noComments>
+    <p>No hay comentarios para mostrar.</p>
+</ng-template>
+
