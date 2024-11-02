@@ -12,6 +12,10 @@ import { CommentListComponent } from '../../Components/comment-list/comment-list
 export class PlanetComponent implements OnInit {
   planet: Planet | undefined;
   error: string | undefined;
+  kilometersInput: number = 0;
+  calculatedPrice: number = 0;
+  isProcessing: boolean = false;
+
   @ViewChild('commentsListComponent') commentListComponent!: CommentListComponent;
 
   constructor(
@@ -27,7 +31,9 @@ export class PlanetComponent implements OnInit {
       this.error = 'Invalid planet ID';
       return;
     }
-
+    this.loadPlanetData(planetId);
+  }
+  private loadPlanetData(planetId: number): void{
     this.planetService.getPlanetById(planetId).subscribe(
       planet => {
         console.log('Planet data received:', planet);
@@ -58,11 +64,57 @@ export class PlanetComponent implements OnInit {
       }
     );
   }
+  calculateTotalPrice(): void {
+    if (this.planet && this.kilometersInput > 0) {
+      this.calculatedPrice = this.kilometersInput * this.planet.price;
+    } else {
+      this.calculatedPrice = 0;
+    }
+  }
 
-  buyPlanet() {
-    if (this.planet) {
-      console.log(`Buying ${this.planet.name} for $${this.planet.price}`);
-      // Implementar lógica de compra
+  get canPurchase(): boolean {
+    return !this.isProcessing && 
+          this.planet != null && 
+          this.kilometersInput > 0 && 
+          this.kilometersInput <= this.planet.availableKilometers;
+  }
+
+  get purchaseButtonText(): string {
+    if (this.isProcessing) return 'Processing...';
+    if (!this.planet?.available) return 'Sold Out';
+    if (this.kilometersInput <= 0) return 'Enter amount to buy';
+    if (this.kilometersInput > this.planet.availableKilometers) 
+      return 'Amount exceeds available space';
+    return 'Buy Now';
+  }
+
+  async buyPlanet(): Promise<void> {
+    if (!this.planet || !this.canPurchase) return;
+
+    this.isProcessing = true;
+    try {
+      const result = await this.planetService.purchaseKilometers(
+        this.planet.id,
+        this.kilometersInput,
+        {
+          userId: 'user123', // Esto debería venir de tu servicio de autenticación
+          email: 'user@example.com'
+        }
+      );
+
+      if (result.success) {
+        alert('Purchase successful!');
+        this.loadPlanetData(this.planet.id);
+        this.kilometersInput = 0;
+        this.calculatedPrice = 0;
+      } else {
+        alert(result.message || 'Purchase failed');
+      }
+    } catch (error) {
+      console.error('Error during purchase:', error);
+      alert('An error occurred during the purchase');
+    } finally {
+      this.isProcessing = false;
     }
   }
 }
