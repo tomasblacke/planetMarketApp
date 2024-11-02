@@ -76,6 +76,7 @@ import { UserTripsReservationComponent } from './Components/user-trips-reservati
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    ReactiveFormsModule,
   ],
   providers: [NasaApiService,PlanetService],
   bootstrap: [AppComponent]
