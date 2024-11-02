@@ -1,0 +1,14 @@
+<div class="p-4">
+    <h2 class="text-xl mb-4">Inicialización de Planetas</h2>
+    
+    <button 
+      (click)="initializePlanets()"
+      [disabled]="isLoading"
+      class="bg-blue-500 text-white px-4 py-2 rounded">
+      {{ isLoading ? 'Cargando...' : 'Cargar Planetas' }}
+    </button>
+
+    <p *ngIf="message" [class]="messageClass" class="mt-4">
+      {{ message }}
+    </p>
+  </div>

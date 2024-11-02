@@ -38,6 +38,7 @@ import { UserProfileComponent } from './Components/user-profile/user-profile.com
 import { UserInfoComponent } from './Components/user-info/user-info.component';
 import { UserPlanetsComponent } from './Components/user-planets/user-planets.component';
 import { UserTripsReservationComponent } from './Components/user-trips-reservation/user-trips-reservation.component';
+import { PlanetInitializerComponent } from './Components/planet-initializar/planet-initializar.component';
 
 
 
@@ -66,7 +67,8 @@ import { UserTripsReservationComponent } from './Components/user-trips-reservati
     UserProfileComponent,
     UserInfoComponent,
     UserPlanetsComponent,
-    UserTripsReservationComponent
+    UserTripsReservationComponent,
+    PlanetInitializerComponent
   
   ],
   imports: [
