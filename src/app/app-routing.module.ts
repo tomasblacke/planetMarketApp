@@ -13,7 +13,7 @@ import { UserProfileComponent } from './Components/user-profile/user-profile.com
 import { UserInfoComponent } from './Components/user-info/user-info.component';
 import { UserPlanetsComponent } from './Components/user-planets/user-planets.component';
 import { UserTripsReservationComponent } from './Components/user-trips-reservation/user-trips-reservation.component';
-
+import { PlanetInitializerComponent } from './Components/planet-initializar/planet-initializar.component';
 
 
 const routes: Routes = [
@@ -37,7 +37,9 @@ const routes: Routes = [
     ]
     
   },
-  
+  /*
+  {path: 'init', component:PlanetInitializerComponent},//esto ya se uso una vez para la carga de planetas en firebase
+  */
   // Añadir otras rutas aca
   { path: '**', redirectTo: '' } // Ruta comodín, redirige a home
 ];
