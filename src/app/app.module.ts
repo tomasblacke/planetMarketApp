@@ -32,7 +32,7 @@ import { CommentListComponent} from './Components/comment-list/comment-list.comp
 import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environment } from '../Environments/environments';
+import { environment } from './Environments/environments';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { UserProfileComponent } from './Components/user-profile/user-profile.component';
 import { UserInfoComponent } from './Components/user-info/user-info.component';
@@ -76,6 +76,7 @@ import { UserTripsReservationComponent } from './Components/user-trips-reservati
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    ReactiveFormsModule,
   ],
   providers: [NasaApiService,PlanetService],
   bootstrap: [AppComponent]

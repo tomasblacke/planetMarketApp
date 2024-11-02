@@ -5,7 +5,7 @@ import { Comment } from '../../Interfaces/coments.interface';
 @Component({
   selector: 'app-comment-list',
   templateUrl: './comment-list.component.html',
-  styleUrl: './comment-list.component.css'
+  styleUrls: ['./comment-list.component.css']
 })
 export class CommentListComponent implements OnInit {
   @Input() itemId!: number;
@@ -18,13 +18,22 @@ export class CommentListComponent implements OnInit {
   ngOnInit() {
     this.loadComments();
   }
+
   loadComments() {
     this.commentServiceService.getComments(this.itemId, this.itemType)
       .subscribe(comments => this.comments = comments);
-      console.log('Loading comments for:', this.itemId, this.itemType)
+    console.log('Loading comments for:', this.itemId, this.itemType);
   }
-  onCommentAdded(comment: Comment) {
-    this.comments.push(comment);
-  }
+    // Método para formatear la fecha
+    formatDate(date: Date): string {
+      if (date instanceof Date && !isNaN(date.getTime())) {
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+      }
+      return '';
+    }
 
+  onCommentAdded(comment: Comment) {
+    this.comments.push(comment); // Agrega el nuevo comentario a la lista
+  }
 }
+

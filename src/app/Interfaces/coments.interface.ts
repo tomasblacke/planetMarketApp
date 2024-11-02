@@ -1,9 +1,10 @@
 export interface Comment {
-    id?: number;
-    itemId: number;  // ID del planeta o viaje
-    itemType: 'planet' | 'trip';  // Para distinguir si es un comentario de planeta o viaje
+    id: string; // Cambiado a string
+    itemId: number;
+    itemType: 'planet' | 'trip';
     userName: string;
     text: string;
     date: Date;
-    rating?: number;//Despues vemos si usamos
-}
+    rating?: number;
+  }
+  
