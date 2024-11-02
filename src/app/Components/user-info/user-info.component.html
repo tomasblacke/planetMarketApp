@@ -1,0 +1,30 @@
+<div class="user-info">
+    <h3>User Information</h3>
+    <form formGroup="userForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input 
+                id="name"
+                type="text"
+                formControlName="name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input 
+                id="email"
+                type="email"
+                formControlName="email">
+        </div>
+
+        <div class="form-group">
+            <label for="lastname">Last Name:</label>
+            <input 
+                id="lastname"
+                type="text"
+                formControlName="lastname">
+        </div>
+
+        <button type="submit" [disabled]="!userForm.valid">Save Changes</button>
+    </form>
+</div>

@@ -1,0 +1,23 @@
+<div class="profile-container">
+    <div class="sidebar">
+        <h2>Hi {{userName}}!</h2>
+        <div class="menu-buttons">
+            <button (click)="navigateTo('trips')" 
+                    [class.active]="isActive('trips')">
+                Mis Reservas
+            </button>
+            <button (click)="navigateTo('planets')"
+                    [class.active]="isActive('planets')">
+                Mis Planetas
+            </button>
+            <button (click)="navigateTo('info')"
+                    [class.active]="isActive('info')">
+                Mis Datos
+            </button>
+        </div>
+    </div>
+    
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

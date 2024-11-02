@@ -1,0 +1,16 @@
+<div class="planets-container">
+    <h3>My Planets</h3>
+    <div class="planets-grid" *ngIf="userPlanets.length > 0">
+      <div class="planet-card" *ngFor="let planet of userPlanets">
+        <img [src]="planet.imageUrl" [alt]="planet.name">
+        <div class="planet-details">
+            <h4>{{ planet.name }}</h4>
+            <p>Purchase Date: {{ planet.purchaseDate | date }}</p>
+            <p>Price: ${{ planet.price }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="no-planets" *ngIf="userPlanets.length === 0">
+        You haven't purchased any planets yet.
+    </div>
+</div>

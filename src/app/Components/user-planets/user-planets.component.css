@@ -1,0 +1,31 @@
+.planets-container {
+    padding: 20px;
+}
+.planets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.planet-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.planet-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.planet-details {
+    padding: 15px;
+}
+.no-planets {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+h3{
+    color: #D95032;
+}

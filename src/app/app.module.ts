@@ -2,6 +2,7 @@ import { ENVIRONMENT_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http'; 
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -33,6 +34,10 @@ import { RegisterComponent } from './Components/register/register.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../Environments/environments';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { UserProfileComponent } from './Components/user-profile/user-profile.component';
+import { UserInfoComponent } from './Components/user-info/user-info.component';
+import { UserPlanetsComponent } from './Components/user-planets/user-planets.component';
+import { UserTripsReservationComponent } from './Components/user-trips-reservation/user-trips-reservation.component';
 
 
 
@@ -57,7 +62,11 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     CommentsFormComponent,
     CommentListComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UserProfileComponent,
+    UserInfoComponent,
+    UserPlanetsComponent,
+    UserTripsReservationComponent
   
   ],
   imports: [
