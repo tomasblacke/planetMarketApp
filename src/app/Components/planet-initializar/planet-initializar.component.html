@@ -1,14 +1,39 @@
 <div class="p-4">
-    <h2 class="text-xl mb-4">Inicialización de Planetas</h2>
-    
+  <h2 class="text-xl mb-4">Panel de Inicialización</h2>
+  
+  <!-- Inicializar Colecciones -->
+  <div class="mb-6">
+    <button 
+      (click)="setupCollections()"
+      [disabled]="isSettingUp"
+      class="bg-blue-500 text-white px-4 py-2 rounded mr-4">
+      {{ isSettingUp ? 'Configurando...' : 'Configurar Colecciones' }}
+    </button>
+    <span *ngIf="setupMessage" [class]="setupSuccess ? 'text-green-500' : 'text-red-500'">
+      {{ setupMessage }}
+    </span>
+  </div>
+
+  <!-- Cargar Planetas -->
+  <div class="mb-6">
     <button 
       (click)="initializePlanets()"
       [disabled]="isLoading"
-      class="bg-blue-500 text-white px-4 py-2 rounded">
+      class="bg-green-500 text-white px-4 py-2 rounded">
       {{ isLoading ? 'Cargando...' : 'Cargar Planetas' }}
     </button>
-
-    <p *ngIf="message" [class]="messageClass" class="mt-4">
-      {{ message }}
-    </p>
+    <span *ngIf="loadMessage" [class]="loadSuccess ? 'text-green-500' : 'text-red-500'">
+      {{ loadMessage }}
+    </span>
   </div>
+
+  <!-- Estado actual -->
+  <div *ngIf="collectionsStatus" class="mt-8">
+    <h3 class="font-bold mb-2">Estado de las Colecciones:</h3>
+    <ul class="list-disc pl-5">
+      <li>Planets: {{ collectionsStatus.planets ? '✓' : '×' }}</li>
+      <li>Users: {{ collectionsStatus.users ? '✓' : '×' }}</li>
+      <li>Purchases: {{ collectionsStatus.purchases ? '✓' : '×' }}</li>
+    </ul>
+  </div>
+</div>

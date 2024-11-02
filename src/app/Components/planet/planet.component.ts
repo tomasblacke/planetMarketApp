@@ -88,33 +88,48 @@ export class PlanetComponent implements OnInit {
     return 'Buy Now';
   }
 
-  async buyPlanet(): Promise<void> {
-    if (!this.planet || !this.canPurchase) return;
+  async buyPlanet() {
+    if (!this.planet || !this.kilometersInput) {
+      alert('Por favor, ingresa la cantidad de kilómetros a comprar');
+      return;
+    }
 
-    this.isProcessing = true;
     try {
-      const result = await this.planetService.purchaseKilometers(
+      const result = await this.planetService.processPurchase(
         this.planet.id,
-        this.kilometersInput,
-        {
-          userId: 'user123', // Esto debería venir de tu servicio de autenticación
-          email: 'user@example.com'
-        }
+        this.kilometersInput
       );
 
       if (result.success) {
-        alert('Purchase successful!');
+        alert(result.message);
+        // Recargar información del planeta
         this.loadPlanetData(this.planet.id);
+        // Resetear el formulario
         this.kilometersInput = 0;
-        this.calculatedPrice = 0;
       } else {
-        alert(result.message || 'Purchase failed');
+        alert(result.message);
       }
     } catch (error) {
-      console.error('Error during purchase:', error);
-      alert('An error occurred during the purchase');
-    } finally {
-      this.isProcessing = false;
-    }
+      console.error('Error:', error);
+      alert('Error al procesar la compra');
+    } 
+  }
+
+  private handleSuccessfulPurchase(result: any): void {
+    alert('Purchase successful!');
+    // Recargar datos del planeta
+    this.loadPlanetData(this.planet!.id);
+    // Resetear formulario
+    this.kilometersInput = 0;
+    this.calculatedPrice = 0;
+  }
+
+  private handleFailedPurchase(message: string): void {
+    alert(message || 'Purchase failed');
+  }
+
+  private handlePurchaseError(error: any): void {
+    console.error('Error during purchase:', error);
+    alert('An error occurred during the purchase');
   }
 }

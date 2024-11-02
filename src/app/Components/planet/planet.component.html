@@ -12,7 +12,7 @@
                 <h2>Available Surface: {{ planet.availableKilometers | number }} km²</h2>
                 <h2>Total Surface: {{ planet.totalKilometers | number }} km²</h2>
                 <h2>Description:</h2>
-                <p>Description que viene de la base de datos o de donde</p>
+                <p>{{ planet.description}}</p>
                 <div class="price-tag">
                     <p>Price per km²: ${{ planet.price | number }}</p>
                     <p>Total Available: {{ planet.availableKilometers | number }} km²</p>

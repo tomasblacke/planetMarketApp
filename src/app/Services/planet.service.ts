@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, of, from } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { AuthService} from '../Services/user-auth.service';
+import firebase from 'firebase/compat/app'
 
 export interface Planet {
   id: number;
@@ -15,6 +17,7 @@ export interface Planet {
   available: boolean;
   totalKilometers: number;
   availableKilometers: number;
+  description: string;
 }
 
 @Injectable({
@@ -22,15 +25,19 @@ export interface Planet {
 })
 export class PlanetService {
   private readonly COLLECTION_NAME = 'planets';
+  
   private nasaApiKey = 'ccn605v3j7TiIR5kXUEBfOXrocFnCbQes3j1Oea1';
   private nasaImageApi = 'https://images-api.nasa.gov/search?q=';
   
   // Cache local de planetas
   private planetsCache: Planet[] = [];
 
+  
+
   constructor(
     private http: HttpClient,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private authService: AuthService
   ) {
     // Inicialiazmos cache para que el usuario una vez que carga tenga en una arreglo, depaso el servicio anterior se manejaba con arreglo asi que es lo mismo solo
     //que ahora cargamos de firebase el arreglo , lo hice asi para mantener las funcionalidades que habiamos implementado
@@ -58,7 +65,8 @@ export class PlanetService {
         price: 1000000, 
         available: true,
         totalKilometers: 74800000,
-        availableKilometers: 74800000
+        availableKilometers: 74800000,
+        description: 'The closest planet to the Sun and the smallest in the solar system.'
       },
       { 
         name: 'Venus', 
@@ -69,7 +77,8 @@ export class PlanetService {
         price: 2000000, 
         available: true,
         totalKilometers: 460200000,
-        availableKilometers: 460200000
+        availableKilometers: 460200000,
+        description: 'Known for its thick atmosphere and extreme greenhouse effect.'
       },
       { 
         name: 'Mars', 
@@ -80,7 +89,8 @@ export class PlanetService {
         price: 3000000, 
         available: true,
         totalKilometers: 144800000,
-        availableKilometers: 144800000
+        availableKilometers: 144800000,
+        description: 'The Red Planet, famous for its iron oxide surface and potential for past life.'
       },
       { 
         name: 'Earth Moon', 
@@ -91,7 +101,8 @@ export class PlanetService {
         price: 6000000, 
         available: true,
         totalKilometers: 37900000,
-        availableKilometers: 37900000
+        availableKilometers: 37900000,
+        description: 'Earth’s only natural satellite, with a unique influence on ocean tides.'
       },
       { 
         name: 'Jupiter', 
@@ -102,7 +113,8 @@ export class PlanetService {
         price: 5000000, 
         available: true,
         totalKilometers: 61419000000,
-        availableKilometers: 61419000000
+        availableKilometers: 61419000000,
+        description: 'The largest planet in the solar system, with a famous Great Red Spot storm.'
       },
       { 
         name: 'Saturn', 
@@ -113,7 +125,8 @@ export class PlanetService {
         price: 4500000, 
         available: true,
         totalKilometers: 42700000000,
-        availableKilometers: 42700000000
+        availableKilometers: 42700000000,
+        description: 'Famous for its extensive ring system and large number of moons.'
       },
       { 
         name: 'Uranus', 
@@ -124,7 +137,8 @@ export class PlanetService {
         price: 4000000, 
         available: true,
         totalKilometers: 8083000000,
-        availableKilometers: 8083000000
+        availableKilometers: 8083000000,
+        description: 'An ice giant with a unique tilted axis, giving it extreme seasonal changes.'
       },
       { 
         name: 'Neptune', 
@@ -135,7 +149,8 @@ export class PlanetService {
         price: 4000000, 
         available: true,
         totalKilometers: 7618000000,
-        availableKilometers: 7618000000
+        availableKilometers: 7618000000,
+        description: 'Known for its striking blue color and strong winds, the farthest planet from the Sun.'
       },
       { 
         name: 'Pluto', 
@@ -146,7 +161,8 @@ export class PlanetService {
         price: 3500000, 
         available: true,
         totalKilometers: 17000000,
-        availableKilometers: 17000000
+        availableKilometers: 17000000,
+        description: 'A dwarf planet in the Kuiper Belt, once considered the ninth planet.'
       },
       { 
         name: 'Ganymede Moon', 
@@ -157,7 +173,8 @@ export class PlanetService {
         price: 2500000, 
         available: true,
         totalKilometers: 87000000,
-        availableKilometers: 87000000
+        availableKilometers: 87000000,
+        description: 'Jupiter’s largest moon and the largest in the solar system, even bigger than Mercury.'
       },
       { 
         name: 'Titan Moon', 
@@ -168,7 +185,8 @@ export class PlanetService {
         price: 2400000, 
         available: true,
         totalKilometers: 83000000,
-        availableKilometers: 83000000
+        availableKilometers: 83000000,
+        description: 'Saturn’s largest moon, known for its thick atmosphere and lakes of methane.'
       },
       { 
         name: 'Europa Moon', 
@@ -179,7 +197,8 @@ export class PlanetService {
         price: 2200000, 
         available: true,
         totalKilometers: 30500000,
-        availableKilometers: 30500000
+        availableKilometers: 30500000,
+        description: 'Jupiter’s icy moon, speculated to have a subsurface ocean that may harbor life.'
       },
       { 
         name: 'Enceladus Moon', 
@@ -190,7 +209,8 @@ export class PlanetService {
         price: 2000000, 
         available: true,
         totalKilometers: 800000,
-        availableKilometers: 800000
+        availableKilometers: 800000,
+        description: 'One of Saturn’s moons, known for geysers ejecting water into space.'
       }
     ];
 
@@ -484,4 +504,127 @@ async checkAvailability(
     };
   }
 }
+
+
+
+
+  //PROCESO DE COMPRA
+  async processPurchase(planetId: number, kilometersToBuy: number): Promise<{
+    success: boolean;
+    message: string;
+    transaction?: any;
+  }> {
+    try {
+      // 1. Verificar que el usuario esté logueado
+      const currentUser = await this.authService.getCurrentUser();
+      if (!currentUser) {
+        return {
+          success: false,
+          message: 'Debes estar logueado para realizar una compra'
+        };
+      }
+
+      // 2. Obtener y verificar el planeta
+      const planetDoc = this.firestore
+        .collection(this.COLLECTION_NAME)
+        .doc(planetId.toString());
+      
+      const planetSnapshot = await planetDoc.get().toPromise();
+      
+      if (!planetSnapshot?.exists) {
+        return {
+          success: false,
+          message: 'Planeta no encontrado'
+        };
+      }
+
+      const planetData = planetSnapshot.data() as any;
+
+      // 3. Verificar disponibilidad de kilómetros
+      if (!planetData.available || planetData.availableKilometers < kilometersToBuy) {
+        return {
+          success: false,
+          message: `Solo hay ${planetData.availableKilometers} km² disponibles`
+        };
+      }
+
+      // 4. Ejecutar la transacción de compra
+      return await this.firestore.firestore.runTransaction(async transaction => {
+        // 4.1 Actualizar kilómetros disponibles del planeta
+        const newAvailableKilometers = planetData.availableKilometers - kilometersToBuy;
+        transaction.update(planetDoc.ref, {
+          availableKilometers: newAvailableKilometers,
+          available: newAvailableKilometers > 0
+        });
+
+        // 4.2 Crear el registro de compra
+        const purchaseData = {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          planetId: planetId,
+          planetName: planetData.name,
+          kilometersPurchased: kilometersToBuy,
+          pricePerKilometer: planetData.price,
+          totalPrice: planetData.price * kilometersToBuy,
+          purchaseDate: firebase.firestore.Timestamp.now()
+        };
+
+        // 4.3 Guardar en la colección de compras
+        const purchaseRef = this.firestore.collection('purchases').doc();
+        transaction.set(purchaseRef.ref, purchaseData);
+
+        // 4.4 Actualizar los kilómetros del usuario
+        const userPlanetRef = this.firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('purchasedPlanets')
+        .doc(planetId.toString());
+
+        // Obtener datos previos si existen
+        const userPlanetDoc = await transaction.get(userPlanetRef.ref);
+        let currentTotalKilometers = 0;
+        let currentPurchases: any[] = [];
+
+        if (userPlanetDoc.exists) {
+        const data = userPlanetDoc.data() as {
+          totalKilometers: number;
+          purchases: any[];
+        };
+        // Accedemos a las propiedades usando notación de corchetes
+        currentTotalKilometers = data['totalKilometers'] || 0;
+        currentPurchases = data['purchases'] || [];
+        }
+
+        // 4.5 Actualizar el documento del planeta del usuario
+        transaction.set(userPlanetRef.ref, {
+        planetId: planetId,
+        planetName: planetData.name,
+        totalKilometers: currentTotalKilometers + kilometersToBuy,
+        lastPurchase: purchaseData,
+        purchases: [...currentPurchases, purchaseData]
+        }, { merge: true });
+
+        // 4.6 Actualizar el documento principal del usuario
+        const userRef = this.firestore.collection('users').doc(currentUser.uid);
+        transaction.update(userRef.ref, {
+          totalInvestment: firebase.firestore.FieldValue.increment(purchaseData.totalPrice),
+          lastPurchase: purchaseData
+        });
+
+        return {
+          success: true,
+          message: 'Compra realizada exitosamente',
+          transaction: purchaseData
+        };
+      });
+
+    } catch (error) {
+      console.error('Error en el proceso de compra:', error);
+      return {
+        success: false,
+        message: 'Error procesando la compra: ' + (error instanceof Error ? error.message : 'Error desconocido')
+      };
+    }
+  }
 }
+
