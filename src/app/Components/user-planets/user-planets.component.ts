@@ -3,23 +3,30 @@ import { AuthService } from '../../Services/user-auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 interface UserPlanet {
-  id?: string;
-  userId: string;
-  name: string;
-  imageUrl: string;
-  purchaseDate: Date;
-  price: number;
+  planetId: string;
+  planetName: string;
+  totalKilometers: number;
+  planetType: string;
+  planetImage: string;
+  lastPurchaseDate: Date;
+  lastPurchaseAmount: number;
+  totalInvested: number;
+  purchases: {
+    date: Date;
+    kilometers: number;
+    price: number;
+  }[];
 }
-
 
 @Component({
   selector: 'app-user-planets',
   templateUrl: './user-planets.component.html',
-  styleUrl: './user-planets.component.css'
+  styleUrls: ['./user-planets.component.css']
 })
 export class UserPlanetsComponent implements OnInit {
-
   userPlanets: UserPlanet[] = [];
+  loading = true;
+  error: string | null = null;
 
   constructor(
     private authService: AuthService,
@@ -31,25 +38,28 @@ export class UserPlanetsComponent implements OnInit {
   }
 
   private loadUserPlanets(): void {
-    console.log('Se empiezan a cargar los planetas del usuario');
+    console.log('Iniciando carga de planetas del usuario');
     this.authService.getCurrentUser().then(user => {
-      console.log('Se recibe el planete', user?.uid);
       if (user) {
-        console.log('Se verifico el usuario')
+        console.log('Usuario autenticado:', user.uid);
         this.firestore
-          .collection<UserPlanet>('userPlanets', ref => 
-            ref.where('userId', '==', user.uid)
-          )
-          .valueChanges({ idField: 'id' })
-          .subscribe(planets => {
-            this.userPlanets = planets;
-            console.log('Planets loaded:', planets);
-          }, error => {
-            console.error('Error loading planets:', error);
-          });
+          .collection('users')
+          .doc(user.uid)
+          .collection<UserPlanet>('purchasedPlanets')
+          .valueChanges({ idField: 'planetId' })
+          .subscribe(
+            planets => {
+              console.log('Planetas cargados:', planets);
+              this.userPlanets = planets;
+              this.loading = false;
+            },
+            error => {
+              console.error('Error cargando planetas:', error);
+              this.error = 'Error cargando los planetas';
+              this.loading = false;
+            }
+          );
       }
-    }).catch(error => {
-      console.error('Error getting current user:', error);
     });
   }
 }

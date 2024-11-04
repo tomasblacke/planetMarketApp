@@ -15,6 +15,7 @@ export class PlanetComponent implements OnInit {
   kilometersInput: number = 0;
   calculatedPrice: number = 0;
   isProcessing: boolean = false;
+  isPlanetLoaded: boolean = false;
 
   @ViewChild('commentsListComponent') commentListComponent!: CommentListComponent;
 
@@ -38,7 +39,9 @@ export class PlanetComponent implements OnInit {
       planet => {
         console.log('Planet data received:', planet);
         this.planet = planet;
-        if (planet) {
+        if (planet && this.planet) {
+          console.log('Planet ID:', this.planet.id);
+          this.isPlanetLoaded = true;
           this.planetService.getPlanetImage(planet.name).subscribe(
             imageUrl => {
               if (this.planet) {
@@ -72,11 +75,11 @@ export class PlanetComponent implements OnInit {
     }
   }
 
-  get canPurchase(): boolean {
+  get isPurchaseValid(): boolean {
     return !this.isProcessing && 
-          this.planet != null && 
-          this.kilometersInput > 0 && 
-          this.kilometersInput <= this.planet.availableKilometers;
+           !!this.planet?.id && 
+           this.kilometersInput > 0 && 
+           this.kilometersInput <= (this.planet?.availableKilometers || 0);
   }
 
   get purchaseButtonText(): string {
@@ -89,31 +92,67 @@ export class PlanetComponent implements OnInit {
   }
 
   async buyPlanet() {
-    if (!this.planet || !this.kilometersInput) {
-      alert('Por favor, ingresa la cantidad de kilómetros a comprar');
-      return;
+    console.log("Iniciando proceso de compra:", {
+        planet: this.planet,
+        kilometersInput: this.kilometersInput
+    });
+
+    // 1. Validaciones mejoradas
+    if (!this.planet?.id) {
+        alert('Error: Planeta no válido');
+        return;
     }
 
-    try {
-      const result = await this.planetService.processPurchase(
-        this.planet.id,
-        this.kilometersInput
-      );
+    if (!this.kilometersInput || this.kilometersInput <= 0) {
+        alert('Por favor, ingresa una cantidad válida de kilómetros');
+        return;
+    }
 
-      if (result.success) {
-        alert(result.message);
-        // Recargar información del planeta
-        this.loadPlanetData(this.planet.id);
-        // Resetear el formulario
-        this.kilometersInput = 0;
-      } else {
-        alert(result.message);
-      }
+    if (this.kilometersInput > this.planet.availableKilometers) {
+        alert(`Solo hay ${this.planet.availableKilometers} km² disponibles`);
+        return;
+    }
+
+    // 2. Proceso de compra
+    try {
+        this.isProcessing = true; // Añadir esta propiedad si no la tienes
+
+        const result = await this.planetService.processPurchase(
+            this.planet.id,
+            this.kilometersInput
+        );
+
+        if (result.success) {
+            // 3. Actualización después de compra exitosa
+            await this.loadPlanetData(this.planet.id);
+            this.resetPurchaseForm();
+            alert('¡Compra realizada exitosamente!');
+        } else {
+            alert(result.message || 'Error en la compra');
+        }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error al procesar la compra');
-    } 
-  }
+        console.error('Error en la compra:', error);
+        alert('Error al procesar la compra. Por favor, intenta nuevamente.');
+    } finally {
+        this.isProcessing = false;
+    }
+}
+
+// Método auxiliar para reset
+private resetPurchaseForm(): void {
+    this.kilometersInput = 0;
+    this.calculatedPrice = 0;
+}
+
+// Agregar un getter para validación
+get canPurchase(): boolean {
+    return !this.isProcessing && 
+           !!this.planet?.id && 
+           this.kilometersInput > 0 && 
+           this.kilometersInput <= (this.planet?.availableKilometers || 0);
+}
+  
+  
 
   private handleSuccessfulPurchase(result: any): void {
     alert('Purchase successful!');

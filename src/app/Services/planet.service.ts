@@ -5,6 +5,7 @@ import { Observable, of, from } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { AuthService} from '../Services/user-auth.service';
 import firebase from 'firebase/compat/app'
+import 'firebase/compat/firestore'; 
 
 export interface Planet {
   id: number;
@@ -254,27 +255,50 @@ export class PlanetService {
   // Obtiene datos de los planetas
   getPlanets(): Observable<Planet[]> {
     return this.firestore.collection<Planet>(this.COLLECTION_NAME, ref => ref.orderBy('name'))
-      .valueChanges({ idField: 'id' }).pipe(
-        tap(planets => this.planetsCache = planets)
+      .valueChanges({ idField: 'id' })
+      .pipe(
+        tap(planets => {
+          console.log('Planets loaded:', planets);
+          this.planetsCache = planets; // Aca se actualiza el cache
+      })
       );
   }
 
   // Aca se implmeneto la buscqueda del id del planeta, para que sea mas rapido va primero al cache si no vuevle a firebase
   getPlanetById(id: number): Observable<Planet | undefined> {
 
+    console.log('Buscando planeta con ID en getid:', id);  // Debug log
+
+    // Primero buscar en el cache
     const cachedPlanet = this.planetsCache.find(p => p.id === id);
     if (cachedPlanet) {
-      return of(cachedPlanet);
+        console.log('Planeta encontrado en cache:', cachedPlanet); // Debug log
+        return of(cachedPlanet);
     }
 
-
+    // Si no está en cache, buscarlo en Firestore
     return this.firestore
-      .collection<Planet>(this.COLLECTION_NAME)
-      .doc(id.toString())
-      .valueChanges()
-      .pipe(
-        tap(planet => console.log('getPlanetById result:', planet))
-      );
+        .collection<Planet>(this.COLLECTION_NAME)
+        .doc(id.toString())
+        .valueChanges({ idField: 'id' })  // Importante: incluir el idField
+        .pipe(
+            tap(planet => {
+                console.log('Planeta obtenido de Firestore:', planet); // Debug log
+                if (planet) {
+                    // Asegurarnos que el ID está presente
+                    const planetWithId = { ...planet, id };
+                    // Actualizar cache
+                    const cacheIndex = this.planetsCache.findIndex(p => p.id === id);
+                    if (cacheIndex >= 0) {
+                        this.planetsCache[cacheIndex] = planetWithId;
+                    } else {
+                        this.planetsCache.push(planetWithId);
+                    }
+                    return planetWithId;
+                }
+                return planet;
+            })
+        );
   }
 
   // Funcion para admin que aregue planeta a mano
@@ -357,110 +381,6 @@ async deletePlanet(id: number): Promise<void> {
   }
 }
 
-// Comprar kilómetros cuadrados, no se si poner mas datos, lo vemos
-async purchaseKilometers(
-  planetId: number, 
-  kilometersToPurchase: number, 
-  buyerInfo?: { //obligamos a que no pueda estar vacio?
-    userId: string, 
-    email: string 
-  }
-): Promise<{ 
-  success: boolean, 
-  transaction?: any, 
-  message: string 
-}> {
-  try {
-    const planetRef = this.firestore
-      .collection(this.COLLECTION_NAME)
-      .doc(planetId.toString());
-
-    return await this.firestore.firestore.runTransaction(async transaction => {
-      const planetDoc = await transaction.get(planetRef.ref);
-
-      if (!planetDoc.exists) {
-        return {
-          success: false,
-          message: 'Planet not found'
-        };
-      }
-
-      const planetData = planetDoc.data() as Planet;
-
-
-
-      // Verificar disponibilidad
-      if (!planetData.available) {
-        return {
-          success: false,
-          message: 'Planet not available for purchase'
-        };
-      }
-
-
-
-      // Verificacion de kilometros disponibles
-      if (planetData.availableKilometers < kilometersToPurchase) {
-        return {
-          success: false,
-          message: `Just ${planetData.availableKilometers} km² available`
-        };
-      }
-
-      const newAvailableKilometers = planetData.availableKilometers - kilometersToPurchase;
-
-
-
-
-      // Actualizar planeta
-      transaction.update(planetRef.ref, {
-        availableKilometers: newAvailableKilometers,
-        available: newAvailableKilometers > 0
-      });
-
-
-
-
-      // Si se proporcionó información del comprador, registrar la transacción, esto va de la mane con el comentario al principio, creo que tendriamos que hacerlo obligatorio
-      if (buyerInfo) {
-        const purchaseRecord = {
-          planetId,
-          planetName: planetData.name,
-          kilometersPurchased: kilometersToPurchase,
-          purchaseDate: new Date(),
-          buyerId: buyerInfo.userId,
-          buyerEmail: buyerInfo.email,
-          pricePerKilometer: planetData.price,
-          totalPrice: planetData.price * kilometersToPurchase
-        };
-
-        const purchaseRef = this.firestore.collection('purchases').doc();
-        transaction.set(purchaseRef.ref, purchaseRecord);
-      }
-
-      return {
-        success: true,
-        transaction: {
-          planetId,
-          kilometersPurchased: kilometersToPurchase,
-          remainingKilometers: newAvailableKilometers,
-          timestamp: new Date()
-        },
-        message: 'Successful purchase'
-      };
-    });
-
-  } catch (error) {
-    console.error('Error on purchase transaction', error);
-    return {
-      success: false,
-      message: 'Error on purchase transaction'
-    };
-  }
-}
-
-
-
 // Verificar disponibilidad
 async checkAvailability(
   planetId: number, 
@@ -509,122 +429,126 @@ async checkAvailability(
 
 
   //PROCESO DE COMPRA
-  async processPurchase(planetId: number, kilometersToBuy: number): Promise<{
-    success: boolean;
-    message: string;
-    transaction?: any;
-  }> {
+  async processPurchase(
+    planetId: number,
+    kilometersToBuy: number
+): Promise<{ success: boolean; message: string; transaction?: any }> {
     try {
-      // 1. Verificar que el usuario esté logueado
-      const currentUser = await this.authService.getCurrentUser();
-      if (!currentUser) {
-        return {
-          success: false,
-          message: 'Debes estar logueado para realizar una compra'
-        };
-      }
-
-      // 2. Obtener y verificar el planeta
-      const planetDoc = this.firestore
-        .collection(this.COLLECTION_NAME)
-        .doc(planetId.toString());
-      
-      const planetSnapshot = await planetDoc.get().toPromise();
-      
-      if (!planetSnapshot?.exists) {
-        return {
-          success: false,
-          message: 'Planeta no encontrado'
-        };
-      }
-
-      const planetData = planetSnapshot.data() as any;
-
-      // 3. Verificar disponibilidad de kilómetros
-      if (!planetData.available || planetData.availableKilometers < kilometersToBuy) {
-        return {
-          success: false,
-          message: `Solo hay ${planetData.availableKilometers} km² disponibles`
-        };
-      }
-
-      // 4. Ejecutar la transacción de compra
-      return await this.firestore.firestore.runTransaction(async transaction => {
-        // 4.1 Actualizar kilómetros disponibles del planeta
-        const newAvailableKilometers = planetData.availableKilometers - kilometersToBuy;
-        transaction.update(planetDoc.ref, {
-          availableKilometers: newAvailableKilometers,
-          available: newAvailableKilometers > 0
-        });
-
-        // 4.2 Crear el registro de compra
-        const purchaseData = {
-          userId: currentUser.uid,
-          userEmail: currentUser.email,
-          planetId: planetId,
-          planetName: planetData.name,
-          kilometersPurchased: kilometersToBuy,
-          pricePerKilometer: planetData.price,
-          totalPrice: planetData.price * kilometersToBuy,
-          purchaseDate: firebase.firestore.Timestamp.now()
-        };
-
-        // 4.3 Guardar en la colección de compras
-        const purchaseRef = this.firestore.collection('purchases').doc();
-        transaction.set(purchaseRef.ref, purchaseData);
-
-        // 4.4 Actualizar los kilómetros del usuario
-        const userPlanetRef = this.firestore
-        .collection('users')
-        .doc(currentUser.uid)
-        .collection('purchasedPlanets')
-        .doc(planetId.toString());
-
-        // Obtener datos previos si existen
-        const userPlanetDoc = await transaction.get(userPlanetRef.ref);
-        let currentTotalKilometers = 0;
-        let currentPurchases: any[] = [];
-
-        if (userPlanetDoc.exists) {
-        const data = userPlanetDoc.data() as {
-          totalKilometers: number;
-          purchases: any[];
-        };
-        // Accedemos a las propiedades usando notación de corchetes
-        currentTotalKilometers = data['totalKilometers'] || 0;
-        currentPurchases = data['purchases'] || [];
+        const currentUser = await this.authService.getCurrentUser();
+        if (!currentUser) {
+            return {
+                success: false,
+                message: 'Debes estar logueado para realizar una compra'
+            };
         }
 
-        // 4.5 Actualizar el documento del planeta del usuario
-        transaction.set(userPlanetRef.ref, {
-        planetId: planetId,
-        planetName: planetData.name,
-        totalKilometers: currentTotalKilometers + kilometersToBuy,
-        lastPurchase: purchaseData,
-        purchases: [...currentPurchases, purchaseData]
-        }, { merge: true });
+        const planetRef = this.firestore
+            .collection(this.COLLECTION_NAME)
+            .doc(planetId.toString());
 
-        // 4.6 Actualizar el documento principal del usuario
-        const userRef = this.firestore.collection('users').doc(currentUser.uid);
-        transaction.update(userRef.ref, {
-          totalInvestment: firebase.firestore.FieldValue.increment(purchaseData.totalPrice),
-          lastPurchase: purchaseData
+        return await this.firestore.firestore.runTransaction(async transaction => {
+            // LECTURAS
+            // 1. Leer planeta
+            const planetDoc = await transaction.get(planetRef.ref);
+            if (!planetDoc.exists) {
+                return { success: false, message: 'Planeta no encontrado' };
+            }
+            const planetData = planetDoc.data() as any;
+
+            // 2. Leer datos del usuario
+            const userRef = this.firestore.collection('users').doc(currentUser.uid);
+            const userDoc = await transaction.get(userRef.ref);
+            const userData = userDoc.data() as any;
+
+            // 3. Leer datos de planetas del usuario
+            const userPlanetRef = this.firestore
+                .collection('users')
+                .doc(currentUser.uid)
+                .collection('purchasedPlanets')  // Subcolección para planetas comprados
+                .doc(planetId.toString());
+            const userPlanetDoc = await transaction.get(userPlanetRef.ref);
+
+            // Verificaciones
+            if (!planetData.available || planetData.availableKilometers < kilometersToBuy) {
+                return {
+                    success: false,
+                    message: `Solo hay ${planetData.availableKilometers} km² disponibles`
+                };
+            }
+
+            let currentTotalKilometers = 0;
+            let currentPurchases: any[] = [];
+            let currentTotalInvestment = userData?.totalInvestment || 0;
+
+            if (userPlanetDoc.exists) {
+                const data = userPlanetDoc.data() as { 
+                    totalKilometers: number; 
+                    purchases: any[] 
+                };
+                currentTotalKilometers = data['totalKilometers'] || 0;
+                currentPurchases = data['purchases'] || [];
+            }
+
+            const purchaseData = {
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                planetId,
+                planetName: planetData.name,
+                kilometersPurchased: kilometersToBuy,
+                pricePerKilometer: planetData.price,
+                totalPrice: planetData.price * kilometersToBuy,
+                purchaseDate: new Date()
+            };
+
+            // ESCRITURAS
+            // 1. Actualizar planeta
+            const newAvailableKilometers = planetData.availableKilometers - kilometersToBuy;
+            transaction.update(planetRef.ref, {
+                availableKilometers: newAvailableKilometers,
+                available: newAvailableKilometers > 0
+            });
+
+            // 2. Crear registro de compra
+            const purchaseRef = this.firestore.collection('purchases').doc();
+            transaction.set(purchaseRef.ref, purchaseData);
+
+            // 3. Actualizar datos de planetas del usuario
+            transaction.set(
+                userPlanetRef.ref,
+                {
+                    planetId,
+                    planetName: planetData.name,
+                    planetType: planetData.type,          // Agregado
+                    planetImage: planetData.imageUrl,     // Agregado
+                    totalKilometers: currentTotalKilometers + kilometersToBuy,
+                    totalInvested: (currentTotalKilometers + kilometersToBuy) * planetData.price, // Agregado
+                    lastPurchase: purchaseData,
+                    purchases: [...currentPurchases, purchaseData]
+                },
+                { merge: true }
+            );
+
+            // 4. Actualizar documento principal del usuario
+            transaction.update(userRef.ref, {
+                totalInvestment: currentTotalInvestment + purchaseData.totalPrice,
+                lastPurchase: purchaseData
+            });
+
+            return {
+                success: true,
+                message: 'Compra realizada exitosamente',
+                transaction: purchaseData
+            };
         });
 
-        return {
-          success: true,
-          message: 'Compra realizada exitosamente',
-          transaction: purchaseData
-        };
-      });
-
     } catch (error) {
-      console.error('Error en el proceso de compra:', error);
-      return {
-        success: false,
-        message: 'Error procesando la compra: ' + (error instanceof Error ? error.message : 'Error desconocido')
-      };
+        console.error('Error en el proceso de compra:', error);
+        return {
+            success: false,
+            message: 'Error procesando la compra: ' + (error instanceof Error ? error.message : 'Error desconocido')
+        };
     }
-  }
+}
+  
 }
 

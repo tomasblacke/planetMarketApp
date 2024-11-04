@@ -12,7 +12,7 @@
                 <h2>Available Surface: {{ planet.availableKilometers | number }} km²</h2>
                 <h2>Total Surface: {{ planet.totalKilometers | number }} km²</h2>
                 <h2>Description:</h2>
-                <p>{{ planet.description}}</p>
+                <p>{{ planet.description }}</p>
                 <div class="price-tag">
                     <p>Price per km²: ${{ planet.price | number }}</p>
                     <p>Total Available: {{ planet.availableKilometers | number }} km²</p>
@@ -20,7 +20,7 @@
             </div>
             
             <!-- Formulario de compra -->
-            <div class="purchase-form" *ngIf="planet?.available">
+            <div class="purchase-form" *ngIf="planet.available">
                 <div class="input-group">
                     <label for="kmInput">Kilometers to purchase:</label>
                     <input 
@@ -29,30 +29,31 @@
                         [(ngModel)]="kilometersInput"
                         [attr.max]="planet.availableKilometers"
                         [attr.min]="1"
+                        [disabled]="isProcessing"
                         (ngModelChange)="calculateTotalPrice()">
                 </div>
-            
+                
                 <div class="price-summary" *ngIf="kilometersInput > 0">
                     <p>Total Price: ${{ calculatedPrice | number }}</p>
                     <p>Selected Area: {{ kilometersInput | number }} km²</p>
                 </div>
-            
+
                 <div class="button-purchase">
                     <button 
                         (click)="buyPlanet()"
-                        [disabled]="!canPurchase"
+                        [disabled]="!isPurchaseValid || isProcessing"
                         class="purchase-button">
                         {{ purchaseButtonText }}
                     </button>
                 </div>
+            </div>
 
-                <!-- Mensaje si no está dis ponible -->
+            <!-- Mensaje si no está disponible -->
             <div class="sold-out" *ngIf="!planet.available">
                 <p class="error-message">This planet is currently sold out!</p>
             </div>
         </div>
     </div>
-</div>
 
     <app-comments-form
         [itemId]="planet.id" 
@@ -67,6 +68,5 @@
     </app-comment-list>
 </div>
 
-<div *ngIf="error">{{ error }}</div>
-<div *ngIf="!planet && !error">Loading planet details...</div>
-
+<div *ngIf="error" class="error-message">{{ error }}</div>
+<div *ngIf="!planet && !error" class="loading">Loading planet details...</div>

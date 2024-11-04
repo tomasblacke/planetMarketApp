@@ -1,16 +1,34 @@
 <div class="planets-container">
-    <h3>My Planets</h3>
-    <div class="planets-grid" *ngIf="userPlanets.length > 0">
-      <div class="planet-card" *ngFor="let planet of userPlanets">
-        <img [src]="planet.imageUrl" [alt]="planet.name">
-        <div class="planet-details">
-            <h4>{{ planet.name }}</h4>
-            <p>Purchase Date: {{ planet.purchaseDate | date }}</p>
-            <p>Price: ${{ planet.price }}</p>
+    <h3>Mis Planetas</h3>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading">
+        Cargando planetas...
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error" class="error">
+        {{ error }}
+    </div>
+
+    <!-- Planets grid -->
+    <div class="planets-grid" *ngIf="!loading && !error && userPlanets.length > 0">
+        <div class="planet-card" *ngFor="let planet of userPlanets">
+            <img [src]="planet.planetImage" [alt]="planet.planetName">
+            <div class="planet-details">
+                <h4>{{ planet.planetName }}</h4>
+                <p>Tipo: {{ planet.planetType }}</p>
+                <p>Kilómetros Totales: {{ planet.totalKilometers | number }} km²</p>
+                <p>Última Compra: {{ planet.lastPurchaseDate | date }}</p>
+                <p>Inversión Total: ${{ planet.totalInvested | number }}</p>
+                    
+                
             </div>
         </div>
     </div>
-    <div class="no-planets" *ngIf="userPlanets.length === 0">
-        You haven't purchased any planets yet.
+
+    <!-- Empty state -->
+    <div class="no-planets" *ngIf="!loading && !error && userPlanets.length === 0">
+        No has comprado ningún planeta aún.
     </div>
 </div>
