@@ -67,3 +67,7 @@ TAREA:
 /*----------------------------------------------------------------
 TEMA DE LOGEO ANGULAR - SPRINGBOOT:
 https://stackoverflow.com/questions/73630393/how-to-send-a-parameter-within-body-no-headers-from-angular-to-spring-boot
+/*---------------------------------------------------------------
+https://fontawesome.com/v4/icon/user libreria de logos, esta es el user
+/*------------------------------
+npm install jspdf html2canvas para poder crear los titulos de pdf

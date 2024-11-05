@@ -38,13 +38,9 @@ export class TripReservaIdComponent implements OnInit {
         this.calculateTotalPrice();
       }
     );
-    //const currentUser = this.authService.currentUserValue;
-    /*if (currentUser) {
-      this.mainPassenger.name = currentUser.name;
-      this.mainPassenger.email = currentUser.email;
-    }*/
+
   }
-  //----------------------------------------------------------------CALCULOS OPERASIONALES ------------------------
+  //----------------------------------------------------------------CALCULOS OPERACIONALES ------------------------
   addCompanion() {
     this.companions.push({ name: '', email: '' });
     this.calculateTotalPrice();

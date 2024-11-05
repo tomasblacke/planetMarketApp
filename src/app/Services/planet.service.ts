@@ -438,7 +438,7 @@ async checkAvailability(
         if (!currentUser) {
             return {
                 success: false,
-                message: 'Debes estar logueado para realizar una compra'
+                message: 'You must be logged'
             };
         }
 
@@ -447,28 +447,28 @@ async checkAvailability(
             .doc(planetId.toString());
 
         return await this.firestore.firestore.runTransaction(async transaction => {
-            // LECTURAS
-            // 1. Leer planeta
+            
+            // 1. Lee / busca datos del planeta
             const planetDoc = await transaction.get(planetRef.ref);
             if (!planetDoc.exists) {
                 return { success: false, message: 'Planeta no encontrado' };
             }
             const planetData = planetDoc.data() as any;
 
-            // 2. Leer datos del usuario
+            // 2. Lee / chequea datos del usuario logeado
             const userRef = this.firestore.collection('users').doc(currentUser.uid);
             const userDoc = await transaction.get(userRef.ref);
             const userData = userDoc.data() as any;
 
-            // 3. Leer datos de planetas del usuario
+          
             const userPlanetRef = this.firestore
                 .collection('users')
                 .doc(currentUser.uid)
-                .collection('purchasedPlanets')  // Subcolección para planetas comprados
+                .collection('purchasedPlanets')
                 .doc(planetId.toString());
             const userPlanetDoc = await transaction.get(userPlanetRef.ref);
 
-            // Verificaciones
+            // Verificar que lo que compre esta disponible
             if (!planetData.available || planetData.availableKilometers < kilometersToBuy) {
                 return {
                     success: false,
@@ -488,7 +488,7 @@ async checkAvailability(
                 currentTotalKilometers = data['totalKilometers'] || 0;
                 currentPurchases = data['purchases'] || [];
             }
-
+              //ingresamos la info
             const purchaseData = {
                 userId: currentUser.uid,
                 userEmail: currentUser.email,
@@ -499,36 +499,36 @@ async checkAvailability(
                 totalPrice: planetData.price * kilometersToBuy,
                 purchaseDate: new Date()
             };
-
-            // ESCRITURAS
-            // 1. Actualizar planeta
+              //Escribe en fb
+            
+            // Actualiza planeta
             const newAvailableKilometers = planetData.availableKilometers - kilometersToBuy;
             transaction.update(planetRef.ref, {
                 availableKilometers: newAvailableKilometers,
                 available: newAvailableKilometers > 0
             });
 
-            // 2. Crear registro de compra
+            //  Crea registro de compra
             const purchaseRef = this.firestore.collection('purchases').doc();
             transaction.set(purchaseRef.ref, purchaseData);
 
-            // 3. Actualizar datos de planetas del usuario
+            //  Actualizar datos de planetas del usuario
             transaction.set(
                 userPlanetRef.ref,
                 {
                     planetId,
                     planetName: planetData.name,
-                    planetType: planetData.type,          // Agregado
-                    planetImage: planetData.imageUrl,     // Agregado
+                    planetType: planetData.type,          
+                    planetImage: planetData.imageUrl,     
                     totalKilometers: currentTotalKilometers + kilometersToBuy,
-                    totalInvested: (currentTotalKilometers + kilometersToBuy) * planetData.price, // Agregado
+                    totalInvested: (currentTotalKilometers + kilometersToBuy) * planetData.price, 
                     lastPurchase: purchaseData,
                     purchases: [...currentPurchases, purchaseData]
                 },
                 { merge: true }
             );
 
-            // 4. Actualizar documento principal del usuario
+            //  Actualizar documento principal del usuario
             transaction.update(userRef.ref, {
                 totalInvestment: currentTotalInvestment + purchaseData.totalPrice,
                 lastPurchase: purchaseData

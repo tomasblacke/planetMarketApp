@@ -17,7 +17,7 @@
                 (input)="onSearch($event)"
                 (blur)="showResults = false"
             >
-            <!-- Contenedor para los resultados de búsqueda -->
+            <!-- Conatiner para mostrar los resultados -->
             <div class="search-results" *ngIf="showResults">
                 <div 
                     *ngFor="let result of searchResults" 
@@ -37,13 +37,13 @@
             </div>
         </div>
         <div class="nav-buttons">
-            <!-- Botones de login/register para usuarios no autenticados -->
+            <!-- Botones de login/register, desaparecen si esta logeado -->
             <ng-container *ngIf="!isLoggedIn">
                 <button routerLink="login">Log in</button>    
                 <button routerLink="register">Sign in</button>
             </ng-container>
         
-            <!-- Menú de usuario para usuarios autenticados -->
+            <!-- Menu para usuarios logeados -->
             <div *ngIf="isLoggedIn" class="user-menu-container">
                 <div class="user-info" (click)="toggleUserMenu()">
                     <div class="user-icon">

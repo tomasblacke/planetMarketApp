@@ -40,7 +40,7 @@ export class PlanetInitializerComponent {
   }
 
   async setupCollections() {
-    if (!confirm('¿Estás seguro? Esto configurará las colecciones necesarias.')) {
+    if (!confirm('Cargamos ?')) { // un extra de seguridad para resetear todo
       return;
     }
 
@@ -61,24 +61,14 @@ export class PlanetInitializerComponent {
           createdAt: new Date(),
           isInitialDocument: true
         });
-
-        // Crear índices necesarios (esto es informativo, los índices se crean en Firebase Console)
-        const indexInfo = `
-          Necesitas crear los siguientes índices en Firebase Console:
-          1. Collection: purchases
-             Fields: userId ASC, purchaseDate DESC
-          2. Collection: users/{userId}/purchasedPlanets
-             Fields: planetId ASC, purchaseDate DESC
-        `;
         
-        console.info(indexInfo);
-
+        //LOS INDICES SE CREAN EN FIREBase
         this.setupMessage = 'Colecciones configuradas exitosamente';
         this.setupSuccess = true;
       }
     } catch (error) {
       console.error('Error setting up collections:', error);
-      this.setupMessage = 'Error configurando colecciones: ' + (error instanceof Error ? error.message : 'Error desconocido');
+      this.setupMessage = 'Error configurando colecciones: ' + (error instanceof Error ? error.message : 'Error');
       this.setupSuccess = false;
     } finally {
       this.isSettingUp = false;
@@ -87,7 +77,7 @@ export class PlanetInitializerComponent {
   }
 
   async initializePlanets() {
-    if (!confirm('¿Estás seguro? Esto cargará los planetas iniciales.')) {
+    if (!confirm('¿Estás seguro? cARGARA LOS PLANETAS AL SISTEMA')) {
       return;
     }
 

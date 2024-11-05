@@ -21,3 +21,4 @@ describe('TiendaStarsComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+//ESTA NO ESTA EN USO, NO SE LLEGO EN EL DISEÇO DE TODO
