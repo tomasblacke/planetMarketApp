@@ -1,15 +1,19 @@
-<div *ngIf="comments.length > 0; else noComments">
+<div class="comments-container">
     <h2>Comentarios:</h2>
-    <ul>
-        <li *ngFor="let comment of comments">
-            <strong>{{ comment.userName }}</strong>: {{ comment.text }}
-            <br>
-            <small>{{ formatDate(comment.date) }}</small>
-        </li>
-    </ul>
+    
+    <div *ngIf="comments.length > 0; else noComments">
+        <ul class="comment-list">
+            <li *ngFor="let comment of comments" class="comment-item">
+                <div class="comment-content">
+                    <strong class="comment-username">{{ comment.userName }}</strong>
+                    <p class="comment-text">{{ comment.text }}</p>
+                    <small class="comment-date">{{ formatDate(comment.date) }}</small>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <ng-template #noComments>
+        <p class="no-comments">No hay comentarios para mostrar.</p>
+    </ng-template>
 </div>
-
-<ng-template #noComments>
-    <p>No hay comentarios para mostrar.</p>
-</ng-template>
-
