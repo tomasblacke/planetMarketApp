@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../Services/user-auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { PdfService } from '../../Services/pdf.service';
+import { UserPurchasedPlanetsService } from '../../Services/user-purchased-planets.service';
+
 
 interface UserPlanet {
   planetId: string;
@@ -17,6 +20,10 @@ interface UserPlanet {
     price: number;
   }[];
 }
+interface UserData {
+  name: string;
+  lastname: string;
+}
 
 @Component({
   selector: 'app-user-planets',
@@ -25,12 +32,16 @@ interface UserPlanet {
 })
 export class UserPlanetsComponent implements OnInit {
   userPlanets: UserPlanet[] = [];
+  
   loading = true;
   error: string | null = null;
 
   constructor(
     private authService: AuthService,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private pdfService: PdfService,
+    private UserPurchasedPlanetsService: UserPurchasedPlanetsService
+
   ) {}
 
   ngOnInit(): void {
@@ -62,4 +73,33 @@ export class UserPlanetsComponent implements OnInit {
       }
     });
   }
+  async downloadCertificate(planet: UserPlanet) {
+    try {
+      const user = await this.authService.getCurrentUser();
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const userDoc = await this.firestore
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .toPromise();
+
+      const userData = userDoc?.data() as UserData;
+      
+      if (userData) {
+        // Extraemos específicamente name y lastname
+        const userInfo = {
+          name: userData.name,
+          lastname: userData.lastname
+        };
+        
+        await this.pdfService.generatePlanetTittleCertificatePDF(planet, userInfo);
+      }
+    } catch (error) {
+      console.error('Error generando certificado:', error);
+    }
+  }
+
 }
