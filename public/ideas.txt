@@ -71,3 +71,5 @@ https://stackoverflow.com/questions/73630393/how-to-send-a-parameter-within-body
 https://fontawesome.com/v4/icon/user libreria de logos, esta es el user
 /*------------------------------
 npm install jspdf html2canvas para poder crear los titulos de pdf
+/*---------------------------------------------------------------
+En caso de tirar error chunk-35ENWJA4.js?v=b1bbc48c:56 POST es debido al addblocker de algunos navegadores,solo desactivarlo y funciona 
