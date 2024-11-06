@@ -22,6 +22,11 @@
                 <p>Última Compra: {{ planet.lastPurchaseDate | date }}</p>
                 <p>Inversión Total: ${{ planet.totalInvested | number }}</p>
                     
+                <button 
+                        (click)="downloadCertificate(planet)"
+                        class="certificate-button">
+                        Descargar Certificado
+                </button>
                 
             </div>
         </div>

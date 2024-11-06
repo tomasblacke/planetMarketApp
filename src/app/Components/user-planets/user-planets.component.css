@@ -32,3 +32,28 @@ h3{
 p{
     color: #020F59;
 }
+.certificate-button {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #D95032; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.certificate-button:hover {
+    background-color: #c4452b;
+}
+
+.certificate-button:active {
+    transform: translateY(1px);
+}
