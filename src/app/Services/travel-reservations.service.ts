@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 export interface SpaceTrip {
   id: number;
@@ -12,7 +13,6 @@ export interface SpaceTrip {
   imageUrl: string;
   priceByPassanger: number;
 }
-
 
 @Injectable({
   providedIn: 'root'
@@ -76,12 +76,17 @@ export class TravelReservationsService {
     },
     
   ];
+
+  constructor(private firestore: AngularFirestore) {}
+
   getTrips(): Observable<SpaceTrip[]> {
     return of(this.trips);
   }
+
   getTripById(id: number): Observable<SpaceTrip | undefined> {
     return of(this.trips.find(trip => trip.id === id));
   }
+
   /* MISMO CASO QUE EL DE PLANETAS PERO PARA TRIPS */
   searchTrips(term: string): Promise<any[]> {
     return new Promise(resolve => {
@@ -92,5 +97,21 @@ export class TravelReservationsService {
       resolve(results);
     });
   }
-  /*constructor() { }*/
+
+  // Nueva función para agregar un viaje a Firebase
+  addTripToFirebase(trip: SpaceTrip): Promise<void> {
+    const id = this.firestore.createId();
+    return this.firestore.collection('trips').doc(id).set(trip);
+  }
+
+  // Función para agregar todos los viajes hardcodeados a Firebase
+  addAllTripsToFirebase(): void {
+    this.trips.forEach(trip => {
+      this.addTripToFirebase(trip).then(() => {
+        console.log(`Trip to ${trip.destination} added successfully!`);
+      }).catch(error => {
+        console.error(`Error adding trip to ${trip.destination}:`, error);
+      });
+    });
+  }
 }
