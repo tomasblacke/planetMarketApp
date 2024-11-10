@@ -113,7 +113,7 @@ export class TravelReservationsService {
     });
   }
 
-  async processPurchase(
+  /*async processPurchase(
     tripId: string,
     seatsToBuy: number
   ): Promise<{ success: boolean; message: string; transaction?: any }> {
@@ -222,7 +222,133 @@ export class TravelReservationsService {
       };
     }
   }
+  */
+ 
+  async processPurchase(
+    tripId: string,
+    seatsToBuy: number
+  ): Promise<{ success: boolean; message: string; transaction?: any }> {
+    try {
+      const currentUser = await this.authService.getCurrentUser();
+      if (!currentUser) {
+        return {
+          success: false,
+          message: 'You must be logged in'
+        };
+      }
   
+      const tripsQuerySnapshot = await this.firestore
+        .collection(this.COLLECTION_NAME)
+        .ref
+        .where('id', '==', parseInt(tripId))
+        .get();
   
+      if (tripsQuerySnapshot.empty) {
+        console.error(`Trip with ID ${tripId} not found.`);
+        return { 
+          success: false, 
+          message: 'Viaje no encontrado' 
+        };
+      }
+  
+      const tripRef = this.firestore
+        .collection(this.COLLECTION_NAME)
+        .doc(tripsQuerySnapshot.docs[0].id);
+  
+      return await this.firestore.firestore.runTransaction(async transaction => {
+        const tripDoc = await transaction.get(tripRef.ref);
+        if (!tripDoc.exists) {
+          console.error(`Trip with ID ${tripId} not found in transaction.`);
+          return { success: false, message: 'Viaje no encontrado' };
+        }
+  
+        console.log(`Trip data found:`, tripDoc.data());
+        
+        const tripData = tripDoc.data() as SpaceTrip;
+        const userRef = this.firestore.collection('users').doc(currentUser.uid);
+        const userDoc = await transaction.get(userRef.ref);
+        const userData = userDoc.data() as any;
+  
+        const userTripRef = this.firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .collection('purchasedTrips')
+          .doc(tripDoc.id); // Usamos el ID del documento aquí
+  
+        const userTripDoc = await transaction.get(userTripRef.ref);
+  
+        if (tripData.availableSeats < seatsToBuy) {
+          return {
+            success: false,
+            message: `Solo hay ${tripData.availableSeats} asientos disponibles`
+          };
+        }
+  
+        let currentTotalSeats = 0;
+        let currentPurchases: any[] = [];
+        let currentTotalInvestment = userData?.totalInvestment || 0;
+  
+        if (userTripDoc.exists) {
+          const data = userTripDoc.data() as {
+            totalSeats: number;
+            purchases: any[];
+          };
+          currentTotalSeats = data.totalSeats || 0;
+          currentPurchases = data.purchases || [];
+        }
+  
+        const purchaseData = {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          tripId: tripDoc.id, // Usamos el ID del documento
+          tripTitle: tripData.title,
+          seatsPurchased: seatsToBuy,
+          pricePerSeat: tripData.priceByPassanger,
+          totalPrice: tripData.priceByPassanger * seatsToBuy,
+          purchaseDate: new Date()
+        };
+  
+        const newAvailableSeats = tripData.availableSeats - seatsToBuy;
+        transaction.update(tripRef.ref, {
+          availableSeats: newAvailableSeats
+        });
+  
+        const purchaseRef = this.firestore.collection('purchases').doc();
+        transaction.set(purchaseRef.ref, purchaseData);
+  
+        transaction.set(
+          userTripRef.ref,
+          {
+            tripId: tripDoc.id, // Usamos el ID del documento
+            tripTitle: tripData.title,
+            tripDescription: tripData.description,
+            tripImage: tripData.imageUrl,
+            totalSeats: currentTotalSeats + seatsToBuy,
+            totalInvested: (currentTotalSeats + seatsToBuy) * tripData.priceByPassanger,
+            lastPurchase: purchaseData,
+            purchases: [...currentPurchases, purchaseData]
+          },
+          { merge: true }
+        );
+  
+        transaction.update(userRef.ref, {
+          totalInvestment: currentTotalInvestment + purchaseData.totalPrice,
+          lastPurchase: purchaseData
+        });
+  
+        return {
+          success: true,
+          message: 'Compra realizada exitosamente',
+          transaction: purchaseData
+        };
+      });
+    } catch (error) {
+      console.error('Error en el proceso de compra:', error);
+      return {
+        success: false,
+        message: 'Error procesando la compra: ' + (error instanceof Error ? error.message : 'Error desconocido')
+      };
+    }
+  }
   
 }
