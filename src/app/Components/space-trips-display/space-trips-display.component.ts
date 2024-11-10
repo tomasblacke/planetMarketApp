@@ -15,7 +15,7 @@ export class SpaceTripsDisplayComponent implements OnInit  {
 
   ngOnInit() {
     // Llamada para agregar todos los viajes hardcodeados a Firebase
-    this.travelReservationsService.addAllTripsToFirebase();
+    //this.travelReservationsService.addAllTripsToFirebase(); //FUNCION QUE AGREGA HARDCODEADOS LOS PLANETAS
 
     // Llamada para obtener los viajes y asignarlos a la variable trips
     this.travelReservationsService.getTrips().subscribe(
