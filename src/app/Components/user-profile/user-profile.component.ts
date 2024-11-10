@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/user-auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { TripNotificationService } from '../../Services/trip-notification-service.service'
 
 @Component({
   selector: 'app-user-profile',
@@ -15,10 +16,12 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private firestore: AngularFirestore,
-    private router: Router  
+    private router: Router,
+    private tripNotificationService: TripNotificationService,
   ) {}
 
   ngOnInit() {
+
     this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.userName = user.displayName || 'Usuario';
@@ -30,6 +33,7 @@ export class UserProfileComponent implements OnInit {
           });
       }
     });
+    this.requestNotificationPermission();
   }
 
 
@@ -39,5 +43,11 @@ export class UserProfileComponent implements OnInit {
 
   isActive(route: string): boolean {
     return this.router.url.includes(`/profile/${route}`);
+  }
+  private async requestNotificationPermission() {
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission();
+      // Podrías guardar esta preferencia en el perfil del usuario
+    }
   }
 }

@@ -40,8 +40,7 @@ import { UserPlanetsComponent } from './Components/user-planets/user-planets.com
 import { UserTripsReservationComponent } from './Components/user-trips-reservation/user-trips-reservation.component';
 import { PlanetInitializerComponent } from './Components/planet-initializar/planet-initializar.component';
 
-
-
+import { TripNotificationService } from './Services/trip-notification-service.service';
 
 
 @NgModule({
@@ -68,7 +67,8 @@ import { PlanetInitializerComponent } from './Components/planet-initializar/plan
     UserInfoComponent,
     UserPlanetsComponent,
     UserTripsReservationComponent,
-    PlanetInitializerComponent
+    PlanetInitializerComponent,
+ 
   
   ],
   imports: [
@@ -80,7 +80,7 @@ import { PlanetInitializerComponent } from './Components/planet-initializar/plan
     AngularFirestoreModule,
     ReactiveFormsModule,
   ],
-  providers: [NasaApiService,PlanetService],
+  providers: [NasaApiService,PlanetService, TripNotificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TravelReservationsService, SpaceTrip } from '../../Services/travel-reservations.service';
+import { TripNotificationService } from 'src/app/Services/trip-notification-service.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Subscription } from 'rxjs';
 
 interface Passenger {
   name: string;
@@ -12,11 +15,14 @@ interface Passenger {
   templateUrl: './trip-reserva-id.component.html',
   styleUrls: ['./trip-reserva-id.component.css']
 })
-export class TripReservaIdComponent implements OnInit {
+export class TripReservaIdComponent implements OnInit, OnDestroy {
   trip: SpaceTrip | undefined;
   mainPassenger: Passenger = { name: '', email: '' };
   companions: Passenger[] = [];
-  totalPrice: number = 0; 
+  totalPrice: number = 0;
+  showNotification: boolean = false;
+  private checkInterval: any;
+  private subscriptions: Subscription[] = [];
 
   reservationForm = {
     name: '',
@@ -26,31 +32,69 @@ export class TripReservaIdComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private travelReservationsService: TravelReservationsService
+    private travelReservationsService: TravelReservationsService,
+    private tripNotificationService: TripNotificationService,
+    private firestore: AngularFirestore
   ) { }
 
   ngOnInit(): void {
     const tripId = this.route.snapshot.paramMap.get('id')!;
-    console.log(`Trip ID: ${tripId}`); // Verifica el ID
-    this.travelReservationsService.getTripById(parseInt(tripId, 10)).subscribe(
-      trip => {
-        this.trip = trip;
-        if (this.trip) {
-          console.log(`Trip loaded:`, this.trip);
-          this.calculateTotalPrice();
-        } else {
-          console.error(`Trip with ID ${tripId} not found.`);
-        }
-      },
-      error => {
-        console.error(`Error loading trip with ID ${tripId}:`, error);
-      }
-    );
+    this.loadTripData(tripId);
+    this.requestNotificationPermission();
   }
-  
-  
 
-  //----------------------------------------------------------------CALCULOS OPERACIONALES ------------------------
+  ngOnDestroy(): void {
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+    }
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  private async requestNotificationPermission() {
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        this.tripNotificationService.initNotificationCheck();
+      }
+    }
+  }
+
+  private loadTripData(tripId: string) {
+    const sub = this.firestore.collection('trips').doc(tripId)
+      .valueChanges()
+      .subscribe(data => {
+        this.trip = data as SpaceTrip;
+        if (this.trip) {
+          this.checkIfTripIsUpcoming();
+          this.calculateTotalPrice();
+        }
+      });
+    this.subscriptions.push(sub);
+  }
+
+  private checkIfTripIsUpcoming() {
+    if (!this.trip?.departure) return;
+
+    const checkNotification = () => {
+      const departureDate = new Date(this.trip!.departure).getTime();
+      const now = new Date().getTime();
+      const twoDaysInMs = 2 * 24 * 60 * 60 * 1000;
+      const timeUntilDeparture = departureDate - now;
+
+      if (timeUntilDeparture <= twoDaysInMs && timeUntilDeparture > 0) {
+        this.showNotification = true;
+        this.tripNotificationService.forceCheck();
+      }
+    };
+
+    checkNotification();
+    this.checkInterval = setInterval(checkNotification, 1000 * 60 * 60); // Cada hora
+  }
+
+  dismissNotification() {
+    this.showNotification = false;
+  }
+
   addCompanion() {
     this.companions.push({ name: '', email: '' });
     this.calculateTotalPrice();
@@ -63,12 +107,10 @@ export class TripReservaIdComponent implements OnInit {
 
   calculateTotalPrice() {
     if (this.trip) {
-      const numberOfPassengers = this.companions.length + 1; // +1 for main passenger
-      this.totalPrice = this.trip!.priceByPassanger * numberOfPassengers;
+      const numberOfPassengers = this.companions.length + 1;
+      this.totalPrice = this.trip.priceByPassanger * numberOfPassengers;
     }
   }
-
-  //----------------------------------------------------------------PROCESSING----------------------------------------------------------------
 
   onSubmit() {
     if (this.trip) {
@@ -86,9 +128,7 @@ export class TripReservaIdComponent implements OnInit {
         .catch(error => {
           console.error('Error during reservation process:', error);
         });
+      this.tripNotificationService.forceCheck();
     }
   }
-  
-  
-  
 }
