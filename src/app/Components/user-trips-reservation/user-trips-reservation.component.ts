@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { UserServiceService } from 'src/app/Services/user-service.service';
+import { UserReservationsService } from 'src/app/Services/user-reservations.service';
 
 
 @Component({
@@ -13,7 +13,7 @@ export class UserTripsReservationComponent implements OnInit {
 
   userReservations$!: Observable<any[]>;
 
-  constructor(private userService: UserServiceService) { }
+  constructor(private userService: UserReservationsService) { }
 
   ngOnInit(): void {
     // Llamamos al servicio para obtener las reservas del usuario
