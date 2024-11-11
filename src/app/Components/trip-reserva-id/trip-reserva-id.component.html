@@ -3,7 +3,6 @@
     <div id="info-trip">
         <img [src]="trip.imageUrl" [alt]="trip.title">
         <div id="info-details">
-
             <p>{{ trip.description }}</p>
             <p>Departure: {{ trip.departure | date:'dd/MM/yyyy' }}</p>
             <p>Origin: {{ trip.origin }}</p>
@@ -14,17 +13,17 @@
 
             <h2>Book this trip</h2>
             <form (ngSubmit)="onSubmit()">
-            <h3>Main Passanger</h3>
-            <div>
-                <label for="name">Name:</label>
-                <input id="name" [(ngModel)]="mainPassenger.name" name="name" required>
-            </div>
-
+                <h3>Main Passanger</h3>
+                <div>
+                    <label for="name">Name:</label>
+                    <input id="name" [(ngModel)]="mainPassenger.name" name="name" required>
+                </div>
                 <div>
                     <label for="email">Email:</label>
                     <input id="email" type="email" [(ngModel)]="mainPassenger.email" name="email" required>
                 </div>
                 <br>
+
                 <h3>Companions</h3>
                 <div *ngFor="let companion of companions; let i = index">
                     <h4>Companion {{ i + 1 }}</h4>
@@ -43,19 +42,24 @@
                 
                 <p>Total Price: ${{ totalPrice }}</p>
                 <button type="submit">Confirm Reservation</button>
+            </form>
 
-        </form>
+            <!-- Mensaje de éxito -->
+            <div *ngIf="successMessage" class="success-message">
+                {{ successMessage }}
+            </div>
         </div>
     </div>
 </div>
+
 <app-comments-form
-[itemId]="trip!.id" 
-[itemType]="'trip'"
-(commentAdded)="commentsListComponent.loadComments()">
+  [itemId]="trip!.id" 
+  [itemType]="'trip'"
+  (commentAdded)="commentsListComponent.loadComments()">
 </app-comments-form>
+
 <app-comment-list
-#commentsListComponent
-[itemId]="trip!.id" 
-[itemType]="'trip'">
+  #commentsListComponent
+  [itemId]="trip!.id" 
+  [itemType]="'trip'">
 </app-comment-list>
-<!--Hay que ver si cuando este en la API le aseguramos que la trip esta o que puede verni null. si no lo cambiamos ?-->

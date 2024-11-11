@@ -38,4 +38,10 @@ input{
 }
 
 
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
 /*NO LO PROOBAMOS NI UN POCO*/

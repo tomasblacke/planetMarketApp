@@ -80,6 +80,8 @@ export class TravelReservationsService {
 
   constructor(private firestore: AngularFirestore, private authService: AuthService) {}
 
+  
+
   getTrips(): Observable<SpaceTrip[]> {
     return of(this.trips);
   }
@@ -112,6 +114,8 @@ export class TravelReservationsService {
       });
     });
   }
+
+
 
   /*async processPurchase(
     tripId: string,
