@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TravelReservationsService, SpaceTrip } from '../../Services/travel-reservations.service';
+import { SpaceTrip } from 'src/app/Services/travel-reservations.service';
+import { TravelReservationsService } from 'src/app/Services/travel-reservations.service';
 
 interface Passenger {
   name: string;
@@ -17,12 +18,7 @@ export class TripReservaIdComponent implements OnInit {
   mainPassenger: Passenger = { name: '', email: '' };
   companions: Passenger[] = [];
   totalPrice: number = 0; 
-
-  reservationForm = {
-    name: '',
-    email: '',
-    passengers: 1
-  };
+  successMessage: string = ''; // Variable para el mensaje de éxito
 
   constructor(
     private route: ActivatedRoute,
@@ -31,12 +27,10 @@ export class TripReservaIdComponent implements OnInit {
 
   ngOnInit(): void {
     const tripId = this.route.snapshot.paramMap.get('id')!;
-    console.log(`Trip ID: ${tripId}`); // Verifica el ID
     this.travelReservationsService.getTripById(parseInt(tripId, 10)).subscribe(
       trip => {
         this.trip = trip;
         if (this.trip) {
-          console.log(`Trip loaded:`, this.trip);
           this.calculateTotalPrice();
         } else {
           console.error(`Trip with ID ${tripId} not found.`);
@@ -48,9 +42,6 @@ export class TripReservaIdComponent implements OnInit {
     );
   }
   
-  
-
-  //----------------------------------------------------------------CALCULOS OPERACIONALES ------------------------
   addCompanion() {
     this.companions.push({ name: '', email: '' });
     this.calculateTotalPrice();
@@ -68,17 +59,27 @@ export class TripReservaIdComponent implements OnInit {
     }
   }
 
-  //----------------------------------------------------------------PROCESSING----------------------------------------------------------------
-
   onSubmit() {
     if (this.trip) {
       const totalPassengers = this.companions.length + 1;
-      console.log(`Attempting to purchase ${totalPassengers} seats for trip ID ${this.trip.id}`);
   
       this.travelReservationsService.processPurchase(this.trip.id.toString(), totalPassengers)
         .then(response => {
           if (response.success) {
             console.log('Reservation submitted successfully:', response.transaction);
+
+            // Limpiar el formulario
+            this.mainPassenger = { name: '', email: '' };
+            this.companions = [];
+            this.calculateTotalPrice();
+
+            // Mostrar mensaje de éxito
+            this.successMessage = 'Reserva exitosa';
+
+            // Ocultar mensaje después de unos segundos
+            setTimeout(() => {
+              this.successMessage = '';
+            }, 3000);
           } else {
             console.error('Error processing reservation:', response.message);
           }
@@ -88,7 +89,4 @@ export class TripReservaIdComponent implements OnInit {
         });
     }
   }
-  
-  
-  
 }

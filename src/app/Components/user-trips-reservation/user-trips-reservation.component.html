@@ -1,1 +1,28 @@
-<p>user-trips-reservation works!</p>
+<!-- user-trips.component.html -->
+<div *ngIf="userReservations$ | async as reservations; else loading">
+    <div *ngIf="reservations.length > 0; else noReservations">
+      <h3>Mis Reservas</h3>
+      <div class="reservation-list">
+        <div *ngFor="let reservation of reservations" class="reservation-card">
+          <img [src]="reservation.tripImage" alt="Trip Image" class="reservation-image">
+          <div class="reservation-details">
+            <h4>{{ reservation.tripTitle }}</h4>
+            <p>{{ reservation.tripDescription }}</p>
+            <p><strong>Asientos: </strong>{{ reservation.totalSeats }}</p>
+            <p><strong>Total invertido: </strong>{{ reservation.totalInvested | currency }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Caso de no tener reservas -->
+    <ng-template #noReservations>
+      <p>No tienes reservas aún.</p>
+    </ng-template>
+  </div>
+  
+  <!-- Loader mientras se cargan las reservas -->
+  <ng-template #loading>
+    <p>Cargando tus reservas...</p>
+  </ng-template>
+  
