@@ -39,6 +39,8 @@ import { UserInfoComponent } from './Components/user-info/user-info.component';
 import { UserPlanetsComponent } from './Components/user-planets/user-planets.component';
 import { UserTripsReservationComponent } from './Components/user-trips-reservation/user-trips-reservation.component';
 import { PlanetInitializerComponent } from './Components/planet-initializar/planet-initializar.component';
+import { AdminManagementComponent } from './Components/admin-management/admin-management.component';
+import { PurchasesComponent } from './Components/purchases/purchases.component'; // Importar el nuevo componente
 
 
 
@@ -68,7 +70,9 @@ import { PlanetInitializerComponent } from './Components/planet-initializar/plan
     UserInfoComponent,
     UserPlanetsComponent,
     UserTripsReservationComponent,
-    PlanetInitializerComponent
+    PlanetInitializerComponent,
+    AdminManagementComponent,
+    PurchasesComponent,
   
   ],
   imports: [

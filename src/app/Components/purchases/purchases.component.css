@@ -1,0 +1,54 @@
+/* Estilo general para el contenedor de compras */
+h2 {
+    color: white; /* Color del texto del título */
+}
+
+/* Contenedor de la lista de compras */
+ul {
+    list-style-type: none; /* Eliminar viñetas */
+    padding: 0; /* Sin padding */
+}
+
+/* Estilo para cada compra */
+/* Estilo para cada compra */
+li {
+    background-color: white; /* Fondo blanco para cada compra */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 15px; /* Espaciado interno */
+    margin: 10px 0; /* Margen entre las compras */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+}
+
+/* Estilo para el encabezado de cada compra */
+li h3 {
+    margin: 0; /* Sin margen */
+    color: #1a1a2e; /* Color del texto del encabezado */
+}
+
+/* Estilo para los párrafos */
+li p {
+    margin: 5px 0; /* Margen entre párrafos */
+    color: #333; /* Color del texto */
+}
+
+/* Estilo para el contenedor principal */
+div {
+    background-color: #1a1a2e; /* Fondo azul oscuro */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados del contenedor */
+}
+
+/* Estilo para los botones (si los hay en este componente) */
+button {
+    background-color: orange; /* Fondo naranja para los botones */
+    color: white; /* Color del texto del botón */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 15px; /* Espaciado interno */
+    cursor: pointer; /* Cambiar el cursor al pasar por encima */
+    transition: background-color 0.3s; /* Transición suave para el fondo */
+}
+
+button:hover {
+    background-color: darkorange; /* Color de fondo al pasar el mouse */
+}

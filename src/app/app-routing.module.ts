@@ -14,7 +14,8 @@ import { UserInfoComponent } from './Components/user-info/user-info.component';
 import { UserPlanetsComponent } from './Components/user-planets/user-planets.component';
 import { UserTripsReservationComponent } from './Components/user-trips-reservation/user-trips-reservation.component';
 import { PlanetInitializerComponent } from './Components/planet-initializar/planet-initializar.component';
-
+import { AdminManagementComponent } from './Components/admin-management/admin-management.component';
+import { PurchasesComponent } from './Components/purchases/purchases.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -24,6 +25,8 @@ const routes: Routes = [
   { path: 'planets', component: TiendaPlanetsComponent},
   { path: 'planets/:planetID', component: PlanetComponent},// este nos va a llevar a la data de cada planeta
   {path: 'login',component: LoginComponent},
+  { path: 'admin-management', component: AdminManagementComponent },
+  {path:'purchases', component: PurchasesComponent},
   {path:'register',component: RegisterComponent},
   {
     path: 'profile',

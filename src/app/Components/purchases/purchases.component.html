@@ -1,0 +1,16 @@
+<div>
+    <h2>Lista de Compras</h2>
+    <ul>
+        <li *ngFor="let purchase of purchases">
+            <h3>{{ purchase.tripTitle || purchase.planetName }}</h3>
+            <p><strong>ID del Viaje o Planeta:</strong> {{ purchase.tripId || purchase.planetId }}</p>
+            <p><strong>Kilómetros Comprados:</strong> {{ purchase.kilometersPurchased || 0 }}</p>
+            <p><strong>Asientos Comprados:</strong> {{ purchase.seatsPurchased || 0 }}</p>
+            <p><strong>Precio por Kilómetro o Asiento:</strong> {{ purchase.pricePerKilometer || purchase.pricePerSeat | currency }}</p>
+            <p><strong>Precio Total:</strong> {{ purchase.totalPrice | currency }}</p>
+            <p><strong>Fecha de Compra:</strong> {{ purchase.purchaseDate | date:'short' }}</p>
+            <p><strong>Email del Usuario:</strong> {{ purchase.userEmail }}</p>
+            <p><strong>ID del Usuario:</strong> {{ purchase.userId }}</p>
+          </li>
+    </ul>
+</div>
