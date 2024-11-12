@@ -10,6 +10,11 @@
             <p>{{ reservation.tripDescription }}</p>
             <p><strong>Asientos: </strong>{{ reservation.totalSeats }}</p>
             <p><strong>Total invertido: </strong>{{ reservation.totalInvested | currency }}</p>
+            <button 
+            (click)="downloadTicketPDF(reservation)"
+            class="certificate-button">
+            Descargar Certificado
+    </button>
           </div>
         </div>
       </div>
