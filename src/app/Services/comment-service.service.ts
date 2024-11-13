@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Comment } from '../Interfaces/coments.interface';
-import { Firestore, collection, getDocs, addDoc, query, where, Timestamp, getFirestore } from 'firebase/firestore'; // Importa Timestamp aquí
+import { Firestore, collection, getDocs, addDoc, query, where, Timestamp, getFirestore,deleteDoc,doc } from 'firebase/firestore'; // Importa Timestamp aquí
 import { initializeApp } from 'firebase/app';
 import { environment } from 'src/app/Environments/environments';
 
@@ -55,16 +55,37 @@ export class CommentServiceService {
     const commentsCollection = collection(this.db, 'comments');
 
     return new Observable<Comment>(observer => {
-      addDoc(commentsCollection, comment).then(docRef => {
-        const newComment: Comment = {
-          ...comment,
-          id: docRef.id, // Convertir id a number, o asignar 0 como valor por defecto
-        };
+        addDoc(commentsCollection, {
+            itemId: comment.itemId,
+            itemType: comment.itemType,
+            userName: comment.userName,
+            text: comment.text,
+            date: comment.date // Asegúrate de que esto esté en el formato correcto
+        }).then(docRef => {
+            const newComment: Comment = {
+                ...comment,
+                id: docRef.id, // Asigna el ID generado por Firestore
+            };
 
-        observer.next(newComment);
+            observer.next(newComment);
+            observer.complete();
+        }).catch(error => {
+            console.error('Error al agregar comentario:', error);
+            observer.error(error);
+        });
+    });
+}
+
+
+  deleteComment(commentId: string): Observable<void> {
+    const commentDoc = doc(this.db, 'comments', commentId);
+    
+    return new Observable<void>(observer => {
+      deleteDoc(commentDoc).then(() => {
+        observer.next();
         observer.complete();
       }).catch(error => {
-        console.error('Error al agregar comentario:', error);
+        console.error('Error al eliminar comentario:', error);
         observer.error(error);
       });
     });

@@ -1,0 +1,67 @@
+/* Estilos generales para la sección de administración */
+h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    color: #444;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 15px 0;
+  }
+  
+  /* Estilo para el botón */
+  button {
+    background-color: #007bff; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el mouse */
+  }
+  
+  /* Estilo para los formularios */
+  .add-trip-form {
+    background-color: #f9f9f9; /* Color de fondo del formulario */
+    border: 1px solid #ddd; /* Borde del formulario */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    margin-top: 10px; /* Margen superior */
+  }
+  
+  label {
+    display: block; /* Muestra las etiquetas en una nueva línea */
+    margin-bottom: 5px; /* Margen inferior */
+  }
+  
+  input, textarea {
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 4px; /* Bordes redondeados */
+    margin-bottom: 15px; /* Margen inferior */
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield; /* Elimina los estilos de spinner en Firefox */
+  }
+  
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Elimina los estilos de spinner en Chrome */
+  }
+  
+  /* Mensajes de éxito/error */
+  p {
+    color: #d9534f; /* Color rojo para mensajes de error */
+  }
+  
+  p.ng-valid {
+    color: #5cb85c; /* Color verde para mensajes de éxito */
+  }

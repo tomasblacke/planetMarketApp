@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from '@firebase/auth-types';
-import { Observable } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 
 //import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -13,8 +13,25 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  user$: Observable<any>;
 
-  constructor(private fireauth: AngularFireAuth, private router: Router, private firestore: AngularFirestore) { }
+  constructor(private fireauth: AngularFireAuth, private router: Router, private firestore: AngularFirestore) {
+    this.user$ = this.fireauth.authState.pipe(
+      switchMap(user => {
+        if (user && user.email) { // Asegúrate de que user.email no sea null
+          // Verifica si el correo del usuario está en la colección de administradores
+          return this.firestore.collection('admins').doc(user.email).valueChanges().pipe(
+            map((adminData: any) => ({
+              uid: user.uid,
+              email: user.email,
+              isAdmin: adminData !== undefined // Si existe, el usuario es admin
+            }))
+          );
+        }
+        return of(null); // Si no hay usuario, retorna null
+      })
+    );
+  }
   //login method
   login(email: string, password: string) {
     this.fireauth.signInWithEmailAndPassword(email, password)
@@ -82,6 +99,13 @@ export class AuthService {
       this.router.navigate(['']);
     })
   }
+
+  isAdmin(email: string): Observable<boolean> {
+    return this.firestore.collection('admins').doc(email).valueChanges().pipe(
+      map(admin => admin !== undefined) // Devuelve true si el documento existe
+    );
+  }
+  
   //FOR STATE MANAGEMENT
   // Nuevo método para observar el estado de autenticación
   getAuthState(): Observable<any> {

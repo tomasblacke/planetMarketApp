@@ -57,6 +57,9 @@
                         <li><a (click)="goToProfile()">Mi Perfil</a></li>
                         <li><a (click)="goToSettings()">Configuración</a></li>
                         <li><button (click)="logout()">Cerrar Sesión</button></li>
+                        <li *ngIf="(authService.user$ | async)?.isAdmin">
+                            <button (click)="goToAdmin()">Administración</button>
+                        </li>
                     </ul>
                 </div>
             </div>

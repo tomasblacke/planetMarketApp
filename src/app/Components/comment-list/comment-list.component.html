@@ -8,6 +8,9 @@
                     <strong class="comment-username">{{ comment.userName }}</strong>
                     <p class="comment-text">{{ comment.text }}</p>
                     <small class="comment-date">{{ formatDate(comment.date) }}</small>
+                    <button *ngIf="isAdmin" (click)="deleteComment(comment.id)" class="delete-button">
+                        &#10006; <!-- Este es un símbolo de cruz -->
+                    </button>
                 </div>
             </li>
         </ul>
