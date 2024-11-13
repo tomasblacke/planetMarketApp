@@ -100,9 +100,19 @@ export class TravelReservationsService {
     });
   }
 
+  // addTripToFirebase(trip: SpaceTrip): Promise<void> {
+  //   const id = this.firestore.createId();
+  //   return this.firestore.collection('trips').doc(id).set(trip);
+  // }
   addTripToFirebase(trip: SpaceTrip): Promise<void> {
-    const id = this.firestore.createId();
-    return this.firestore.collection('trips').doc(id).set(trip);
+    const id = this.firestore.createId(); // Genera un nuevo ID
+    trip.id = parseInt(id); // Asigna el ID generado al viaje
+    return this.firestore.collection(this.COLLECTION_NAME).doc(id).set(trip)
+      .then(() => console.log(`Viaje ${trip.title} agregado exitosamente.`))
+      .catch(error => {
+        console.error("Error al agregar el viaje: ", error);
+        throw error; // Propagar el error para manejarlo en el componente
+      });
   }
 
   addAllTripsToFirebase(): void {

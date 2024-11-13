@@ -9,25 +9,23 @@ import { AuthService } from '../../Services/user-auth.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
   private searchTerms = new Subject<string>();
   searchResults: any[] = [];
   showResults = false;
-//USERS MANAGEMENT
   isLoggedIn: boolean = false;
   userDisplayName: string = '';
   showUserMenu: boolean = false;
-
+  isAdmin: boolean = false; // Propiedad para verificar si el usuario es admin
 
   constructor(
     private router: Router,
     private planetService: PlanetService,
     private tripService: TravelReservationsService,
-    private authService: AuthService,
+    public authService: AuthService,
   ) {
-   
     this.searchTerms.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -41,10 +39,19 @@ export class HeaderComponent {
       this.searchResults = results;
       this.showResults = results.length > 0;
     });
+
+    // Suscribirse al estado de autenticación
     this.authService.getAuthState().subscribe(user => {
-      this.isLoggedIn = !!user;
+      this.isLoggedIn = !!user; // Verifica si hay un usuario autenticado
       if (user) {
         this.userDisplayName = user.displayName || 'Usuario';
+        
+        // Verifica si el usuario es admin
+        this.authService.isAdmin(user.email).subscribe(isAdmin => {
+          this.isAdmin = isAdmin; // Actualiza la propiedad isAdmin
+        });
+      } else {
+        this.isAdmin = false; // Si no hay usuario, no es admin
       }
     });
   }
@@ -115,6 +122,10 @@ Sintaxis moderna: Es una característica estándar de ES6+
   // Método para navegar a configuración
   goToSettings() {
     this.router.navigate(['/settings']);
+    this.showUserMenu = false;
+  }
+  goToAdmin() {
+    this.router.navigate(['/admin-management']); // Asegúrate de que la ruta esté definida
     this.showUserMenu = false;
   }
 

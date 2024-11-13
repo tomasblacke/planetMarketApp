@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/user-auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-profile',
@@ -11,6 +12,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 export class UserProfileComponent implements OnInit {
   userName: string = '';
   userData: any = null;
+  user$: Observable<any> | undefined;
 
   constructor(
     private authService: AuthService,
@@ -22,16 +24,14 @@ export class UserProfileComponent implements OnInit {
     this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.userName = user.displayName || 'Usuario';
-        this.firestore.collection('users').doc(user.uid)
-          .valueChanges()
-          .subscribe(data => {
-            console.log('User data:', data);
-            this.userData = data;
-          });
+        this.user$ = this.firestore.collection('users').doc(user.uid).valueChanges();
+        this.user$.subscribe(data => {
+          console.log('User  data:', data);
+          this.userData = data;
+        });
       }
     });
   }
-
 
   navigateTo(route: string) {
     this.router.navigate(['profile', route]);

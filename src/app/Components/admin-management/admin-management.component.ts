@@ -1,34 +1,13 @@
 import { Component } from '@angular/core';
 import { AdminService } from '../../Services/admin.service'; 
 import {Router} from '@angular/router';
+import { TravelReservationsService,SpaceTrip } from 'src/app/Services/travel-reservations.service';
 
 @Component({
   selector: 'app-admin-management',
-  template: `
-    <div>
-      <h2>Gestión de Administradores</h2>
-      <button (click)="toggleAdminSection()">
-        {{ showAdminSection ? 'Ocultar' : 'Mostrar' }} Sección de Administración
-      </button>
-      <div *ngIf="showAdminSection">
-        <h3>Agregar Administrador</h3>
-        <input [(ngModel)]="addAdminEmail" placeholder="Correo del administrador" />
-        <button (click)="addAdmin()">Agregar</button>
-        <p *ngIf="addAdminMessage">{{ addAdminMessage }}</p>
+  templateUrl: './admin-management.component.html',
+  styleUrls: ['./admin-management.component.css']
 
-        <h3>Eliminar Administrador</h3>
-        <input [(ngModel)]="deleteAdminEmail" placeholder="Correo del administrador" />
-        <button (click)="deleteAdmin()">Eliminar</button>
-        <p *ngIf="deleteAdminMessage">{{ deleteAdminMessage }}</p>
-
-        <h3>Verificar Administrador</h3>
-        <input [(ngModel)]="checkAdminEmail" placeholder="Ingresa el correo" />
-        <button (click)="checkAdmin()">Verificar</button>
-        <p *ngIf="checkAdminMessage">{{ checkAdminMessage }}</p>
-        <h3><button (click)="goToPurchases()">Ver Compras</button></h3> <!-- Botón para ir a compras -->
-      </div>
-    </div>
-  `
 })
 export class AdminManagementComponent {
   showAdminSection: boolean = false;
@@ -38,11 +17,30 @@ export class AdminManagementComponent {
   deleteAdminMessage: string | null = null;
   checkAdminEmail: string = '';
   checkAdminMessage: string | null = null;
+  showAddTripSection: boolean = false;
 
-  constructor(private adminService: AdminService,private router:Router) {}
+  //PROPIEDADES DE ADMIN PARA AGREGAR VIJAE
+  newTrip: SpaceTrip = {
+    id: 0,
+    title: '',
+    description: '',
+    departure: new Date(),
+    origin: '',
+    destination: '',
+    availableSeats: 1,
+    priceByPassanger: 0,
+    imageUrl: ''
+  };
+  addTripMessage: string | null = null;
+
+
+  constructor(private adminService: AdminService,private router:Router,private travelReservationsService: TravelReservationsService) {}
 
   toggleAdminSection() {
     this.showAdminSection = !this.showAdminSection;
+  }
+  toggleAddTripSection() {
+    this.showAddTripSection = !this.showAddTripSection;
   }
 
   addAdmin() {
@@ -77,5 +75,24 @@ export class AdminManagementComponent {
       }
       goToPurchases() {
         this.router.navigate(['/purchases']); // Asegúrate de que la ruta sea correcta
+      }
+      addTrip() {
+        this.travelReservationsService.addTripToFirebase(this.newTrip).then(() => {
+          this.addTripMessage = 'Viaje agregado exitosamente.';
+          // Limpiar el formulario
+          this.newTrip = {
+            id: 0,
+            title: '',
+            description: '',
+            departure: new Date(),
+            origin: '',
+            destination: '',
+            availableSeats: 1,
+            priceByPassanger: 0,
+            imageUrl: ''
+          };
+        }).catch(error => {
+          this.addTripMessage = 'Error al agregar el viaje: ' + error.message;
+        });
       }
     }
