@@ -1,8 +1,6 @@
-<div *ngIf="trip$ | async as trip; else notFound" class="trip-details">
+<div *ngIf="trip; else notFound" class="trip-details">
     <h1>{{ trip.title }}</h1>
     <div id="info-trip">
-        
-        <!-- Mostrar imagen con un cargador si no está completamente cargada -->
         <img [src]="trip.imageUrl" [alt]="trip.title" *ngIf="trip.imageUrl; else noImage" (load)="onImageLoad()" [class.loading]="isImageLoading">
         
         <div id="info-details">
@@ -47,7 +45,7 @@
                 <button type="submit">Confirm Reservation</button>
             </form>
 
-            <!-- Mensaje de éxito -->
+
             <div *ngIf="successMessage" class="success-message">
                 {{ successMessage }}
             </div>
@@ -55,14 +53,12 @@
     </div>
 </div>
 
-<!-- Plantilla alternativa para cuando no se encuentre el viaje -->
 <ng-template #notFound>
     <div class="error-message">
         <p>Trip not found. Please check the ID and try again.</p>
     </div>
 </ng-template>
 
-<!-- Plantilla alternativa para cuando no hay imagen disponible -->
 <ng-template #noImage>
     <p class="no-image-text">No Image Available</p>
 </ng-template>

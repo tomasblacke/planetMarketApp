@@ -21,7 +21,7 @@ export interface SpaceTrip {
   providedIn: 'root'
 })
 export class TravelReservationsService {
-  private COLLECTION_NAME = 'trips'; // Asegúrate de que este sea el nombre correcto de tu colección
+  private COLLECTION_NAME = 'trips'; 
 
   constructor(private firestore: AngularFirestore, private authService: AuthService) {}
 
@@ -35,7 +35,7 @@ export class TravelReservationsService {
     return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME, ref => ref.where('id', '==', id))
       .valueChanges()
       .pipe(
-        map((trips: SpaceTrip[]) => trips.length > 0 ? trips[0] : undefined) // Especifica el tipo de `trips` aquí
+        map((trips: SpaceTrip[]) => trips.length > 0 ? trips[0] : undefined) 
       );
   }
 
@@ -64,7 +64,19 @@ export class TravelReservationsService {
       });
   }
 
-  // Método para agregar todos los viajes de una vez a Firebase (puedes usarlo para migrar los datos iniciales)
+  /*addTripToFirebase(trip: SpaceTrip): Promise<void> {
+    const id = this.firestore.createId(); // Genera un nuevo ID
+    trip.id = parseInt(id); // Asigna el ID generado al viaje
+    return this.firestore.collection(this.COLLECTION_NAME).doc(id).set(trip)
+      .then(() => console.log('Viaje ${trip.title} agregado exitosamente.'))
+      .catch(error => {
+        console.error("Error al agregar el viaje: ", error);
+        throw error; // Propagar el error para manejarlo en el componente
+      });
+  }*/
+
+
+  // Método para agregar todos los viajes de una vez a Firebase 
   /*addAllTripsToFirebase(): void {
     const trips: SpaceTrip[] = [
       {
@@ -258,4 +270,5 @@ export class TravelReservationsService {
       };
     }
   }
+  
 }
