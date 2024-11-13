@@ -100,10 +100,7 @@ export class TravelReservationsService {
     });
   }
 
-  // addTripToFirebase(trip: SpaceTrip): Promise<void> {
-  //   const id = this.firestore.createId();
-  //   return this.firestore.collection('trips').doc(id).set(trip);
-  // }
+
   addTripToFirebase(trip: SpaceTrip): Promise<void> {
     const id = this.firestore.createId(); // Genera un nuevo ID
     trip.id = parseInt(id); // Asigna el ID generado al viaje
