@@ -1,9 +1,7 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { SpaceTrip } from 'src/app/Services/travel-reservations.service';
-import { TravelReservationsService } from 'src/app/Services/travel-reservations.service';
-import { CommentListComponent } from 'src/app/Components/comment-list/comment-list.component';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core'; 
+import { ActivatedRoute } from '@angular/router'; 
+import { SpaceTrip, TravelReservationsService } from 'src/app/Services/travel-reservations.service'; 
+import { CommentListComponent } from 'src/app/Components/comment-list/comment-list.component'; 
 
 interface Passenger {
   name: string;
@@ -16,30 +14,31 @@ interface Passenger {
   styleUrls: ['./trip-reserva-id.component.css']
 })
 export class TripReservaIdComponent implements OnInit {
-  trip$!: Observable<SpaceTrip | undefined>;
+  trip: SpaceTrip | undefined; // Usamos una propiedad regular trip
   mainPassenger: Passenger = { name: '', email: '' };
   companions: Passenger[] = [];
   totalPrice: number = 0; 
-  successMessage: string = ''; // Variable para el mensaje de éxito
-  isImageLoading: boolean = true; // Flag para mostrar cargador de imagen
+  successMessage: string = ''; 
+  isImageLoading: boolean = true;
 
-  // Declarar ViewChild para acceder a commentsListComponent
   @ViewChild('commentsListComponent') commentsListComponent!: CommentListComponent;
 
   constructor(
     private route: ActivatedRoute,
     private travelReservationsService: TravelReservationsService,
-    private cd: ChangeDetectorRef // Inyectar ChangeDetectorRef
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     const tripId = this.route.snapshot.paramMap.get('id')!;
-    this.trip$ = this.travelReservationsService.getTripById(parseInt(tripId, 10));
+    this.travelReservationsService.getTripById(parseInt(tripId, 10)).subscribe(trip => {
+      this.trip = trip;
+      this.calculateTotalPrice();  // Llamada inicial para calcular el precio
+    });
   }
 
-  // Función llamada cuando la imagen se carga
   onImageLoad() {
-    this.isImageLoading = false; // La imagen se ha cargado
+    this.isImageLoading = false;
   }
 
   addCompanion() {
@@ -53,44 +52,37 @@ export class TripReservaIdComponent implements OnInit {
   }
 
   calculateTotalPrice() {
-    const numberOfPassengers = this.companions.length + 1; // +1 for main passenger
-    this.trip$?.subscribe(trip => {
-      if (trip) {
-        this.totalPrice = trip.priceByPassanger * numberOfPassengers;
-      }
-    });
+    const numberOfPassengers = this.companions.length + 1;
+    if (this.trip) {
+      this.totalPrice = this.trip.priceByPassanger * numberOfPassengers;
+    }
   }
 
   onSubmit() {
-    this.trip$?.subscribe(trip => {
-      if (trip) {
-        const totalPassengers = this.companions.length + 1;
-    
-        this.travelReservationsService.processPurchase(trip.id.toString(), totalPassengers)
-          .then(response => {
-            if (response.success) {
-              console.log('Reservation submitted successfully:', response.transaction);
+    if (!this.trip) return;
 
-              // Limpiar el formulario
-              this.mainPassenger = { name: '', email: '' };
-              this.companions = [];
-              this.calculateTotalPrice();
+    const totalPassengers = this.companions.length + 1;
+    this.travelReservationsService.processPurchase(this.trip.id.toString(), totalPassengers)
+      .then(response => {
+        if (response.success) {
+          console.log('Reservation submitted successfully:', response.transaction);
 
-              // Mostrar mensaje de éxito
-              this.successMessage = 'Reserva exitosa';
+          // Limpiar el formulario después de la compra
+          this.mainPassenger = { name: '', email: '' };
+          this.companions = [];
+          this.calculateTotalPrice();
 
-              // Ocultar mensaje después de unos segundos
-              setTimeout(() => {
-                this.successMessage = '';
-              }, 3000);
-            } else {
-              console.error('Error processing reservation:', response.message);
-            }
-          })
-          .catch(error => {
-            console.error('Error during reservation process:', error);
-          });
-      }
-    });
+          // Mostrar mensaje de éxito
+          this.successMessage = 'Reserva exitosa';
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
+        } else {
+          console.error('Error processing reservation:', response.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error during reservation process:', error);
+      });
   }
 }
