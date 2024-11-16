@@ -4,55 +4,93 @@
     padding: 20px;
 }
 
+/* Título de la sección */
 h1 {
     text-align: center;
     margin-bottom: 20px;
 }
 
+/* Contenedor de tarjetas */
 .trip-cards {
     display: flex;
-    flex-wrap: wrap; 
-    justify-content: space-between; 
-    gap: 20px; 
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
 }
 
+/* Tarjetas de viaje */
 .trip-card {
     background-color: #3068D9;
     border-radius: 10px;
     overflow: hidden;
-    width: 300px; 
+    width: 300px; /* Mantener tamaño consistente */
+    height: auto; /* Altura automática basada en contenido */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    justify-content: space-between; /* Uniformiza distribución */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Hover para acercar la tarjeta */
+.trip-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Imagen de las tarjetas */
 .trip-card img {
     width: 100%;
     height: 200px;
-    object-fit: cover; 
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border-radius: 10px;
 }
 
+/* Hover para acercar la imagen */
+.trip-card:hover img {
+    transform: scale(1.1);
+}
+
+/* Información de la tarjeta */
 .trip-info {
     padding: 15px;
-    text-align: center; 
+    text-align: center;
+    flex-grow: 1; /* Empuja el contenido hacia abajo */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Botón al final */
 }
 
+/* Estilo del título */
 .trip-info h2 {
     margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
 }
 
+/* Botón de reserva */
 .reserve-button {
     background-color: #D95032;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    width: 100%;
-    margin-top: 10px;
+    width: 90%; /* Asegura que todos los botones tengan el mismo ancho */
+    align-self: center; /* Asegura que el botón esté centrado */
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+/* Hover para el botón */
 .reserve-button:hover {
     background-color: #f4511e;
+    transform: scale(1.05);
+}
+
+/* Solución para la alineación de botones */
+.trip-info p {
+    flex-grow: 1; /* Empuja los botones hacia abajo */
+    text-align: left; /* Opcional: Alinear el texto */
 }

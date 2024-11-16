@@ -1,40 +1,26 @@
-/* Contenedor principal */
+/* Contenedor principal del detalle del viaje */
 .trip-details {
     text-align: center;
-    margin: 20px auto;
+    margin: 10px auto; /* Ajusta el margen para acercarlo */
     padding: 20px;
     background-color: #1a237e; /* Fondo azul oscuro */
     border-radius: 10px;
-    max-width: 1200px; /* Ancho ampliado */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
-    color: whitesmoke; /* Color del texto */
+    max-width: 1200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: whitesmoke;
 }
 
 /* Contenedor de la información del viaje */
 #info-trip {
     display: flex;
     flex-direction: row;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
+    justify-content: center;
+    align-items: flex-start; /* Alinea la imagen y los detalles hacia arriba */
     gap: 60px; /* Más espacio entre la imagen y los detalles */
-    margin-top: 20px;
+    margin-top: 0; /* Reduce la separación adicional */
 }
 
-/* Imagen del viaje */
-img {
-    width: 500px; /* Imagen más grande */
-    height: auto; /* Mantiene las proporciones */
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra */
-    align-self: flex-start; /* Asegura que se mantenga alineada correctamente */
-}
-
-img:hover {
-    transform: scale(1.05); /* Efecto de agrandamiento en hover */
-}
-
-/* Contenedor de detalles del viaje */
+/* Detalles del viaje */
 #info-details {
     display: flex;
     flex-direction: column;
@@ -42,39 +28,44 @@ img:hover {
     text-align: left;
     margin-left: 20px;
     background-color: #283593; /* Fondo para destacar la tarjeta */
-    padding: 30px; /* Más espacio interno */
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
-    max-width: 500px; /* Ancho máximo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+}
+
+/* Imagen del viaje */
+img {
+    width: 400px;
+    height: 400px;
+    object-fit: cover; /* Mantiene las proporciones */
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin-top: -10px; /* Mueve la imagen hacia arriba */
+}
+
+/* Efecto hover para la imagen */
+img:hover {
+    transform: scale(1.05);
 }
 
 /* Textos */
 p, h3, h4 {
     color: whitesmoke;
-    margin: 15px 0; /* Mayor separación */
-    font-size: 1.2rem; /* Texto ligeramente más grande */
-}
-
-h1 {
-    color: #ffffff;
-    font-size: 2.5rem; /* Encabezado más grande */
-    margin-bottom: 20px;
+    margin: 15px 0;
+    font-size: 1.2rem;
 }
 
 h2 {
-    color: #ffffff;
+    color: whitesmoke;
     margin-bottom: 20px;
-    font-size: 1.8rem; /* Mayor tamaño para el título */
-    border-bottom: 2px solid whitesmoke; /* Línea decorativa */
+    font-size: 1.8rem;
+    border-bottom: 2px solid whitesmoke;
     display: inline-block;
 }
 
 /* Formularios */
-form {
-    margin-top: 20px;
-    text-align: left;
-}
-
 label {
     color: whitesmoke;
     margin-right: 5px;
@@ -82,40 +73,45 @@ label {
 }
 
 input {
-    width: 100%; /* Asegura que todos los campos ocupen el mismo ancho */
-    max-width: 300px; /* Limita el ancho máximo */
+    width: 100%;
+    max-width: 300px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    padding: 10px; /* Espaciado interno uniforme */
-    margin-bottom: 15px; /* Espaciado entre los campos */
+    padding: 10px;
+    margin-bottom: 15px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    font-size: 1rem; /* Tamaño uniforme del texto */
-    box-sizing: border-box; /* Incluye el padding y border en el ancho total */
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
 /* Botones */
 button {
-    background-color: #ff5722; /* Naranja vibrante */
+    background-color: #ff5722;
     color: white;
     border: none;
-    padding: 12px 25px; /* Botones más grandes */
+    padding: 12px 25px;
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
-    display: block;
-    margin: 10px auto; /* Centrado automático */
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
-    background-color: #e64a19; /* Naranja más oscuro en hover */
-    transform: scale(1.05); /* Efecto de agrandamiento */
+    background-color: #e64a19;
+    transform: scale(1.05);
 }
 
 button:active {
-    background-color: #d84315; /* Naranja más oscuro al presionar */
+    background-color: #d84315;
+}
+
+/* Mensaje de éxito */
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 /* Compatibilidad móvil */
@@ -134,7 +130,7 @@ button:active {
     }
 
     img {
-        width: 300px; /* Imagen más pequeña en móviles */
+        width: 300px;
         height: auto;
     }
 }
