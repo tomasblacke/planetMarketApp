@@ -1,64 +1,71 @@
 <div *ngIf="trip; else notFound" class="trip-details">
     <h1>{{ trip.title }}</h1>
     <div id="info-trip">
-        <img [src]="trip.imageUrl" [alt]="trip.title" *ngIf="trip.imageUrl; else noImage" (load)="onImageLoad()" [class.loading]="isImageLoading">
-        
-        <div id="info-details">
-            <p>{{ trip.description }}</p>
-            <p>Departure: {{ trip.departure | date:'dd/MM/yyyy' }}</p>
-            <p>Origin: {{ trip.origin }}</p>
-            <p>Destination: {{ trip.destination }}</p>
-            <p>Available Seats: {{ trip.availableSeats }}</p>
-            <p>Price p/ Passenger: ${{ trip.priceByPassanger }}</p>
-            <br>
-
-            <h2>Book this trip</h2>
-            <form (ngSubmit)="onSubmit()">
-                <h3>Main Passenger</h3>
-                <div>
-                    <label for="name">Name:</label>
-                    <input id="name" [(ngModel)]="mainPassenger.name" name="name" required>
-                </div>
-                <div>
-                    <label for="email">Email:</label>
-                    <input id="email" type="email" [(ngModel)]="mainPassenger.email" name="email" required>
-                </div>
-                <br>
-
-                <h3>Companions</h3>
-                <div *ngFor="let companion of companions; let i = index">
-                    <h4>Companion {{ i + 1 }}</h4>
-                    <div>
-                        <label>Name:</label>
-                        <input [(ngModel)]="companion.name" [name]="'companionName' + i" required>
-                    </div>
-                    <div>
-                        <label>Email:</label>
-                        <input type="email" [(ngModel)]="companion.email" [name]="'companionEmail' + i" required>
-                    </div>
-                    <br>
-                    <button type="button" (click)="removeCompanion(i)">Delete Companion</button>
-                </div>
-                <button type="button" (click)="addCompanion()">Add Companion</button>
-                
-                <p>Total Price: ${{ totalPrice }}</p>
-                <button type="submit">Confirm Reservation</button>
-            </form>
-
-
-            <div *ngIf="successMessage" class="success-message">
-                {{ successMessage }}
-            </div>
+      <img [src]="trip.imageUrl" [alt]="trip.title" *ngIf="trip.imageUrl; else noImage" (load)="onImageLoad()" [class.loading]="isImageLoading">
+  
+      <div id="info-details">
+        <p>{{ trip.description }}</p>
+        <p>Departure: {{ trip.departure | date:'dd/MM/yyyy' }}</p>
+        <p>Origin: {{ trip.origin }}</p>
+        <p>Destination: {{ trip.destination }}</p>
+        <p>Available Seats: {{ trip.availableSeats }}</p>
+        <p>Price p/ Passenger: ${{ trip.priceByPassanger }}</p>
+        <br>
+  
+        <h2>Book this trip</h2>
+  
+        <!-- Mostrando errores si existen -->
+        <div *ngIf="errorMessages.length > 0" class="error-messages">
+          <p *ngFor="let error of errorMessages">{{ error }}</p>
         </div>
+  
+        <form (ngSubmit)="onSubmit()" #reservationForm="ngForm">
+          <h3>Main Passenger</h3>
+          <div>
+            <label for="name">Name:</label>
+            <input id="name" [(ngModel)]="mainPassenger.name" name="name" required>
+          </div>
+          <div>
+            <label for="email">Email:</label>
+            <input id="email" type="email" [(ngModel)]="mainPassenger.email" name="email" required>
+          </div>
+          <br>
+  
+          <h3>Companions</h3>
+          <div *ngFor="let companion of companions; let i = index">
+            <h4>Companion {{ i + 1 }}</h4>
+            <div>
+              <label>Name:</label>
+              <input [(ngModel)]="companion.name" [name]="'companionName' + i" required>
+            </div>
+            <div>
+              <label>Email:</label>
+              <input type="email" [(ngModel)]="companion.email" [name]="'companionEmail' + i" required>
+            </div>
+            <br>
+            <button type="button" (click)="removeCompanion(i)">Delete Companion</button>
+          </div>
+          <button type="button" (click)="addCompanion()">Add Companion</button>
+  
+          <p>Total Price: ${{ totalPrice }}</p>
+          <button type="submit">Confirm Reservation</button>
+        </form>
+  
+        <!-- Mensajes de éxito -->
+        <div *ngIf="successMessage" class="success-message">
+          {{ successMessage }}
+        </div>
+      </div>
     </div>
-</div>
-
-<ng-template #notFound>
+  </div>
+  
+  <ng-template #notFound>
     <div class="error-message">
-        <p>Trip not found. Please check the ID and try again.</p>
+      <p>Trip not found. Please check the ID and try again.</p>
     </div>
-</ng-template>
-
-<ng-template #noImage>
+  </ng-template>
+  
+  <ng-template #noImage>
     <p class="no-image-text">No Image Available</p>
-</ng-template>
+  </ng-template>
+  
