@@ -3,7 +3,7 @@
 
     <!-- Loading state -->
     <div *ngIf="loading" class="loading">
-        Cargando planetas...
+        Loading planets...
     </div>
 
     <!-- Error state -->
@@ -25,7 +25,7 @@
                 <button 
                         (click)="downloadCertificate(planet)"
                         class="certificate-button">
-                        Descargar Certificado
+                        Download Certificate
                 </button>
                 
             </div>
@@ -34,6 +34,6 @@
 
     <!-- Empty state -->
     <div class="no-planets" *ngIf="!loading && !error && userPlanets.length === 0">
-        No has comprado ningún planeta aún.
+        You haven't bought any planets yet
     </div>
 </div>
