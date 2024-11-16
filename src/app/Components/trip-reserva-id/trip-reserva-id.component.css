@@ -1,47 +1,140 @@
-.trip-details{
+/* Contenedor principal */
+.trip-details {
     text-align: center;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #1a237e; /* Fondo azul oscuro */
+    border-radius: 10px;
+    max-width: 1200px; /* Ancho ampliado */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    color: whitesmoke; /* Color del texto */
 }
-#info-trip{
+
+/* Contenedor de la información del viaje */
+#info-trip {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-}
-#info-details{
-    float: inline-end;
-    flex-direction: column;
-    margin-left: 100px;
-    text-align: right;
-    
-
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    gap: 60px; /* Más espacio entre la imagen y los detalles */
+    margin-top: 20px;
 }
 
-p,h3,h4{
-    color: whitesmoke;
-}
-h2{
-    border-color: whitesmoke;
-}
-img{
-    width: 400px;
-    height: 400px;
+/* Imagen del viaje */
+img {
+    width: 500px; /* Imagen más grande */
+    height: auto; /* Mantiene las proporciones */
     border-radius: 10px;
     transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra */
+    align-self: flex-start; /* Asegura que se mantenga alineada correctamente */
 }
-label{
+
+img:hover {
+    transform: scale(1.05); /* Efecto de agrandamiento en hover */
+}
+
+/* Contenedor de detalles del viaje */
+#info-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    margin-left: 20px;
+    background-color: #283593; /* Fondo para destacar la tarjeta */
+    padding: 30px; /* Más espacio interno */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    max-width: 500px; /* Ancho máximo */
+}
+
+/* Textos */
+p, h3, h4 {
+    color: whitesmoke;
+    margin: 15px 0; /* Mayor separación */
+    font-size: 1.2rem; /* Texto ligeramente más grande */
+}
+
+h1 {
+    color: #ffffff;
+    font-size: 2.5rem; /* Encabezado más grande */
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 1.8rem; /* Mayor tamaño para el título */
+    border-bottom: 2px solid whitesmoke; /* Línea decorativa */
+    display: inline-block;
+}
+
+/* Formularios */
+form {
+    margin-top: 20px;
+    text-align: left;
+}
+
+label {
     color: whitesmoke;
     margin-right: 5px;
-}
-input{
-    border-radius: 2px;
-    border: hidden;
-    margin-bottom: 2px;
-}
-
-
-.success-message {
-    color: green;
     font-weight: bold;
+}
+
+input {
+    width: 100%; /* Asegura que todos los campos ocupen el mismo ancho */
+    max-width: 300px; /* Limita el ancho máximo */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px; /* Espaciado interno uniforme */
+    margin-bottom: 15px; /* Espaciado entre los campos */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 1rem; /* Tamaño uniforme del texto */
+    box-sizing: border-box; /* Incluye el padding y border en el ancho total */
+}
+
+/* Botones */
+button {
+    background-color: #ff5722; /* Naranja vibrante */
+    color: white;
+    border: none;
+    padding: 12px 25px; /* Botones más grandes */
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
     margin-top: 10px;
-  }
-  
-/*NO LO PROOBAMOS NI UN POCO*/
+    display: block;
+    margin: 10px auto; /* Centrado automático */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #e64a19; /* Naranja más oscuro en hover */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+button:active {
+    background-color: #d84315; /* Naranja más oscuro al presionar */
+}
+
+/* Compatibilidad móvil */
+@media (max-width: 768px) {
+    #info-trip {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    #info-details {
+        margin-left: 0;
+        align-items: center;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    img {
+        width: 300px; /* Imagen más pequeña en móviles */
+        height: auto;
+    }
+}
