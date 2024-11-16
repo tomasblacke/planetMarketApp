@@ -1,7 +1,7 @@
 <!-- user-trips.component.html -->
 <div *ngIf="userReservations$ | async as reservations; else loading">
   <div *ngIf="reservations.length > 0; else noReservations">
-    <h3>Mis Reservas</h3>
+    <h3>My Reservations</h3>
     <div class="reservation-list">
       <div *ngFor="let reservation of reservations" class="reservation-card">
         <img [src]="reservation.tripImage" alt="Trip Image" class="reservation-image">
