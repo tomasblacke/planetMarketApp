@@ -1,14 +1,15 @@
 <header>
     <nav>
-        <img src="/assets/logoPM.png" alt="Logo">
+        <!-- Logo clicable -->
+        <a routerLink="/">
+            <img src="/assets/logoPM.png" alt="Logo">
+        </a>
         <div class="nav-links">
-            
             <a routerLink="/">Home</a>
             <a routerLink="/faq">FAQ</a>
             <a routerLink="/trips">Trips</a>
             <a routerLink="/planets">Planets</a>
-            <!--<a routerLink="/tienda-stars">Estrellas y más</a>NO LO VAMOS A USAR NO LLEGAMOS -->
-            
+            <!-- <a routerLink="/tienda-stars">Estrellas y más</a>NO LO VAMOS A USAR NO LLEGAMOS -->
         </div>
         <div class="search-container">
             <input 
@@ -17,7 +18,7 @@
                 (input)="onSearch($event)"
                 (blur)="showResults = false"
             >
-            <!-- Conatiner para mostrar los resultados -->
+            <!-- Container para mostrar los resultados -->
             <div class="search-results" *ngIf="showResults">
                 <div 
                     *ngFor="let result of searchResults" 
@@ -37,13 +38,13 @@
             </div>
         </div>
         <div class="nav-buttons">
-            <!-- Botones de login/register, desaparecen si esta logeado -->
+            <!-- Botones de login/register, desaparecen si está logeado -->
             <ng-container *ngIf="!isLoggedIn">
                 <button routerLink="login">Log in</button>    
                 <button routerLink="register">Sign in</button>
             </ng-container>
         
-            <!-- Menu para usuarios logeados -->
+            <!-- Menú para usuarios logeados -->
             <div *ngIf="isLoggedIn" class="user-menu-container">
                 <div class="user-info" (click)="toggleUserMenu()">
                     <div class="user-icon">
