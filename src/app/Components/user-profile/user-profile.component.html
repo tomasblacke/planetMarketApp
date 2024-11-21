@@ -10,12 +10,12 @@
                     [class.active]="isActive('planets')">
                 My Planets
             </button>
+            <button (click)="navigateTo('notifications')" [class.active]="isActive('notifications')">
+                Notifications
+            </button>
             <button (click)="navigateTo('info')"
                     [class.active]="isActive('info')">
                 My Info
-            </button>
-            <button (click)="navigateTo('notifications')" [class.active]="isActive('notifications')">
-                Notifications
             </button>
         </div>
     </div>
