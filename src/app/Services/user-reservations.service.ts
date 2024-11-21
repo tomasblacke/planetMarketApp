@@ -24,15 +24,14 @@ export class UserReservationsService {
     return this.getCurrentUserObservable().pipe(
       switchMap(user => {
         if (user) {
-          // Si hay un usuario autenticado, obtenemos sus reservas de Firestore
           return this.firestore
             .collection('users')
             .doc(user.uid)
             .collection('purchasedTrips')
-            .valueChanges();  // Devuelve un observable con las reservas
+            .valueChanges();  
         } else {
-          // Si no hay usuario autenticado, devolvemos un observable vacío
-          return of([]);  // Retorna un observable vacío
+          
+          return of([]);  
         }
       })
     );

@@ -13,20 +13,20 @@ export interface SpaceTrip {
   id: number;
   title: string;
   description: string;
-  departure: Date | FirebaseTimestamp  |null; // Después de la conversión, siempre será Date o null
+  departure: Date | FirebaseTimestamp  |null; 
   origin: string;
   destination: string;
   availableSeats: number;
   imageUrl: string;
   priceByPassanger: number;
-  purchases?: any[];  // La propiedad "purchases" es opcional
+  purchases?: any[];  
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class TravelReservationsService {
-  private COLLECTION_NAME = 'trips'; // Asegúrate de que este sea el nombre correcto de tu colección
+  private COLLECTION_NAME = 'trips'; 
 
   constructor(private firestore: AngularFirestore, private authService: AuthService) {}
 

@@ -13,6 +13,13 @@
             <br>
 
             <h2>Book this trip</h2>
+            
+            <!-- Mensaje de error -->
+            <div *ngIf="errorMessage" class="error-message">
+                {{ errorMessage }}
+            </div>
+            
+            <!-- Formulario -->
             <form (ngSubmit)="onSubmit()">
                 <h3>Main Passenger</h3>
                 <div>
@@ -45,6 +52,7 @@
                 <button type="submit">Confirm Reservation</button>
             </form>
 
+            
             <div *ngIf="successMessage" class="success-message">
                 {{ successMessage }}
             </div>
