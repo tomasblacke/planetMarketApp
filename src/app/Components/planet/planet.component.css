@@ -1,157 +1,41 @@
-
-body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; 
-    background-color: #001f4d; 
-    color: white; 
-    font-family: Arial, sans-serif;
-}
-
-
-.planet-container {
-    width: 90%; 
-    max-width: 1000px; 
-    background-color: #2a3b8f;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin: 20px auto; 
-}
-
-
-#planet-title {
-    font-size: 2.5em;
-    color: white; 
-    margin-bottom: 10px;
+#planet-title{
     text-align: center;
-}
-
-/* Contenedor del contenido (imagen + detalles) */
-.content-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%; 
-    gap: 20px;
-}
-
-/* Contenedor de la imagen */
-.image-container img {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 10px;
-    object-fit: cover;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.operational-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-/* Información principal del planeta */
-.info-container h2 {
-    margin: 5px 0;
-    color: white; /* Texto blanco */
-    font-size: 1.2em;
-}
-
-.info-container p {
-    color: white; /* Descripción en blanco */
-    margin-top: 10px;
-    line-height: 1.5;
-}
-
-/* Etiqueta de precio */
-.price-tag p {
-    margin: 5px 0;
-    font-size: 1.2em;
-    color: white; /* Texto en blanco */
-    font-weight: bold;
-}
-
-/* Estilo del formulario */
-.purchase-form .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-top: 15px;
-}
-
-.purchase-form label {
-    font-size: 1.1em;
-}
-
-.purchase-form input {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #004080;
-    background-color: #001f4d;
-    color: white;
-    font-size: 1em;
-}
-
-.purchase-form input:focus {
-    border-color: #0073e6;
-    outline: none;
-}
-
-/* Resumen de precios */
-.price-summary {
-    margin-top: 10px;
-    font-size: 1em;
-    color: white; /* Texto blanco */
-}
-
-
-.purchase-button {
-    padding: 10px 20px;
-    background-color: #00bfff; 
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.2em;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.purchase-button:hover {
-    background-color: #009acd; 
-}
-
-.purchase-button:disabled {
-    background-color:  #f4511e; /* Gris cuando está deshabilitado */
-    cursor: not-allowed;
-}
-
-/* Mensaje de agotado */
-.sold-out {
-    color: #ff3333; /* Rojo para destacar el mensaje */
-    font-size: 1.2em;
-    text-align: center;
-}
-
-/* Mensaje de error */
-.error-message {
-    color: #ff3333;
-    font-size: 1.2em;
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Cargando */
-.loading {
-    color: white; /* Texto blanco */
-    font-size: 1.2em;
-    text-align: center;
-}
+    }
+    .content-wrapper{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;/*con space around en 100% se chocan, es este modo se repelen*/
+    }
+    .image-container{
+        width: 200px;
+        height: auto;
+        margin-right: 10px;
+    }
+    .operational-container{
+        margin-left: 100px; 
+    }
+    .price-tag{
+        font-weight: bold;
+        font-size: 20px;
+        margin-top: 50px;
+    }
+    img{
+        width: 500px;  
+        height: 500px; 
+        object-fit: cover; 
+        border-radius: 8px; 
+    }
+    .button-purchase{
+        font-size: 18px !important;
+        display: block;
+        margin: 0 auto; /* Centra el botón */
+        padding: 10px 20px;
+        background-color: #ff5722; 
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+    
+    
+    }
