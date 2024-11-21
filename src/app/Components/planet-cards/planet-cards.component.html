@@ -1,10 +1,15 @@
 <div class="planet-grid">
     <div *ngFor="let planet of planets" class="planet-card">
         <img class="planet-img" [src]="planet.imageUrl" [alt]="planet.name">
-        <h2>{{ planet.name }}</h2>
-        <p>Price: ${{ planet.price | number }}</p>
+        <h2 class="planet_name">{{ planet.name }}</h2>
+
+        <div class="price-container">
+                <p class="price-text">Price: ${{ planet.price | number }}</p>
+            </div>
+        <div class="button-wrapper">
         <button type="button"  [disabled]="!planet.available" (click)="viewPlanetDetails(planet.id)" >
             {{ planet.available ? 'BUY' : 'SOLD OUT' }}
         </button>
+        </div>
     </div>
 </div>

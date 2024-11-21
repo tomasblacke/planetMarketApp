@@ -19,6 +19,8 @@
 .planet-card{
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    
     gap:5px ;
     background: #020F59;
     border-radius: 10px;
@@ -50,6 +52,25 @@
 .planet-grid::-webkit-scrollbar {
     display: none;
 }
+.planet-name {
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1.2rem;
+    min-height: 2.4rem; /* Asegura espacio consistente para nombres de dos líneas */
+}
+
+.price-container {
+    width: 100%;
+    padding: 0 10px;
+    margin: 10px 0;
+}
+
+.price-text {
+    text-align: left;
+    margin: 0;
+    font-size: 1rem;
+    white-space: nowrap; /* Evita que el precio se rompa en múltiples líneas */
+}
 
 .planet-card{
     display: flex;
@@ -68,3 +89,10 @@
     border-radius: 10px;
 }
 
+.button-wrapper {
+    padding: 10px;
+    margin-top: auto; 
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
