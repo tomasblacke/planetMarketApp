@@ -64,17 +64,8 @@ export class HeaderComponent {
 
 
   // Método que combina resultados de planetas y viajes, los busca en el arreglo ver cuando conectemos la api
-  //Segun gpt, para limpiar el codigo nos recomienda usar spread que serian los ...
-  /*
-  Ventajas de usar spread:
-
-Código más limpio y legible
-Inmutabilidad: Crea nuevos objetos/arrays sin modificar los originales
-Flexibilidad: Fácil de añadir o combinar propiedades/elementos
-Sintaxis moderna: Es una característica estándar de ES6+
-
-No me termina de cerrar pero no me funciono de otra manera
-  */
+  //Usamos spread, anduve averiguand y va rellenando los y completando los campos mapeados ademas le mete el typo
+  
   private search(term: string): Promise<any[]> {
     return Promise.all([
       this.planetService.searchPlanets(term),
