@@ -60,8 +60,26 @@ export class TripReservaIdComponent implements OnInit {
     }
   }
 
+  isValidEmail(email: string): boolean {
+    return email.includes('@'); // Validación básica para verificar si contiene "@"
+  }
+
   onSubmit() {
     if (!this.trip) return;
+
+    // Validar el correo principal
+    if (!this.isValidEmail(this.mainPassenger.email)) {
+      this.errorMessage = 'The main passenger\'s email is invalid. Please include an "@" symbol.';
+      return;
+    }
+
+    // Validar los correos de los acompañantes
+    for (const companion of this.companions) {
+      if (!this.isValidEmail(companion.email)) {
+        this.errorMessage = `The email for companion "${companion.name}" is invalid. Please include an "@" symbol.`;
+        return;
+      }
+    }
 
     const totalPassengers = this.companions.length + 1;
 
@@ -73,12 +91,10 @@ export class TripReservaIdComponent implements OnInit {
         if (response.success) {
           console.log('Reservation submitted successfully:', response.transaction);
 
-          
           this.mainPassenger = { name: '', email: '' };
           this.companions = [];
           this.calculateTotalPrice();
 
-          
           this.successMessage = 'Reservation successful';
           setTimeout(() => {
             this.successMessage = '';
