@@ -73,3 +73,6 @@ https://fontawesome.com/v4/icon/user libreria de logos, esta es el user
 npm install jspdf html2canvas para poder crear los titulos de pdf
 /*---------------------------------------------------------------
 En caso de tirar error chunk-35ENWJA4.js?v=b1bbc48c:56 POST es debido al addblocker de algunos navegadores,solo desactivarlo y funciona 
+/*-------------------------------------------
+CONVERSION TIMESTAMP A dinámicamentehttps://stackoverflow.com/questions/74608404/how-to-convert-timestamp-to-date-format-in-angular
+/*-------------------------------------------
