@@ -34,6 +34,9 @@ h2{
     font-size: small;
     width: 90%; 
 }
+#signup{
+    color: whitesmoke !important;
+}
 button{
     margin-top: 20px;
 
