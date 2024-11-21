@@ -19,6 +19,7 @@ export class TripReservaIdComponent implements OnInit {
   companions: Passenger[] = [];
   totalPrice: number = 0; 
   successMessage: string = ''; 
+  errorMessage: string = ''; 
   isImageLoading: boolean = true;
 
   @ViewChild('commentsListComponent') commentsListComponent!: CommentListComponent;
