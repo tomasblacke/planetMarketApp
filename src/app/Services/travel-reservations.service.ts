@@ -312,6 +312,9 @@ export class TravelReservationsService {
   }*/
 
 
+
+    //METODO PRINCIPAL
+
   async processPurchase(
     tripId: string, 
     seatsToBuy: number
@@ -344,6 +347,7 @@ export class TravelReservationsService {
     }
   }
   
+  //VERIFICACION AUTENTICACION USER
   private async validateUserLogin() {
     const currentUser = await this.authService.getCurrentUser();
     if (!currentUser) {
@@ -352,6 +356,8 @@ export class TravelReservationsService {
     return currentUser;
   }
   
+
+  //BUSCA VIAJE EN FIREBASE
   private async findTripReference(tripId: string) {
     const tripsQuerySnapshot = await this.firestore
       .collection(this.COLLECTION_NAME)
@@ -368,6 +374,7 @@ export class TravelReservationsService {
       .doc(tripsQuerySnapshot.docs[0].id);
   }
   
+  //VALIDA CANTIDAD ASIENTOS 
   private async validateTrip(tripRef: any, transaction: any, seatsToBuy: number) {
     const tripDoc = await transaction.get(tripRef.ref);
     if (!tripDoc.exists) {
@@ -400,6 +407,9 @@ export class TravelReservationsService {
     return await transaction.get(userTripRef.ref);
   }
   
+
+
+  //CREA OBJETO CON LOS DATOS DE LA COMPRA
   private createPurchaseData(currentUser: any, tripData: SpaceTrip, tripDoc: any, seatsToBuy: number) {
     return {
       userId: currentUser.uid,
@@ -413,6 +423,8 @@ export class TravelReservationsService {
     };
   }
   
+
+  //RECUPERA LAS COMPRAS ANTERIORES DEL USUARIO
   private getPreviousPurchaseDetails(userTripDoc: any) {
     const currentTotalSeats = userTripDoc.exists 
       ? userTripDoc.data().totalSeats || 0 
@@ -424,6 +436,7 @@ export class TravelReservationsService {
     return { currentTotalSeats, currentPurchases };
   }
   
+  //ACTUALIZA LA CANTIDAD DE ASIENTOS
   private async updateTripAvailableSeats(transaction: any, tripRef: any, newAvailableSeats: number) {
     transaction.update(tripRef.ref, { availableSeats: newAvailableSeats });
   }
@@ -433,6 +446,8 @@ export class TravelReservationsService {
     transaction.set(purchaseRef.ref, purchaseData);
   }
   
+
+  //Actualiza  un documento en la subcolección purchasedTrips
   private async updateUserTripCollection(
     transaction: any, 
     currentUser: any, 
@@ -464,6 +479,8 @@ export class TravelReservationsService {
     );
   }
   
+
+  //Actualiza el perfil del usuario en Firestore
   private async updateUserProfile(
     transaction: any, 
     currentUser: any, 
@@ -479,6 +496,8 @@ export class TravelReservationsService {
     });
   }
   
+
+  //ERROR EN CONSOLA
   private handlePurchaseError(error: any) {
     console.error('Error en el proceso de compra:', error);
     return {
