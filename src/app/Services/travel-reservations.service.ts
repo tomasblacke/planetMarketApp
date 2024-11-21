@@ -4,11 +4,16 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from './user-auth.service'; // Suponiendo que tienes un servicio de autenticación
 import { map } from 'rxjs/operators';
 
+
+export interface FirebaseTimestamp {
+  seconds: number;
+  nanoseconds: number;
+}
 export interface SpaceTrip {
   id: number;
   title: string;
   description: string;
-  departure: Date;
+  departure: Date | FirebaseTimestamp  |null; // Después de la conversión, siempre será Date o null
   origin: string;
   destination: string;
   availableSeats: number;
@@ -26,18 +31,65 @@ export class TravelReservationsService {
   constructor(private firestore: AngularFirestore, private authService: AuthService) {}
 
   // Método para obtener todos los viajes desde Firebase
-  getTrips(): Observable<SpaceTrip[]> {
+  /*getTrips(): Observable<SpaceTrip[]> {
     return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges();
-  }
+  }*/
+    getTrips(): Observable<SpaceTrip[]> {
+      return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges().pipe(
+        map(trips => trips.map(trip => {
+          if (trip.departure && typeof trip.departure === 'object' && 'seconds' in trip.departure) {
+            trip.departure = new Date(trip.departure.seconds * 1000);
+          } else if (trip.departure && typeof trip.departure === 'string') {
+            trip.departure = new Date(trip.departure);
+          } else {
+            trip.departure = null;
+          }
+          return trip;
+        }))
+      );
+    }
+    
+
+    
+    
+    getTripById(id: number): Observable<SpaceTrip | undefined> {
+      return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME, ref => ref.where('id', '==', id))
+        .valueChanges()
+        .pipe(
+          map((trips: SpaceTrip[]) => {
+            if (trips.length > 0) {
+              const trip = trips[0];
+              if (trip.departure && typeof trip.departure === 'object' && 'seconds' in trip.departure) {
+                trip.departure = new Date(trip.departure.seconds * 1000); // Convierte el Timestamp a Date
+              } else if (trip.departure && typeof trip.departure === 'string') {
+                trip.departure = new Date(trip.departure); // Convierte cadenas ISO a Date
+              } else {
+                trip.departure = null; // Si no es válida, asigna null
+              }
+              return trip;
+            }
+            return undefined;
+          })
+        );
+    }
+    
+    
+    private isFirebaseTimestamp(obj: any): obj is FirebaseTimestamp {
+      return obj && typeof obj.seconds === 'number' && typeof obj.nanoseconds === 'number';
+    }
+    
+    
+    
+    
 
   // Método para obtener un viaje por ID
-  getTripById(id: number): Observable<SpaceTrip | undefined> {
+  /*getTripById(id: number): Observable<SpaceTrip | undefined> {
     return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME, ref => ref.where('id', '==', id))
       .valueChanges()
       .pipe(
         map((trips: SpaceTrip[]) => trips.length > 0 ? trips[0] : undefined) // Especifica el tipo de `trips` aquí
       );
-  }
+  }*/
 
   // Método de búsqueda para filtrar los viajes directamente desde Firebase
   searchTrips(term: string): Promise<SpaceTrip[]> {

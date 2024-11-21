@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'; 
 import { SpaceTrip, TravelReservationsService } from 'src/app/Services/travel-reservations.service'; 
 import { CommentListComponent } from 'src/app/Components/comment-list/comment-list.component'; 
-
+import { FirebaseTimestamp } from 'src/app/Services/travel-reservations.service';
 interface Passenger {
   name: string;
   email: string;
@@ -84,5 +84,19 @@ export class TripReservaIdComponent implements OnInit {
       .catch(error => {
         console.error('Error during reservation process:', error);
       });
+  }
+  getFormattedDate(date: Date | FirebaseTimestamp | null): string {
+    const validDate = this.convertToDate(date); // Asegura que sea un Date o null
+    if (!validDate || isNaN(validDate.getTime())) {
+      return 'Not specified';
+    }
+    return validDate.toLocaleDateString('en-GB'); // Formato dd/MM/yyyy
+  }
+
+  convertToDate(date: Date | FirebaseTimestamp | null): Date | null {
+    if (date && typeof date === 'object' && 'seconds' in date) {
+      return new Date(date.seconds * 1000); // Convierte FirebaseTimestamp a Date
+    }
+    return date instanceof Date ? date : null; // Si ya es Date, úsalo; si no, devuelve null
   }
 }

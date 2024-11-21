@@ -5,7 +5,7 @@
         
         <div id="info-details">
             <p>{{ trip.description }}</p>
-            <p>Departure: {{ trip.departure | date:'dd/MM/yyyy' }}</p>
+            <p>Departure: {{ getFormattedDate(trip.departure) }}</p>
             <p>Origin: {{ trip.origin }}</p>
             <p>Destination: {{ trip.destination }}</p>
             <p>Available Seats: {{ trip.availableSeats }}</p>
@@ -44,7 +44,6 @@
                 <p>Total Price: ${{ totalPrice }}</p>
                 <button type="submit">Confirm Reservation</button>
             </form>
-
 
             <div *ngIf="successMessage" class="success-message">
                 {{ successMessage }}
