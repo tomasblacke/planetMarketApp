@@ -2,7 +2,7 @@
 body{
     font-family: 'Work Sans', Arial, Helvetica, sans-serif;
     background: #020F59;
-    /*cursor: url("./assets/cursor-planet-nbg32.png"), auto;*/
+    cursor: url("./assets/cursor-planet-nbg32.png"), auto;
 }
 h1,h2,h3{
     color: whitesmoke;
