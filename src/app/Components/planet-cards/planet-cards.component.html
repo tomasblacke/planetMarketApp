@@ -1,10 +1,14 @@
-<div class="planet-grid">
-    <div *ngFor="let planet of planets" class="planet-card">
-        <img class="planet-img" [src]="planet.imageUrl" [alt]="planet.name">
-        <h2>{{ planet.name }}</h2>
-        <p>Price: ${{ planet.price | number }}</p>
-        <button type="button"  [disabled]="!planet.available" (click)="viewPlanetDetails(planet.id)" >
-            {{ planet.available ? 'BUY' : 'SOLD OUT' }}
-        </button>
+<div class="planet-grid-container">
+    <button class="scroll-button left" (click)="scrollLeft()">&lt;</button>
+    <div class="planet-grid" #planetGrid>
+        <div *ngFor="let planet of planets" class="planet-card">
+            <img class="planet-img" [src]="planet.imageUrl" [alt]="planet.name">
+            <h2>{{ planet.name }}</h2>
+            <p>Price: ${{ planet.price | number }}</p>
+            <button type="button" [disabled]="!planet.available" (click)="viewPlanetDetails(planet.id)">
+                {{ planet.available ? 'BUY' : 'SOLD OUT' }}
+            </button>
+        </div>
     </div>
+    <button class="scroll-button right" (click)="scrollRight()">&gt;</button>
 </div>
