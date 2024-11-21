@@ -1,27 +1,35 @@
-.comments-container {
-    width: 100%;
-    max-width: 1400px; /* aca esta el contenedor */
+/* Contenedor de comentarios y formulario */
+.comment-form-container {
+    width: 95%;
+    max-width: 1400px; /* Ajusta el ancho máximo */
     margin: 20px auto;
     padding: 20px;
-    background-color: #f1f1f1;
+    background-color: #002766; /* Mismo fondo que el recuadro */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacio entre el formulario y los comentarios */
+    color: white; /* Texto blanco */
 }
 
-h2 {
+/* Estilo del título */
+.comment-form-container h2 {
     text-align: left;
-    color: #333;
+    color: white;
     font-size: 1.8em;
     margin-bottom: 15px;
     font-weight: bold;
 }
 
+/* Lista de comentarios */
 .comment-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
+/* Cada comentario */
 .comment-item {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
@@ -33,10 +41,12 @@ h2 {
     flex-direction: column;
 }
 
+/* Efecto hover en comentarios */
 .comment-item:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilo del nombre de usuario */
 .comment-username {
     font-weight: bold;
     color: #333;
@@ -44,66 +54,38 @@ h2 {
     margin-bottom: 5px;
 }
 
+/* Texto del comentario */
 .comment-text {
     color: #555;
     font-size: 1em;
     margin: 8px 0;
 }
 
+/* Fecha del comentario */
 .comment-date {
     color: #999;
     font-size: 0.9em;
     text-align: right;
-    margin-top: auto; /* Alinea la fecha hacia el fondo del contenedor */
+    margin-top: auto;
 }
 
+/* Botón de eliminación */
+.delete-button {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+
+.delete-button:hover {
+    color: darkred;
+}
+
+/* Mensaje si no hay comentarios */
 .no-comments {
     text-align: center;
     color: #777;
     font-style: italic;
 }
-.delete-button {
-    background: none;
-    border: none;
-    color: red; /* Color rojo para la cruz */
-    cursor: pointer;
-    font-size: 1.2em; /* Tamaño de la cruz */
-    margin-left: 10px; /* Espaciado a la izquierda */
-}
-
-.delete-button:hover {
-    color: darkred; /* Cambia el color al pasar el mouse */
-}
-
-
-
-/* .comments-list {
-    background-color: #1a237e;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px 0;
-}
-
-.comment {
-    background-color: #283593;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
-
-.comment-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.date {
-    color: #aaa;
-    font-size: 0.9em;
-}
-
-.no-comments {
-    text-align: center;
-    color: #aaa;
-    padding: 20px;
-} */
