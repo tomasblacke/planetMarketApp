@@ -4,13 +4,13 @@
     max-width: 1400px; 
     margin: 20px auto;
     padding: 20px;
-    background-color: #002766; /* Mismo fondo que el recuadro */
+    background-color: #002766; 
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Espacio entre el formulario y los comentarios */
-    color: white; /* Texto blanco */
+    gap: 20px; 
+    color: white; 
 }
 
 /* Estilo del título */

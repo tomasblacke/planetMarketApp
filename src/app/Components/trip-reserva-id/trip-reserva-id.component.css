@@ -1,5 +1,5 @@
 .trip-details{
-    text-align: center;
+    text-align: left;
 }
 #info-trip{
     display: flex;
@@ -39,9 +39,19 @@ input{
 
 
 .success-message {
-    color: green;
+    color: rgb(255, 255, 255);
     font-weight: bold;
     margin-top: 10px;
   }
   
-/*NO LO PROOBAMOS NI UN POCO*/
+  .error-message {
+    color: black; 
+    background-color: white; 
+    font-weight: bold;
+    padding: 10px; 
+    border-radius: 5px; 
+    margin-top: 10px;
+    text-align: center;
+    border: 1px solid #ccc; 
+}
+

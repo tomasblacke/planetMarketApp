@@ -4,7 +4,7 @@
     .content-wrapper{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;/*con space around en 100% se chocan, es este modo se repelen*/
+        justify-content: space-between;
     }
     .image-container{
         width: 200px;
