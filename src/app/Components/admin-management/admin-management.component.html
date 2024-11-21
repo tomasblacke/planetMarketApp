@@ -1,70 +1,85 @@
-<div>
+<div class="admin-container">
     <h2>Gestión de Administradores</h2>
-    <button (click)="toggleAdminSection()">
+    <button class="toggle-section-button" (click)="toggleAdminSection()">
         {{ showAdminSection ? 'Ocultar' : 'Mostrar' }} Sección de Administración
     </button>
 
-    <div *ngIf="showAdminSection">
+    <div *ngIf="showAdminSection" class="admin-section">
         <!-- Sección para agregar nuevo administrador -->
-        <h3>Agregar Administrador</h3>
-        <input [(ngModel)]="addAdminEmail" placeholder="Correo del administrador" />
-        <button (click)="addAdmin()">Agregar</button>
-        <p *ngIf="addAdminMessage">{{ addAdminMessage }}</p>
+        <div class="admin-action">
+            <h3>Agregar Administrador</h3>
+            <input [(ngModel)]="addAdminEmail" placeholder="Correo del administrador" />
+            <button class="action-button" (click)="addAdmin()">Agregar</button>
+            <p *ngIf="addAdminMessage" class="message">{{ addAdminMessage }}</p>
+        </div>
 
-        <h3>Eliminar Administrador</h3>
-        <input [(ngModel)]="deleteAdminEmail" placeholder="Correo del administrador" />
-        <button (click)="deleteAdmin()">Eliminar</button>
-        <p *ngIf="deleteAdminMessage">{{ deleteAdminMessage }}</p>
+        <!-- Sección para eliminar administrador -->
+        <div class="admin-action">
+            <h3>Eliminar Administrador</h3>
+            <input [(ngModel)]="deleteAdminEmail" placeholder="Correo del administrador" />
+            <button class="action-button" (click)="deleteAdmin()">Eliminar</button>
+            <p *ngIf="deleteAdminMessage" class="message">{{ deleteAdminMessage }}</p>
+        </div>
 
-        <h3>Verificar Administrador</h3>
-        <input [(ngModel)]="checkAdminEmail" placeholder="Ingresa el correo" />
-        <button (click)="checkAdmin()">Verificar</button>
-        <p *ngIf="checkAdminMessage">{{ checkAdminMessage }}</p>
+        <!-- Sección para verificar administrador -->
+        <div class="admin-action">
+            <h3>Verificar Administrador</h3>
+            <input [(ngModel)]="checkAdminEmail" placeholder="Ingresa el correo" />
+            <button class="action-button" (click)="checkAdmin()">Verificar</button>
+            <p *ngIf="checkAdminMessage" class="message">{{ checkAdminMessage }}</p>
+        </div>
 
-        <h3><button (click)="goToPurchases()">Ver Compras</button></h3> <!-- Botón para ir a compras -->
+        <!-- Botón para ver compras -->
+        <div class="admin-action">
+            <button class="action-button" (click)="goToPurchases()">Ver Compras</button>
+        </div>
 
         <!-- Sección para agregar nuevo viaje -->
-        <h3> <button (click)="toggleAddTripSection()" style="cursor: pointer;">Agregar Nuevo Viaje </button></h3>
-        <div *ngIf="showAddTripSection" class="add-trip-form">
-            <form (ngSubmit)="addTrip()">
-                <div>
-                    <label for="title">Título:</label>
-                    <input id="title" [(ngModel)]="newTrip.title" name="title" required>
-                </div>
-                <div>
-                    <label for="description">Descripción:</label>
-                    <textarea id="description" [(ngModel)]="newTrip.description" name="description" required></textarea>
-                </div>
-                <div>
-                    <label for="departure">Salida:</label>
-                    <input type="datetime-local" id="departure" [(ngModel)]="newTrip.departure" name="departure"
-                        required>
-                </div>
-                <div>
-                    <label for="origin">Origen:</label>
-                    <input id="origin" [(ngModel)]="newTrip.origin" name="origin" required>
-                </div>
-                <div>
-                    <label for="destination">Destino:</label>
-                    <input id="destination" [(ngModel)]="newTrip.destination" name="destination" required>
-                </div>
-                <div>
-                    <label for="availableSeats">Asientos Disponibles:</label>
-                    <input type="number" id="availableSeats" [(ngModel)]="newTrip.availableSeats" name="availableSeats"
-                        required min="1">
-                </div>
-                <div>
-                    <label for="priceByPassanger">Precio por Pasajero:</label>
-                    <input type="number" id="priceByPassanger" [(ngModel)]="newTrip.priceByPassanger"
-                        name="priceByPassanger" required min="0">
-                </div>
-                <div>
-                    <label for="imageUrl">URL de la Imagen:</label>
-                    <input id="imageUrl" [(ngModel)]="newTrip.imageUrl" name="imageUrl" required>
-                </div>
-                <button type="submit">Agregar Viaje</button>
-            </form>
-            <p *ngIf="addTripMessage">{{ addTripMessage }}</p>
+        <div class="admin-action">
+            <h3>
+                <button class="toggle-trip-button" (click)="toggleAddTripSection()">Agregar Nuevo Viaje</button>
+            </h3>
+            <div *ngIf="showAddTripSection" class="add-trip-form">
+                <form (ngSubmit)="addTrip()">
+                    <div>
+                        <label for="title">Título:</label>
+                        <input id="title" [(ngModel)]="newTrip.title" name="title" required>
+                    </div>
+                    <div>
+                        <label for="description">Descripción:</label>
+                        <textarea id="description" [(ngModel)]="newTrip.description" name="description" required></textarea>
+                    </div>
+                    <div>
+                        <label for="departure">Salida:</label>
+                        <input type="datetime-local" id="departure" [(ngModel)]="newTrip.departure" name="departure"
+                            required>
+                    </div>
+                    <div>
+                        <label for="origin">Origen:</label>
+                        <input id="origin" [(ngModel)]="newTrip.origin" name="origin" required>
+                    </div>
+                    <div>
+                        <label for="destination">Destino:</label>
+                        <input id="destination" [(ngModel)]="newTrip.destination" name="destination" required>
+                    </div>
+                    <div>
+                        <label for="availableSeats">Asientos Disponibles:</label>
+                        <input type="number" id="availableSeats" [(ngModel)]="newTrip.availableSeats" name="availableSeats"
+                            required min="1">
+                    </div>
+                    <div>
+                        <label for="priceByPassanger">Precio por Pasajero:</label>
+                        <input type="number" id="priceByPassanger" [(ngModel)]="newTrip.priceByPassanger"
+                            name="priceByPassanger" required min="0">
+                    </div>
+                    <div>
+                        <label for="imageUrl">URL de la Imagen:</label>
+                        <input id="imageUrl" [(ngModel)]="newTrip.imageUrl" name="imageUrl" required>
+                    </div>
+                    <button type="submit" class="submit-button">Agregar Viaje</button>
+                </form>
+                <p *ngIf="addTripMessage" class="message">{{ addTripMessage }}</p>
+            </div>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { TravelReservationsService, SpaceTrip } from '../../Services/travel-reservations.service';
 
@@ -7,24 +7,36 @@ import { TravelReservationsService, SpaceTrip } from '../../Services/travel-rese
   templateUrl: './space-trips-display.component.html',
   styleUrls: ['./space-trips-display.component.css']
 })
-export class SpaceTripsDisplayComponent implements OnInit  {
+export class SpaceTripsDisplayComponent implements OnInit {
   trips: SpaceTrip[] = [];
+  imagesLoaded = 0; // Contador para las imágenes cargadas
 
-  constructor(private travelReservationsService: TravelReservationsService,
-              private router: Router) { }
+  constructor(
+    private travelReservationsService: TravelReservationsService,
+    private router: Router,
+    private cdr: ChangeDetectorRef, 
+    private zone: NgZone // Inyectamos NgZone para asegurar detección de cambios
+  ) {}
 
   ngOnInit() {
-    // Llamada para agregar todos los viajes hardcodeados a Firebase
-    //this.travelReservationsService.addAllTripsToFirebase(); //FUNCION QUE AGREGA HARDCODEADOS LOS PLANETAS
-
-    // Llamada para obtener los viajes y asignarlos a la variable trips
-    this.travelReservationsService.getTrips().subscribe(
-      trips => this.trips = trips
-    );
+ 
+    this.travelReservationsService.getTrips().subscribe(trips => {
+      this.zone.run(() => {
+        this.trips = trips; 
+      });
+    });
   }
 
+  // Método para manejar el evento load de las imágenes
+  onImageLoad() {
+    this.imagesLoaded++;
+    if (this.imagesLoaded === this.trips.length) {
+      this.cdr.detectChanges(); 
+    }
+  }
+
+  // Método para redirigir al detalle de un viaje
   reserveTrip(tripId: number) {
-    this.router.navigate(['/trips', tripId]); // En teoría, esto te lleva al viaje por ID
+    this.router.navigate(['/trips', tripId]); 
   }
 }
-
