@@ -40,7 +40,9 @@ import { UserPlanetsComponent } from './Components/user-planets/user-planets.com
 import { UserTripsReservationComponent } from './Components/user-trips-reservation/user-trips-reservation.component';
 import { PlanetInitializerComponent } from './Components/planet-initializar/planet-initializar.component';
 import { AdminManagementComponent } from './Components/admin-management/admin-management.component';
-import { PurchasesComponent } from './Components/purchases/purchases.component'; // Importar el nuevo componente
+import { PurchasesComponent } from './Components/purchases/purchases.component';
+import { UserNotificationsComponent } from './Components/user-notifications/user-notifications.component'; // Importar el nuevo componente
+import { TravelNotificationService } from './Services/travel-notification.service';
 
 
 
@@ -73,6 +75,7 @@ import { PurchasesComponent } from './Components/purchases/purchases.component';
     PlanetInitializerComponent,
     AdminManagementComponent,
     PurchasesComponent,
+    UserNotificationsComponent,
   
   ],
   imports: [
@@ -84,7 +87,7 @@ import { PurchasesComponent } from './Components/purchases/purchases.component';
     AngularFirestoreModule,
     ReactiveFormsModule,
   ],
-  providers: [NasaApiService,PlanetService],
+  providers: [NasaApiService,PlanetService,TravelNotificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

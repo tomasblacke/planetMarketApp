@@ -1,0 +1,32 @@
+.notifications-container {
+    padding: 20px;
+}
+
+.notifications-grid {
+    margin-top: 20px;
+}
+
+.notification-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #007bff;
+}
+
+.notification-details h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.notification-details p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.countdown {
+    color: #007bff;
+    font-weight: bold;
+}
+

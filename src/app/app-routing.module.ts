@@ -17,6 +17,7 @@ import { PlanetInitializerComponent } from './Components/planet-initializar/plan
 import { AdminManagementComponent } from './Components/admin-management/admin-management.component';
 import { PurchasesComponent } from './Components/purchases/purchases.component';
 import { AdminGuard } from './guards/admin.guard';
+import { UserNotificationsComponent } from './Components/user-notifications/user-notifications.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -33,6 +34,7 @@ const routes: Routes = [
 },
   {path:'purchases', component: PurchasesComponent},
   {path:'register',component: RegisterComponent},
+
   {
     path: 'profile',
     component: UserProfileComponent,
@@ -41,7 +43,8 @@ const routes: Routes = [
 
       { path: 'info', component: UserInfoComponent },      
       { path: 'planets', component: UserPlanetsComponent }, 
-      { path: 'trips', component: UserTripsReservationComponent } 
+      { path: 'trips', component: UserTripsReservationComponent },
+      { path: 'notifications', component: UserNotificationsComponent }
     ]
     
   },
