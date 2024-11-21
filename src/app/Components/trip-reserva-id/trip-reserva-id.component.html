@@ -52,12 +52,24 @@
                 <button type="submit">Confirm Reservation</button>
             </form>
 
-            
             <div *ngIf="successMessage" class="success-message">
                 {{ successMessage }}
             </div>
         </div>
     </div>
+
+    <!-- Integración de comentarios -->
+    <h2>Comments</h2>
+    <app-comments-form
+        [itemId]="trip!.id" 
+        [itemType]="'trip'"
+        (commentAdded)="commentsListComponent.loadComments()">
+    </app-comments-form>
+    <app-comment-list
+        #commentsListComponent
+        [itemId]="trip!.id" 
+        [itemType]="'trip'">
+    </app-comment-list>
 </div>
 
 <ng-template #notFound>
