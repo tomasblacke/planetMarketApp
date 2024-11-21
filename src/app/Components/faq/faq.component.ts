@@ -9,42 +9,40 @@ export class FaqComponent {
   readonly mail: string = 'soporte@planetMarket.com';
   faqs = [
     {
-      question: '¿Es posible comprar terrenos en otros planetas?',
-      answer: 'Sí, ofrecemos la opción de adquirir terrenos en varios planetas de nuestra galaxia. Sin embargo, estos terrenos no tienen reconocimiento oficial por parte de ningún gobierno terrestre. Son simbólicos, ideales para entusiastas del espacio o como regalos originales.'
+      question: 'Is it possible to buy land on other planets?',
+      answer: 'Yes, we offer the option to acquire land on various planets in our galaxy. However, these lands do not have official recognition from any Earth government. They are symbolic, ideal for space enthusiasts or as original gifts.'
     },
     {
-      question: '¿Cómo puedo elegir el terreno que quiero comprar?',
-      answer: 'Puedes seleccionar un terreno de entre los planetas disponibles en nuestro catálogo. Cada terreno tiene coordenadas específicas y puedes recibir un certificado personalizado con las características de tu parcela estelar.'
+      question: 'How can I choose the land I want to buy?',
+      answer: 'You can select land from among the available planets in our catalog. Each plot has specific coordinates, and you can receive a personalized certificate with the characteristics of your stellar plot.'
     },
     {
-      question: '¿Qué incluye la compra de un terreno en otro planeta?',
-      answer: 'La compra incluye un certificado digital que acredita la propiedad simbólica de un terreno en el planeta seleccionado. También recibirás un mapa interactivo que muestra la ubicación aproximada de tu terreno.'
+      question: 'What does the purchase of land on another planet include?',
+      answer: 'The purchase includes a digital certificate that proves symbolic ownership of land on the selected planet. You will also receive an interactive map showing the approximate location of your land.'
     },
     {
-      question: '¿Se puede visitar el terreno comprado en un futuro?',
-      answer: 'Actualmente no existen medios comerciales para viajar a otros planetas muy lejanos, pero en el futuro cercano, con los avances en los viajes espaciales, puede ser posible. Por ahora, la compra representara tu terreno y podras verlo si se enuentra dentro de los viajes disponibles.'
+      question: 'Will it be possible to visit the purchased land in the future?',
+      answer: 'Currently, there are no commercial means to travel to very distant planets, but in the near future, with advances in space travel, it may be possible. For now, the purchase will represent your land and you can view it if it falls within the available travel options.'
     },
     {
-    
-      question: '¿Cómo funcionan los viajes estelares que ofrecen?',
-      answer: 'Ofrecemos experiencias de un viaje interestelar y simulaciones. Puedes disfrutar de recorridos por planetas cercanos y estrellas desde la comodidad de nuestra nave o desde la comodidad de tu casa. Además, estamos colaborando con empresas de turismo espacial para ofrecer viajes a mayor distancia en un futuro.'
-
+      question: 'How do the stellar travels you offer work?',
+      answer: 'We offer interstellar journey experiences and simulations. You can enjoy tours of nearby planets and stars from the comfort of our spacecraft or from the comfort of your home. Additionally, we are collaborating with space tourism companies to offer longer-distance travels in the future.'
     },
     {
-      question: '¿Cuáles son los destinos disponibles para los viajes estelares?',
-      answer: 'Nuestros destinos incluyen planetas dentro de nuestro sistema solar, como Marte y la Luna, además de planetas más distantes como Proxima b. Para los viajes virtuales, también puedes explorar nebulosas y otros fenómenos cósmicos.'
+      question: 'What are the available destinations for stellar travels?',
+      answer: 'Our destinations include planets within our solar system, such as Mars and the Moon, as well as more distant planets like Proxima b. For virtual travels, you can also explore nebulae and other cosmic phenomena.'
     },
     {
-      question: '¿Es seguro viajar al espacio?',
-      answer: 'Si bien viajar al espacio tiene sus riesgos, nuestras naves estan preparadas para adptarse al entorno espacial.'
+      question: 'Is space travel safe?',
+      answer: 'While space travel has its risks, our spacecraft are prepared to adapt to the space environment.'
     },
     {
-      question: ' ¿Puedo obtener un reembolso si cambio de opinión?',
-      answer: 'Los reembolsos están sujetos a las políticas de nuestra empresa. Generalmente, para terrenos en otros planetas no se realizan reembolsos. En el caso de experiencias virtuales o viajes espaciales, ofrecemos una política de cancelación flexible.'
+      question: 'Can I get a refund if I change my mind?',
+      answer: 'Refunds are subject to our company policies. Generally, for land on other planets, refunds are not provided. In the case of virtual experiences or space travels, we offer a flexible cancellation policy.'
     },
     {
-      question:'¿Qué debo hacer si tengo más preguntas?',
-      answer: 'Si tienes más preguntas o inquietudes, puedes contactarnos a través de un correo electrionico ' + this.mail
+      question: 'What should I do if I have more questions?',
+      answer: 'If you have more questions or concerns, you can contact us through email at ' + this.mail
     }
     // Agrega más preguntas aquí
   ];
