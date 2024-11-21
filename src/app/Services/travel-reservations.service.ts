@@ -186,7 +186,7 @@ export class TravelReservationsService {
   }*/
 
   // Método para procesar la compra de un viaje
-  async processPurchase(
+  /*async processPurchase(
     tripId: string,
     seatsToBuy: number
   ): Promise<{ success: boolean; message: string; transaction?: any }> {
@@ -309,5 +309,181 @@ export class TravelReservationsService {
         message: 'Error procesando la compra: ' + (error instanceof Error ? error.message : 'Error desconocido')
       };
     }
+  }*/
+
+
+  async processPurchase(
+    tripId: string, 
+    seatsToBuy: number
+  ): Promise<{ success: boolean; message: string; transaction?: any }> {
+    try {
+      const currentUser = await this.validateUserLogin();
+      const tripRef = await this.findTripReference(tripId);
+  
+      return await this.firestore.firestore.runTransaction(async transaction => {
+        const { tripData, tripDoc } = await this.validateTrip(tripRef, transaction, seatsToBuy);
+        const { userDoc, userData } = await this.getUserDetails(currentUser, transaction);
+        const userTripDoc = await this.getUserTripDocument(currentUser, tripDoc, transaction);
+  
+        const purchaseData = this.createPurchaseData(currentUser, tripData, tripDoc, seatsToBuy);
+        const { currentTotalSeats, currentPurchases } = this.getPreviousPurchaseDetails(userTripDoc);
+        
+        await this.updateTripAvailableSeats(transaction, tripRef, tripData.availableSeats - seatsToBuy);
+        await this.recordPurchase(transaction, purchaseData);
+        await this.updateUserTripCollection(transaction, currentUser, tripData, purchaseData, currentTotalSeats, currentPurchases, seatsToBuy);
+        await this.updateUserProfile(transaction, currentUser, userData, purchaseData);
+  
+        return { 
+          success: true, 
+          message: 'Compra realizada exitosamente', 
+          transaction: purchaseData 
+        };
+      });
+    } catch (error) {
+      return this.handlePurchaseError(error);
+    }
+  }
+  
+  private async validateUserLogin() {
+    const currentUser = await this.authService.getCurrentUser();
+    if (!currentUser) {
+      throw new Error('You must be logged in');
+    }
+    return currentUser;
+  }
+  
+  private async findTripReference(tripId: string) {
+    const tripsQuerySnapshot = await this.firestore
+      .collection(this.COLLECTION_NAME)
+      .ref
+      .where('id', '==', parseInt(tripId))
+      .get();
+  
+    if (tripsQuerySnapshot.empty) {
+      throw new Error('Viaje no encontrado');
+    }
+  
+    return this.firestore
+      .collection(this.COLLECTION_NAME)
+      .doc(tripsQuerySnapshot.docs[0].id);
+  }
+  
+  private async validateTrip(tripRef: any, transaction: any, seatsToBuy: number) {
+    const tripDoc = await transaction.get(tripRef.ref);
+    if (!tripDoc.exists) {
+      throw new Error('Viaje no encontrado');
+    }
+  
+    const tripData = tripDoc.data() as SpaceTrip;
+    if (tripData.availableSeats < seatsToBuy) {
+      throw new Error(`Solo hay ${tripData.availableSeats} asientos disponibles`);
+    }
+  
+    return { tripData, tripDoc };
+  }
+  
+  private async getUserDetails(currentUser: any, transaction: any) {
+    const userRef = this.firestore.collection('users').doc(currentUser.uid);
+    const userDoc = await transaction.get(userRef.ref);
+    const userData = userDoc.data() as any;
+  
+    return { userDoc, userData };
+  }
+  
+  private async getUserTripDocument(currentUser: any, tripDoc: any, transaction: any) {
+    const userTripRef = this.firestore
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('purchasedTrips')
+      .doc(tripDoc.id);
+  
+    return await transaction.get(userTripRef.ref);
+  }
+  
+  private createPurchaseData(currentUser: any, tripData: SpaceTrip, tripDoc: any, seatsToBuy: number) {
+    return {
+      userId: currentUser.uid,
+      userEmail: currentUser.email,
+      tripId: tripDoc.id,
+      tripTitle: tripData.title,
+      seatsPurchased: seatsToBuy,
+      pricePerSeat: tripData.priceByPassanger,
+      totalPrice: tripData.priceByPassanger * seatsToBuy,
+      purchaseDate: new Date()
+    };
+  }
+  
+  private getPreviousPurchaseDetails(userTripDoc: any) {
+    const currentTotalSeats = userTripDoc.exists 
+      ? userTripDoc.data().totalSeats || 0 
+      : 0;
+    const currentPurchases = userTripDoc.exists 
+      ? userTripDoc.data().purchases || [] 
+      : [];
+  
+    return { currentTotalSeats, currentPurchases };
+  }
+  
+  private async updateTripAvailableSeats(transaction: any, tripRef: any, newAvailableSeats: number) {
+    transaction.update(tripRef.ref, { availableSeats: newAvailableSeats });
+  }
+  
+  private async recordPurchase(transaction: any, purchaseData: any) {
+    const purchaseRef = this.firestore.collection('purchases').doc();
+    transaction.set(purchaseRef.ref, purchaseData);
+  }
+  
+  private async updateUserTripCollection(
+    transaction: any, 
+    currentUser: any, 
+    tripData: SpaceTrip, 
+    purchaseData: any,
+    currentTotalSeats: number,
+    currentPurchases: any[],
+    seatsToBuy: number
+  ) {
+    const userTripRef = this.firestore
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('purchasedTrips')
+      .doc(purchaseData.tripId);
+  
+    transaction.set(
+      userTripRef.ref,
+      {
+        tripId: purchaseData.tripId,
+        tripTitle: tripData.title,
+        tripDescription: tripData.description,
+        tripImage: tripData.imageUrl,
+        totalSeats: currentTotalSeats + seatsToBuy,
+        totalInvested: (currentTotalSeats + seatsToBuy) * tripData.priceByPassanger,
+        lastPurchase: purchaseData,
+        purchases: [...currentPurchases, purchaseData]
+      },
+      { merge: true }
+    );
+  }
+  
+  private async updateUserProfile(
+    transaction: any, 
+    currentUser: any, 
+    userData: any, 
+    purchaseData: any
+  ) {
+    const userRef = this.firestore.collection('users').doc(currentUser.uid);
+    const currentTotalInvestment = userData?.totalInvestment || 0;
+  
+    transaction.update(userRef.ref, {
+      totalInvestment: currentTotalInvestment + purchaseData.totalPrice,
+      lastPurchase: purchaseData
+    });
+  }
+  
+  private handlePurchaseError(error: any) {
+    console.error('Error en el proceso de compra:', error);
+    return {
+      success: false,
+      message: 'Error procesando la compra: ' + (error instanceof Error ? error.message : 'Error desconocido')
+    };
   }
 }
