@@ -59,6 +59,10 @@ export class TripReservaIdComponent implements OnInit {
     }
   }
 
+  isValidEmail(email: string): boolean {
+    return email.includes('@'); 
+  }
+
   onSubmit() {
     if (!this.trip) return;
 
