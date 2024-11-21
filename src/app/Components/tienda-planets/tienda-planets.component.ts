@@ -33,7 +33,7 @@ export class TiendaPlanetsComponent implements OnInit {
     this.router.navigate(['/planets', planetId]);
   }
   buyPlanet(planet: Planet) {
-    // Implementar lógica de compra aquí
+    //Podemos implementar logica de compra a futuro
     console.log(`Buying ${planet.name} for $${planet.price}`);
   }
 

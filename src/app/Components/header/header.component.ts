@@ -72,6 +72,8 @@ Código más limpio y legible
 Inmutabilidad: Crea nuevos objetos/arrays sin modificar los originales
 Flexibilidad: Fácil de añadir o combinar propiedades/elementos
 Sintaxis moderna: Es una característica estándar de ES6+
+
+No me termina de cerrar pero no me funciono de otra manera
   */
   private search(term: string): Promise<any[]> {
     return Promise.all([
@@ -119,13 +121,9 @@ Sintaxis moderna: Es una característica estándar de ES6+
     this.showUserMenu = false;
   }
 
-  // Método para navegar a configuración
-  goToSettings() {
-    this.router.navigate(['/settings']);
-    this.showUserMenu = false;
-  }
+  
   goToAdmin() {
-    this.router.navigate(['/admin-management']); // Asegúrate de que la ruta esté definida
+    this.router.navigate(['/admin-management']); 
     this.showUserMenu = false;
   }
 

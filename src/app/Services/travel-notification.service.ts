@@ -39,7 +39,7 @@ export class TravelNotificationService {
                 ...trip,
                 daysUntilDeparture,
                 shouldNotify: daysUntilDeparture <= 30 && daysUntilDeparture > 0
-              };
+              };//avisa despues de 30 dias
             })),
             map(trips => trips.filter(trip => trip && trip.shouldNotify))
           );

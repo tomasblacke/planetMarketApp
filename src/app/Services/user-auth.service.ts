@@ -18,8 +18,8 @@ export class AuthService {
   constructor(private fireauth: AngularFireAuth, private router: Router, private firestore: AngularFirestore) {
     this.user$ = this.fireauth.authState.pipe(
       switchMap(user => {
-        if (user && user.email) { // Asegúrate de que user.email no sea null
-          // Verifica si el correo del usuario está en la colección de administradores
+        if (user && user.email) { // user email no tiene que ser null
+          //Ver si el mail esta en la base admi
           return this.firestore.collection('admins').doc(user.email).valueChanges().pipe(
             map((adminData: any) => ({
               uid: user.uid,
@@ -43,17 +43,6 @@ export class AuthService {
         this.router.navigate(['/login']);
       })
   }
-  //register method
-  // register(email: string, password: string, name: string, lastname: string) {
-  //   this.fireauth.createUserWithEmailAndPassword(email, password).then(() => {
-  //     this
-  //     this.router.navigate(['/login']);
-  //   }, err => {
-  //     alert(err.message)
-  //     this.router.navigate(['/register']);
-  //   })
-
-  // }
 
 
   // Método de registro modificado

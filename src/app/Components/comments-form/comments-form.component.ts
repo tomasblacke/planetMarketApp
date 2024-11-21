@@ -23,7 +23,7 @@ export class CommentsFormComponent {
   async onSubmit() {
     if (this.userName && this.commentText) {
       const newComment: Comment = {
-        id: '', // Puedes asignar un string vacío temporalmente
+        id: '', 
         itemId: this.itemId,
         itemType: this.itemType,
         userName: this.userName,

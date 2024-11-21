@@ -1,17 +1,17 @@
 <div class="planets-container">
     <h3>Mis Planetas</h3>
 
-    <!-- Loading state -->
+    <!-- Situacion de carga -->
     <div *ngIf="loading" class="loading">
         Cargando planetas...
     </div>
 
-    <!-- Error state -->
+    <!-- Error -->
     <div *ngIf="error" class="error">
         {{ error }}
     </div>
 
-    <!-- Planets grid -->
+    <!-- Grilla para muestra planetas -->
     <div class="planets-grid" *ngIf="!loading && !error && userPlanets.length > 0">
         <div class="planet-card" *ngFor="let planet of userPlanets">
             <img [src]="planet.planetImage" [alt]="planet.planetName">
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <!-- Empty state -->
+    <!-- Caso sin compras -->
     <div class="no-planets" *ngIf="!loading && !error && userPlanets.length === 0">
         No has comprado ningún planeta aún.
     </div>

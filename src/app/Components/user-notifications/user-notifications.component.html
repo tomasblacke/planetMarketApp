@@ -2,19 +2,19 @@
     <h3>Mis Notificaciones</h3>
 
 
-    <!-- Notifications grid -->
+    <!-- Parte de las notificaciones, si hay muestra, si no. no -->
     <div class="notifications-grid" *ngIf=" (upcomingTrips$ | async) as trips">
         <div *ngIf="trips.length > 0" class="notifications-list">
             <div class="notification-card" *ngFor="let trip of trips">
                 <div class="notification-details">
                     <h4>{{ trip.tripTitle }}</h4>
-                    <p>Fecha de Salida: {{ trip.formattedDeparture }}</p>
+                    <!--<p>Fecha de Salida: {{ trip.formattedDeparture }}</p>-->
                     <p class="countdown">¡Tu viaje sale en {{ trip.daysUntilDeparture }} días!</p>
                 </div>
             </div>
         </div>
 
-        <!-- Empty state -->
+        <!-- Caso no hay -->
         <div class="no-notifications" *ngIf="trips.length === 0">
             No tienes notificaciones de viajes próximos.
         </div>

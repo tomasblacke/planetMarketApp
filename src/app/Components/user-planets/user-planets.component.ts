@@ -47,7 +47,7 @@ export class UserPlanetsComponent implements OnInit {
   ngOnInit(): void {
     this.loadUserPlanets();
   }
-
+//CARGA DE PLANETAS
   private loadUserPlanets(): void {
     console.log('Iniciando carga de planetas del usuario');
     this.authService.getCurrentUser().then(user => {
@@ -73,6 +73,7 @@ export class UserPlanetsComponent implements OnInit {
       }
     });
   }
+  //DESCARGA DE CERTIFICADO
   async downloadCertificate(planet: UserPlanet) {
     try {
       const user = await this.authService.getCurrentUser();
@@ -89,7 +90,6 @@ export class UserPlanetsComponent implements OnInit {
       const userData = userDoc?.data() as UserData;
       
       if (userData) {
-        // Extraemos específicamente name y lastname
         const userInfo = {
           name: userData.name,
           lastname: userData.lastname

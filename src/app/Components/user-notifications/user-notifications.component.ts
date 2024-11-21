@@ -9,13 +9,13 @@ import { Observable } from 'rxjs';
   styleUrls: ['./user-notifications.component.css']
 })
 export class UserNotificationsComponent implements OnInit {
-  upcomingTrips$: Observable<any[]>;
+  upcomingTrips$: Observable<any[]>; // por convencion segun doc al fianl $ si es observable
 
   constructor(private notificationService: TravelNotificationService) {
     this.upcomingTrips$ = this.notificationService.getUpcomingTrips();
   }
 
   ngOnInit(): void {
-    // Empty implementation to satisfy OnInit interface
+
   }
 }

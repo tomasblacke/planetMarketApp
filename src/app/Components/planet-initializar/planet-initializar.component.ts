@@ -75,7 +75,7 @@ export class PlanetInitializerComponent {
       this.checkCollectionsStatus();
     }
   }
-
+//OJO CON ESTA FUNCION, TE CARGA LOS PLANETAS( TIENE PARTES COMENTADAS PARA QUE TIRE ERROR DIRECTAMENTE)
   async initializePlanets() {
     if (!confirm('¿Estás seguro? cARGARA LOS PLANETAS AL SISTEMA')) {
       return;

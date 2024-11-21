@@ -19,7 +19,7 @@ export class CommentListComponent implements OnInit {
   constructor(
     private commentServiceService: CommentServiceService,
     private adminService:AdminService,
-    private authService: AuthService,  // Agregado para obtener el usuario logeado
+    private authService: AuthService,  
 
   ) {}
 
@@ -39,7 +39,7 @@ export class CommentListComponent implements OnInit {
       if (user && user.email) {
         this.authService.isAdmin(user.email).subscribe(isAdmin => {
           this.isAdmin = isAdmin;
-          // Aquí puedes realizar acciones adicionales si el usuario es admin
+        
         });
       }
     } catch (error) {

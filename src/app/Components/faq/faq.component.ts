@@ -44,6 +44,6 @@ export class FaqComponent {
       question: 'What should I do if I have more questions?',
       answer: 'If you have more questions or concerns, you can contact us through email at ' + this.mail
     }
-    // Agrega más preguntas aquí
+   
   ];
 }

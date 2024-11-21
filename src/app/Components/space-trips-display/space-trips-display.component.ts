@@ -19,7 +19,7 @@ export class SpaceTripsDisplayComponent implements OnInit {
   ) {}
 
   ngOnInit() {
- 
+
     this.travelReservationsService.getTrips().subscribe(trips => {
       this.zone.run(() => {
         this.trips = trips; 
