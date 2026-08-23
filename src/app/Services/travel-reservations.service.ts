@@ -20,6 +20,8 @@ export interface SpaceTrip {
   imageUrl: string;
   priceByPassanger: number;
   purchases?: any[];  // La propiedad "purchases" es opcional
+  docId?: string;
+  active?: boolean; // Si es false, el viaje fue dado de baja por el admin
 }
 
 @Injectable({
@@ -35,7 +37,7 @@ export class TravelReservationsService {
     return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges();
   }*/
     getTrips(): Observable<SpaceTrip[]> {
-      return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges().pipe(
+      return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges({ idField: 'docId' }).pipe(
         map(trips => trips.map(trip => {
           if (trip.departure && typeof trip.departure === 'object' && 'seconds' in trip.departure) {
             trip.departure = new Date(trip.departure.seconds * 1000);
@@ -45,9 +47,21 @@ export class TravelReservationsService {
             trip.departure = null;
           }
           return trip;
+        })),
+        // Filtra los viajes dados de baja por el admin y los que ya salieron
+        map(trips => trips.filter(trip => {
+          if (trip.active === false) {
+            return false; // El admin lo dio de baja
+          }
+          if (trip.departure instanceof Date) {
+            return trip.departure.getTime() >= Date.now(); // Solo los que todavía no salieron
+          }
+          return true; // Sin fecha definida, se sigue mostrando
         }))
       );
     }
+
+
     
 
     
@@ -114,6 +128,17 @@ export class TravelReservationsService {
         console.error("Error al agregar el viaje: ", error);
         throw error; // Propagar el error para manejarlo en el componente
       });
+  }
+  //baja logica queda guardada en base
+  deleteTrip(docId:string){
+    return this.firestore.collection(this.COLLECTION_NAME).doc(docId).update({
+      active:false
+    })
+    .then(()=> console.log(`Viaje ${docId} desactivado`)  )
+    .catch(error=> {console.error("Error al descactivar viaje ", error);
+        throw error;
+        }
+          );
   }
 
   // Método para agregar todos los viajes de una vez a Firebase 
