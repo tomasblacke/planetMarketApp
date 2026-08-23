@@ -9,6 +9,7 @@
                 <div class="notification-details">
                     <h4>{{ trip.tripTitle }}</h4>
                     <!--<p>Fecha de Salida: {{ trip.formattedDeparture }}</p>-->
+                    <p class="tickets">{{ trip.totalSeats }} {{ trip.totalSeats === 1 ? "pasaje" : "pasajes" }}</p>
                     <p class="countdown">¡Tu viaje sale en {{ trip.daysUntilDeparture }} días!</p>
                 </div>
             </div>

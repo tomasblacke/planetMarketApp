@@ -70,3 +70,8 @@
     font-style: italic; 
     margin-top: 15px; 
 }
+
+.tickets {
+    color: #333;
+    font-weight: bold;
+}

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class TravelNotificationService {
   getUpcomingTrips(): Observable<any[]> {
     return this.auth.authState.pipe(
       switchMap(user => {
-        if (!user) return [];
+        if (!user) return of([]);
         
         return this.firestore
           .collection('users')
@@ -39,7 +39,7 @@ export class TravelNotificationService {
                 ...trip,
                 daysUntilDeparture,
                 shouldNotify: daysUntilDeparture <= 30 && daysUntilDeparture > 0
-              };//avisa despues de 30 dias
+              };//avisa cuando faltan 30 dias o menos
             })),
             map(trips => trips.filter(trip => trip && trip.shouldNotify))
           );
