@@ -10,7 +10,6 @@
     overflow-x: auto;
     padding: 20px;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
 }
 .planet-grid::-webkit-scrollbar {
     display: none;
@@ -19,8 +18,6 @@
 .planet-card{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    
     gap:5px ;
     background: #020F59;
     border-radius: 10px;
@@ -35,28 +32,11 @@
     border-radius: 10px;
 }
 
-/* .planet-grid{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    gap: 20px;} */
-.planet-grid {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    overflow-x: auto;
-    padding: 20px;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-}
-.planet-grid::-webkit-scrollbar {
-    display: none;
-}
 .planet-name {
     margin: 10px 0;
     text-align: center;
     font-size: 1.2rem;
-    min-height: 2.4rem; /* Asegura espacio consistente para nombres de dos líneas */
+    min-height: 3.5rem; /* Si hay mas de dos lineas mantiene formato */
 }
 
 .price-container {
@@ -72,27 +52,46 @@
     white-space: nowrap; /* Evita que el precio se rompa en múltiples líneas */
 }
 
-.planet-card{
-    display: flex;
-    flex-direction: column;
-    gap:5px ;
-    background: #020F59;
-    border-radius: 10px;
-    align-items: center;
-}
-
-.planet-img{
-    width: 150px;
-    height: 150px;
-    padding: 5px 5px 5px 5px;
-    border-image: round;
-    border-radius: 10px;
-}
-
 .button-wrapper {
     padding: 10px;
     margin-top: auto; 
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+.planet-carousel {
+    position: relative;
+}
+/*FLECHAS DEL SCROLL*/
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: #283593;
+    color: whitesmoke;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.scroll-arrow:hover {
+    opacity: 1;
+}
+
+.scroll-arrow:disabled {
+    opacity: 0;
+    cursor: default;
+}
+
+.scroll-arrow.left {
+    left: 5px;
+}
+
+.scroll-arrow.right {
+    right: 5px;
 }
