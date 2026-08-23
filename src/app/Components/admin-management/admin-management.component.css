@@ -111,3 +111,46 @@ input:focus, textarea:focus {
   margin-top: 5px;
   color: #ffffff;
 }
+
+/* Lista de viajes para dar de baja */
+.trip-list {
+  margin-top: 10px;
+}
+
+.trip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: #2a3b6a;
+  border-radius: 5px;
+}
+
+.trip-row-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.trip-row-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.trip-row-detail {
+  font-size: 0.85rem;
+  color: #cfd8dc;
+}
+
+.trip-row-status {
+  font-size: 0.8rem;
+  color: #3bc0a8;
+  margin-top: 3px;
+}
+
+.trip-row .action-button:disabled {
+  background-color: #6b7a99;
+  cursor: not-allowed;
+}

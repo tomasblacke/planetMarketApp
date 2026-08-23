@@ -81,5 +81,24 @@
                 <p *ngIf="addTripMessage" class="message">{{ addTripMessage }}</p>
             </div>
         </div>
+
+        <!-- Sección para dar de baja viajes -->
+        <div class="admin-action">
+            <h3>
+                <button class="toggle-trip-button" (click)="toggleTripListSection()">Dar de Baja un Viaje</button>
+            </h3>
+            <div *ngIf="showTripListSection" class="trip-list">
+                <div *ngFor="let trip of trips" class="trip-row">
+                    <div class="trip-row-info">
+                        <span class="trip-row-title">{{ trip.title }}</span>
+                        <span class="trip-row-detail">{{ trip.destination }} · {{ getFormattedDate(trip.departure) }} · {{ trip.availableSeats }} asientos</span>
+                        <span class="trip-row-status">{{ getTripStatus(trip) }}</span>
+                    </div>
+                    <button class="action-button" (click)="deleteTrip(trip)" [disabled]="trip.active === false">Dar de baja</button>
+                </div>
+                <p *ngIf="trips.length === 0" class="message">No hay viajes cargados.</p>
+                <p *ngIf="deleteTripMessage" class="message">{{ deleteTripMessage }}</p>
+            </div>
+        </div>
     </div>
 </div>

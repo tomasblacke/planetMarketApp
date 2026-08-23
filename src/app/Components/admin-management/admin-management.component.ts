@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdminService } from '../../Services/admin.service'; 
 import {Router} from '@angular/router';
 import { TravelReservationsService,SpaceTrip } from 'src/app/Services/travel-reservations.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-management',
@@ -9,7 +10,7 @@ import { TravelReservationsService,SpaceTrip } from 'src/app/Services/travel-res
   styleUrls: ['./admin-management.component.css']
 
 })
-export class AdminManagementComponent {
+export class AdminManagementComponent implements OnInit, OnDestroy {
   showAdminSection: boolean = false;
   addAdminEmail: string = '';
   addAdminMessage: string | null = null;
@@ -33,8 +34,25 @@ export class AdminManagementComponent {
   };
   addTripMessage: string | null = null;
 
+  //PROPIEDADES DE ADMIN PARA DAR DE BAJA VIAJES
+  showTripListSection: boolean = false;
+  trips: SpaceTrip[] = [];
+  deleteTripMessage: string | null = null;
+  private tripsSubscription?: Subscription;
+
 
   constructor(private adminService: AdminService,private router:Router,private travelReservationsService: TravelReservationsService) {}
+
+  ngOnInit(): void {
+    // El admin ve todos los viajes, incluidos los dados de baja y los que ya salieron
+    this.tripsSubscription = this.travelReservationsService.getAllTrips().subscribe(trips => {
+      this.trips = trips;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.tripsSubscription?.unsubscribe();
+  }
 
   toggleAdminSection() {
     this.showAdminSection = !this.showAdminSection;
@@ -94,5 +112,43 @@ export class AdminManagementComponent {
         }).catch(error => {
           this.addTripMessage = 'Error al agregar el viaje: ' + error.message;
         });
+      }
+
+      //GESTION DE VIAJES: LISTAR Y DAR DE BAJA
+      toggleTripListSection() {
+        this.showTripListSection = !this.showTripListSection;
+      }
+
+      deleteTrip(trip: SpaceTrip) {
+        if (!trip.docId) {
+          this.deleteTripMessage = 'No se pudo identificar el viaje.';
+          return;
+        }
+        if (!confirm(`¿Seguro que querés dar de baja "${trip.title}"?`)) {
+          return;
+        }
+        this.travelReservationsService.deleteTrip(trip.docId).then(() => {
+          this.deleteTripMessage = `Viaje "${trip.title}" dado de baja.`;
+        }).catch(error => {
+          this.deleteTripMessage = 'Error al dar de baja el viaje: ' + error.message;
+        });
+      }
+
+      // Texto de estado para mostrar en la lista
+      getTripStatus(trip: SpaceTrip): string {
+        if (trip.active === false) {
+          return 'Dado de baja';
+        }
+        if (trip.departure instanceof Date && trip.departure.getTime() < Date.now()) {
+          return 'Ya salió';
+        }
+        return 'Activo';
+      }
+
+      getFormattedDate(date: any): string {
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+          return 'Sin fecha';
+        }
+        return date.toLocaleDateString('en-GB');
       }
     }

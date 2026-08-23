@@ -20,6 +20,8 @@ export interface SpaceTrip {
   imageUrl: string;
   priceByPassanger: number;
   purchases?: any[];  // La propiedad "purchases" es opcional
+  docId?: string;
+  active?: boolean; // Si es false, el viaje fue dado de baja por el admin
 }
 
 @Injectable({
@@ -34,8 +36,9 @@ export class TravelReservationsService {
   /*getTrips(): Observable<SpaceTrip[]> {
     return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges();
   }*/
-    getTrips(): Observable<SpaceTrip[]> {
-      return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges().pipe(
+    // Devuelve todos los viajes tal como están en Firebase, sin filtrar
+    getAllTrips(): Observable<SpaceTrip[]> {
+      return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges({ idField: 'docId' }).pipe(
         map(trips => trips.map(trip => {
           if (trip.departure && typeof trip.departure === 'object' && 'seconds' in trip.departure) {
             trip.departure = new Date(trip.departure.seconds * 1000);
@@ -48,6 +51,24 @@ export class TravelReservationsService {
         }))
       );
     }
+
+    // Devuelve solo los viajes que se muestran al público
+    getTrips(): Observable<SpaceTrip[]> {
+      return this.getAllTrips().pipe(
+        // Filtra los viajes dados de baja por el admin y los que ya salieron
+        map(trips => trips.filter(trip => {
+          if (trip.active === false) {
+            return false; // El admin lo dio de baja
+          }
+          if (trip.departure instanceof Date) {
+            return trip.departure.getTime() >= Date.now(); // Solo los que todavía no salieron
+          }
+          return true; // Sin fecha definida, se sigue mostrando
+        }))
+      );
+    }
+
+
     
 
     
@@ -69,6 +90,19 @@ export class TravelReservationsService {
               return trip;
             }
             return undefined;
+          }),
+          // No devuelve el viaje si el admin lo dio de baja o si ya salió
+          map((trip: SpaceTrip | undefined) => {
+            if (!trip) {
+              return undefined;
+            }
+            if (trip.active === false) {
+              return undefined; // El admin lo dio de baja
+            }
+            if (trip.departure instanceof Date && trip.departure.getTime() < Date.now()) {
+              return undefined; // El viaje ya salió
+            }
+            return trip;
           })
         );
     }
@@ -107,13 +141,24 @@ export class TravelReservationsService {
   // Método para añadir un viaje a Firebase
   addTripToFirebase(trip: SpaceTrip): Promise<void> {
     const id = this.firestore.createId(); // Genera un nuevo ID
-    trip.id = parseInt(id); // Asigna el ID generado al viaje
+    trip.id = Date.now(); // Numero unico para las rutas /trips/:id y los comentarios
     return this.firestore.collection(this.COLLECTION_NAME).doc(id).set(trip)
       .then(() => console.log(`Viaje ${trip.title} agregado exitosamente.`))
       .catch(error => {
         console.error("Error al agregar el viaje: ", error);
         throw error; // Propagar el error para manejarlo en el componente
       });
+  }
+  //baja logica queda guardada en base
+  deleteTrip(docId:string){
+    return this.firestore.collection(this.COLLECTION_NAME).doc(docId).update({
+      active:false
+    })
+    .then(()=> console.log(`Viaje ${docId} desactivado`)  )
+    .catch(error=> {console.error("Error al descactivar viaje ", error);
+        throw error;
+        }
+          );
   }
 
   // Método para agregar todos los viajes de una vez a Firebase 

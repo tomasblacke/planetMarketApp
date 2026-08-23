@@ -5,14 +5,14 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px;
 }
 #info-details{
-    float: inline-end;
-    flex-direction: column;
-    margin-left: 100px;
-    text-align: right;
-    
-
+    text-align: left;
+    max-width: 500px;
 }
 
 p,h3,h4{
@@ -30,18 +30,23 @@ img{
 label{
     color: whitesmoke;
     margin-right: 5px;
+    display: inline-block;
+    width: 60px;
 }
 input{
     border-radius: 2px;
     border: hidden;
     margin-bottom: 2px;
+    padding: 5px;
+    width: 250px;
 }
-
+button{
+    margin-top: 10px;
+    margin-right: 5px;
+}
 
 .success-message {
     color: green;
     font-weight: bold;
     margin-top: 10px;
   }
-  
-/*NO LO PROOBAMOS NI UN POCO*/
