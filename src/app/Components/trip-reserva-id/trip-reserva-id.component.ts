@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core'; 
-import { ActivatedRoute } from '@angular/router'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
 import { SpaceTrip, TravelReservationsService } from 'src/app/Services/travel-reservations.service'; 
 import { CommentListComponent } from 'src/app/Components/comment-list/comment-list.component'; 
 import { FirebaseTimestamp } from 'src/app/Services/travel-reservations.service';
@@ -26,12 +26,17 @@ export class TripReservaIdComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private travelReservationsService: TravelReservationsService,
+    private router: Router,
     private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     const tripId = this.route.snapshot.paramMap.get('id')!;
     this.travelReservationsService.getTripById(parseInt(tripId, 10)).subscribe(trip => {
+      if (!trip) {
+        this.router.navigate(['/trips']); // No existe, fue dado de baja o ya salió
+        return;
+      }
       this.trip = trip;
       this.calculateTotalPrice();  // Llamada inicial para calcular el precio
     });

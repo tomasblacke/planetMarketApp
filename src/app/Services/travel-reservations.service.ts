@@ -36,7 +36,8 @@ export class TravelReservationsService {
   /*getTrips(): Observable<SpaceTrip[]> {
     return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges();
   }*/
-    getTrips(): Observable<SpaceTrip[]> {
+    // Devuelve todos los viajes tal como están en Firebase, sin filtrar
+    getAllTrips(): Observable<SpaceTrip[]> {
       return this.firestore.collection<SpaceTrip>(this.COLLECTION_NAME).valueChanges({ idField: 'docId' }).pipe(
         map(trips => trips.map(trip => {
           if (trip.departure && typeof trip.departure === 'object' && 'seconds' in trip.departure) {
@@ -47,7 +48,13 @@ export class TravelReservationsService {
             trip.departure = null;
           }
           return trip;
-        })),
+        }))
+      );
+    }
+
+    // Devuelve solo los viajes que se muestran al público
+    getTrips(): Observable<SpaceTrip[]> {
+      return this.getAllTrips().pipe(
         // Filtra los viajes dados de baja por el admin y los que ya salieron
         map(trips => trips.filter(trip => {
           if (trip.active === false) {
@@ -83,6 +90,19 @@ export class TravelReservationsService {
               return trip;
             }
             return undefined;
+          }),
+          // No devuelve el viaje si el admin lo dio de baja o si ya salió
+          map((trip: SpaceTrip | undefined) => {
+            if (!trip) {
+              return undefined;
+            }
+            if (trip.active === false) {
+              return undefined; // El admin lo dio de baja
+            }
+            if (trip.departure instanceof Date && trip.departure.getTime() < Date.now()) {
+              return undefined; // El viaje ya salió
+            }
+            return trip;
           })
         );
     }
@@ -121,7 +141,7 @@ export class TravelReservationsService {
   // Método para añadir un viaje a Firebase
   addTripToFirebase(trip: SpaceTrip): Promise<void> {
     const id = this.firestore.createId(); // Genera un nuevo ID
-    trip.id = parseInt(id); // Asigna el ID generado al viaje
+    trip.id = Date.now(); // Numero unico para las rutas /trips/:id y los comentarios
     return this.firestore.collection(this.COLLECTION_NAME).doc(id).set(trip)
       .then(() => console.log(`Viaje ${trip.title} agregado exitosamente.`))
       .catch(error => {
