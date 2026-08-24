@@ -400,6 +400,8 @@ export class TravelReservationsService {
         tripDescription: tripData.description,
         tripImage: tripData.imageUrl,
         tripDeparture: tripData.departure,
+        tripOrigin: tripData.origin,
+        tripDestination: tripData.destination,
         totalSeats: currentTotalSeats + seatsToBuy,
         totalInvested: (currentTotalSeats + seatsToBuy) * tripData.priceByPassanger,
         lastPurchase: purchaseData,

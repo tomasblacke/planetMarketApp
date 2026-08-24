@@ -93,6 +93,8 @@ export class PdfService {
     doc.text([
       `Titular: ${userData.name} ${userData.lastname}`,
       `Fecha de salida: ${this.formatDeparture(tripData.tripDeparture)}`,
+      `Origen: ${tripData.tripOrigin || 'No especificado'}`,
+      `Destino: ${tripData.tripDestination || 'No especificado'}`,
       `Asientos: ${tripData.totalSeats}`,
       `Total abonado: $${(tripData.totalInvested || 0).toLocaleString()}`,
       `Codigo de reserva: ${tripData.tripId}`
@@ -129,7 +131,7 @@ export class PdfService {
     doc.save(`Pasaje-${tripData.tripTitle}-${userData.name}${userData.lastname}.pdf`);
   }
 
-  // La fecha de salida viene como Timestamp de Firebase
+  // Fomarte de fecha timestamp de Firebase
   private formatDeparture(date: any): string {
     if (!date) {
       return 'Not specified';

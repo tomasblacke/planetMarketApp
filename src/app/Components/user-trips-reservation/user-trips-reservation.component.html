@@ -16,6 +16,7 @@
         <div class="reservation-details" *ngIf="reservaAbierta === reservation.tripId">
           <p>{{ reservation.tripDescription }}</p>
           <p><strong>Salida: </strong>{{ getFormattedDate(reservation.tripDeparture) }}</p>
+          <p *ngIf="reservation.tripOrigin"><strong>Ruta: </strong>{{ reservation.tripOrigin }} - {{ reservation.tripDestination }}</p>
           <p><strong>Asientos: </strong>{{ reservation.totalSeats }}</p>
           <p><strong>Total invertido: </strong>{{ reservation.totalInvested | currency }}</p>
 
