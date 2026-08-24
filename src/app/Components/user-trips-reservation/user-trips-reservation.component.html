@@ -33,6 +33,10 @@
           <p class="sin-pasajeros" *ngIf="!reservation.passengers || reservation.passengers.length === 0">
             Esta reserva no tiene datos de pasajeros registrados.
           </p>
+
+          <button (click)="downloadTicket(reservation)" class="ticket-button">
+            Descargar Pasaje
+          </button>
         </div>
       </div>
     </div>

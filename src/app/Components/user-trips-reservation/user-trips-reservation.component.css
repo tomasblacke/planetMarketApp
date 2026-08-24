@@ -123,3 +123,25 @@
     font-style: italic;
     color: #999;
   }
+  
+  /* Boton para bajar el pasaje en PDF */
+  .ticket-button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .ticket-button:hover {
+    background-color: #216a94;
+  }
+  
+  .ticket-button:active {
+    transform: translateY(1px);
+  }
