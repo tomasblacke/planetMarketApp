@@ -38,6 +38,8 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
   showTripListSection: boolean = false;
   trips: SpaceTrip[] = [];
   deleteTripMessage: string | null = null;
+  ordenBaja: string = 'proximos'; // proximos o todos
+  viajesBaja: SpaceTrip[] = [];
   private tripsSubscription?: Subscription;
 
   //PROPIEDADES DE ADMIN PARA VER LOS PASAJEROS DE UN VIAJE
@@ -56,6 +58,7 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
     // El admin ve todos los viajes, incluidos los dados de baja y los que ya salieron
     this.tripsSubscription = this.travelReservationsService.getAllTrips().subscribe(trips => {
       this.trips = trips;
+      this.armarListaBaja();
       this.armarListaManifiesto();
     });
 
@@ -176,17 +179,31 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
         this.pasajerosDelViaje = [];
       }
 
-      // Ordena los viajes del mas proximo al mas lejano
+      // Cambia el orden de la lista para dar de baja
+      cambiarOrdenBaja(orden: string) {
+        this.ordenBaja = orden;
+        this.armarListaBaja();
+      }
+
+      armarListaBaja() {
+        this.viajesBaja = this.ordenarViajes(this.ordenBaja);
+      }
+
       armarListaManifiesto() {
+        this.viajesManifiesto = this.ordenarViajes(this.ordenManifiesto);
+      }
+
+      // Ordena los viajes del mas proximo al mas lejano
+      private ordenarViajes(orden: string): SpaceTrip[] {
         let lista = [...this.trips];
 
-        if (this.ordenManifiesto === 'proximos') {
+        if (orden === 'proximos') {
           // Deja afuera los que ya salieron
           lista = lista.filter(trip => trip.departure instanceof Date && trip.departure.getTime() >= Date.now());
         }
 
         lista.sort((a, b) => this.tiempoDeSalida(a) - this.tiempoDeSalida(b));
-        this.viajesManifiesto = lista;
+        return lista;
       }
 
       // Los viajes sin fecha cargada quedan al final de la lista
