@@ -100,5 +100,48 @@
                 <p *ngIf="deleteTripMessage" class="message">{{ deleteTripMessage }}</p>
             </div>
         </div>
+
+        <!-- Sección para ver los pasajeros de cada viaje -->
+        <div class="admin-action">
+            <h3>
+                <button class="toggle-trip-button" (click)="toggleManifiestoSection()">Ver Pasajeros de un Viaje</button>
+            </h3>
+            <div *ngIf="showManifiestoSection" class="trip-list">
+                <div class="manifiesto-orden">
+                    <button class="action-button" (click)="cambiarOrden('proximos')" [class.orden-activo]="ordenManifiesto === 'proximos'">Próximos</button>
+                    <button class="action-button" (click)="cambiarOrden('todos')" [class.orden-activo]="ordenManifiesto === 'todos'">Todos</button>
+                </div>
+
+                <div *ngFor="let trip of viajesManifiesto" class="trip-item">
+                    <div class="trip-row">
+                        <div class="trip-row-info">
+                            <span class="trip-row-title">{{ trip.title }}</span>
+                            <span class="trip-row-detail">{{ trip.destination }} · {{ getFormattedDate(trip.departure) }} · {{ trip.availableSeats }} asientos</span>
+                            <span class="trip-row-status">{{ getTripStatus(trip) }}</span>
+                        </div>
+                        <button class="action-button" (click)="verPasajeros(trip)">Ver pasajeros</button>
+                    </div>
+
+                    <!-- Lista de quienes viajan, se abre con el boton -->
+                    <div class="manifiesto" *ngIf="manifiestoAbierto === trip.docId">
+                        <p class="manifiesto-titulo">Pasajeros ({{ pasajerosDelViaje.length }})</p>
+                        <table class="manifiesto-tabla" *ngIf="pasajerosDelViaje.length > 0">
+                            <tr>
+                                <th>Pasajero</th>
+                                <th>Mail</th>
+                                <th>Comprado por</th>
+                            </tr>
+                            <tr *ngFor="let pasajero of pasajerosDelViaje">
+                                <td>{{ pasajero.name }}</td>
+                                <td>{{ pasajero.email }}</td>
+                                <td>{{ pasajero.comprador }}</td>
+                            </tr>
+                        </table>
+                        <p class="message" *ngIf="pasajerosDelViaje.length === 0">Todavia no hay reservas para este viaje.</p>
+                    </div>
+                </div>
+                <p *ngIf="viajesManifiesto.length === 0" class="message">No hay viajes para mostrar.</p>
+            </div>
+        </div>
     </div>
 </div>

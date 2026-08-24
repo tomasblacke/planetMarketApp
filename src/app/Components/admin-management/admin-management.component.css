@@ -154,3 +154,60 @@ input:focus, textarea:focus {
   background-color: #6b7a99;
   cursor: not-allowed;
 }
+
+/* Cada viaje */
+.trip-item {
+  margin-bottom: 8px;
+}
+
+.trip-item .trip-row {
+  margin-bottom: 0;
+}
+
+/* Lista de pasajeros del viaje */
+.manifiesto {
+  padding: 10px 15px 15px 15px;
+  background-color: #24395e;
+  border-radius: 0 0 5px 5px;
+}
+
+.manifiesto-titulo {
+  color: #3bc0a8;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+.manifiesto-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.manifiesto-tabla th {
+  text-align: left;
+  color: #cfd8dc;
+  border-bottom: 1px solid #4a90e2;
+  padding: 5px;
+}
+
+.manifiesto-tabla td {
+  color: #ffffff;
+  padding: 5px;
+  border-bottom: 1px solid #2a3b6a;
+}
+
+/* Selector de orden del manifiesto */
+.manifiesto-orden {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.manifiesto-orden .action-button {
+  background-color: #24395e;
+  border: 1px solid #4a90e2;
+}
+
+.manifiesto-orden .orden-activo {
+  background-color: #4a90e2;
+}
