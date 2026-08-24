@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserReservationsService } from 'src/app/Services/user-reservations.service';
+import { AuthService } from 'src/app/Services/user-auth.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { PdfService } from 'src/app/Services/pdf.service';
+
+interface UserData {
+  name: string;
+  lastname: string;
+}
 
 @Component({
   selector: 'app-user-trips-reservation',
@@ -12,7 +20,12 @@ export class UserTripsReservationComponent implements OnInit {
   userReservations$!: Observable<any[]>;
   reservaAbierta: string | null = null;
 
-  constructor(private userService: UserReservationsService) { }
+  constructor(
+    private userService: UserReservationsService,
+    private authService: AuthService,
+    private firestore: AngularFirestore,
+    private pdfService: PdfService
+  ) { }
 
   ngOnInit(): void {
     // Llamamos al servicio para obtener las reservas del usuario
@@ -24,7 +37,7 @@ export class UserTripsReservationComponent implements OnInit {
     this.reservaAbierta = this.reservaAbierta === tripId ? null : tripId;
   }
 
-  // Fomartea timestamp de Firebase
+  // La fecha de salida viene como Timestamp de Firebase
   getFormattedDate(date: any): string {
     if (!date) {
       return 'Not specified';
@@ -34,5 +47,34 @@ export class UserTripsReservationComponent implements OnInit {
       return 'Not specified';
     }
     return validDate.toLocaleDateString('en-GB');
+  }
+
+  //DESCARGA DEL PASAJE
+  async downloadTicket(reservation: any) {
+    try {
+      const user = await this.authService.getCurrentUser();
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const userDoc = await this.firestore
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .toPromise();
+
+      const userData = userDoc?.data() as UserData;
+
+      if (userData) {
+        const userInfo = {
+          name: userData.name,
+          lastname: userData.lastname
+        };
+
+        await this.pdfService.generateTripTicketPDF(reservation, userInfo);
+      }
+    } catch (error) {
+      console.error('Error generando el pasaje:', error);
+    }
   }
 }
