@@ -67,7 +67,9 @@ export class TripReservaIdComponent implements OnInit {
     if (!this.trip) return;
 
     const totalPassengers = this.companions.length + 1;
-    this.travelReservationsService.processPurchase(this.trip.id.toString(), totalPassengers)
+    // El pasajero principal primero y despues los acompañantes
+    const passengers = [this.mainPassenger, ...this.companions];
+    this.travelReservationsService.processPurchase(this.trip.id.toString(), totalPassengers, passengers)
       .then(response => {
         if (response.success) {
           console.log('Reservation submitted successfully:', response.transaction);

@@ -13,7 +13,7 @@
             <br>
 
             <h2>Book this trip</h2>
-            <form (ngSubmit)="onSubmit()">
+            <form (ngSubmit)="onSubmit()" #reservaForm="ngForm">
                 <h3>Main Passenger</h3>
                 <div>
                     <label for="name">Name:</label>
@@ -42,7 +42,7 @@
                 <button type="button" (click)="addCompanion()">Add Companion</button>
                 
                 <p>Total Price: ${{ totalPrice }}</p>
-                <button type="submit">Confirm Reservation</button>
+                <button type="submit" [disabled]="reservaForm.invalid">Confirm Reservation</button>
             </form>
 
             <div *ngIf="successMessage" class="success-message">

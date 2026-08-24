@@ -81,4 +81,45 @@
     text-align: center;
     margin-top: 20px;
   }
+    
+  /* Clickeable de la tarjeta para info*/
+  .reservation-header {
+    cursor: pointer;
+    position: relative;
+  }
   
+  .reservation-header h4 {
+    margin: 0;
+    padding: 15px 40px 15px 15px;
+    font-size: 1.2em;
+    color: #2c3e50;
+    font-weight: bold;
+  }
+  
+  /* El + / - para indicar si esta abierta */
+  .toggle-icon {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #2980b9;
+  }
+  
+  /* Lista de pasajeros */
+  .reservation-details h5 {
+    margin: 10px 0 5px 0;
+    color: #2c3e50;
+  }
+  
+  .reservation-details ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #7f8c8d;
+  }
+  
+  /* Aviso para las reservas viejas que no guardaron pasajeros */
+  .reservation-details .sin-pasajeros {
+    font-style: italic;
+    color: #999;
+  }

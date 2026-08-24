@@ -4,13 +4,21 @@
     <h3>Mis Reservas</h3>
     <div class="reservation-list">
       <div *ngFor="let reservation of reservations" class="reservation-card">
-        <img [src]="reservation.tripImage" alt="Trip Image" class="reservation-image">
-        <div class="reservation-details">
+
+        
+        <div class="reservation-header" (click)="toggleReserva(reservation.tripId)">
+          <img [src]="reservation.tripImage" alt="Trip Image" class="reservation-image">
           <h4>{{ reservation.tripTitle }}</h4>
+          <span class="toggle-icon">{{ reservaAbierta === reservation.tripId ? '-' : '+' }}</span>
+        </div>
+
+        <!-- Detalle, se abre al hacer click -->
+        <div class="reservation-details" *ngIf="reservaAbierta === reservation.tripId">
           <p>{{ reservation.tripDescription }}</p>
+          <p><strong>Salida: </strong>{{ getFormattedDate(reservation.tripDeparture) }}</p>
           <p><strong>Asientos: </strong>{{ reservation.totalSeats }}</p>
           <p><strong>Total invertido: </strong>{{ reservation.totalInvested | currency }}</p>
-          
+
           <!-- Mostrar los pasajeros -->
           <div *ngIf="reservation.passengers && reservation.passengers.length > 0">
             <h5>Pasajeros:</h5>
@@ -20,6 +28,11 @@
               </li>
             </ul>
           </div>
+
+          <!-- Las reservas hechas antes no guardaron los pasajeros -->
+          <p class="sin-pasajeros" *ngIf="!reservation.passengers || reservation.passengers.length === 0">
+            Esta reserva no tiene datos de pasajeros registrados.
+          </p>
         </div>
       </div>
     </div>
