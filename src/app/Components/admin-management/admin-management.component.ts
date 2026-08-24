@@ -38,7 +38,18 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
   showTripListSection: boolean = false;
   trips: SpaceTrip[] = [];
   deleteTripMessage: string | null = null;
+  ordenBaja: string = 'proximos'; // proximos o todos
+  viajesBaja: SpaceTrip[] = [];
   private tripsSubscription?: Subscription;
+
+  //PROPIEDADES DE ADMIN PARA VER LOS PASAJEROS DE UN VIAJE
+  purchases: any[] = [];
+  showManifiestoSection: boolean = false;
+  ordenManifiesto: string = 'proximos'; // proximos o todos
+  viajesManifiesto: SpaceTrip[] = [];
+  manifiestoAbierto: string | null = null;
+  pasajerosDelViaje: any[] = [];
+  private purchasesSubscription?: Subscription;
 
 
   constructor(private adminService: AdminService,private router:Router,private travelReservationsService: TravelReservationsService) {}
@@ -47,11 +58,19 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
     // El admin ve todos los viajes, incluidos los dados de baja y los que ya salieron
     this.tripsSubscription = this.travelReservationsService.getAllTrips().subscribe(trips => {
       this.trips = trips;
+      this.armarListaBaja();
+      this.armarListaManifiesto();
+    });
+
+    // Las compras sirven para armar la lista de pasajeros de cada viaje
+    this.purchasesSubscription = this.adminService.getPurchases().subscribe(purchases => {
+      this.purchases = purchases;
     });
   }
 
   ngOnDestroy(): void {
     this.tripsSubscription?.unsubscribe();
+    this.purchasesSubscription?.unsubscribe();
   }
 
   toggleAdminSection() {
@@ -143,6 +162,86 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
           return 'Ya salió';
         }
         return 'Activo';
+      }
+
+      toggleManifiestoSection() {
+        this.showManifiestoSection = !this.showManifiestoSection;
+        // Al abrir o cerrar la seccion no queda ningun viaje desplegado
+        this.manifiestoAbierto = null;
+        this.pasajerosDelViaje = [];
+      }
+
+      // Cambia entre ver solo los proximos o todos los viajes
+      cambiarOrden(orden: string) {
+        this.ordenManifiesto = orden;
+        this.armarListaManifiesto();
+        this.manifiestoAbierto = null;
+        this.pasajerosDelViaje = [];
+      }
+
+      // Cambia el orden de la lista para dar de baja
+      cambiarOrdenBaja(orden: string) {
+        this.ordenBaja = orden;
+        this.armarListaBaja();
+      }
+
+      armarListaBaja() {
+        this.viajesBaja = this.ordenarViajes(this.ordenBaja);
+      }
+
+      armarListaManifiesto() {
+        this.viajesManifiesto = this.ordenarViajes(this.ordenManifiesto);
+      }
+
+      // Ordena los viajes del mas proximo al mas lejano
+      private ordenarViajes(orden: string): SpaceTrip[] {
+        let lista = [...this.trips];
+
+        if (orden === 'proximos') {
+          // Deja afuera los que ya salieron
+          lista = lista.filter(trip => trip.departure instanceof Date && trip.departure.getTime() >= Date.now());
+        }
+
+        lista.sort((a, b) => this.tiempoDeSalida(a) - this.tiempoDeSalida(b));
+        return lista;
+      }
+
+      // Los viajes sin fecha cargada quedan al final de la lista
+      private tiempoDeSalida(trip: SpaceTrip): number {
+        return trip.departure instanceof Date ? trip.departure.getTime() : Number.MAX_SAFE_INTEGER;
+      }
+
+      // Arma la lista de pasajeros del viaje juntando todas sus compras
+      verPasajeros(trip: SpaceTrip) {
+        if (this.manifiestoAbierto === trip.docId) {
+          this.manifiestoAbierto = null;
+          this.pasajerosDelViaje = [];
+          return;
+        }
+
+        this.manifiestoAbierto = trip.docId || null;
+        this.pasajerosDelViaje = [];
+
+        this.purchases
+          .filter(compra => compra.tripId === trip.docId)
+          .forEach(compra => {
+            if (compra.passengers && compra.passengers.length > 0) {
+              compra.passengers.forEach((pasajero: any) => {
+                this.pasajerosDelViaje.push({
+                  name: pasajero.name,
+                  email: pasajero.email,
+                  comprador: compra.userEmail
+                });
+              });
+            } else {
+              // Las compras viejas no guardaron los nombres, solo la cantidad por lo que se puede evitamos errores futuros en cargas de viajes viejos 
+              this.pasajerosDelViaje.push({
+                name: compra.seatsPurchased + ' asiento(s) sin datos de pasajero',
+                email: '-',
+                comprador: compra.userEmail
+              });
+            }
+          });
       }
 
       getFormattedDate(date: any): string {
