@@ -238,7 +238,8 @@ export class TravelReservationsService {
 
   async processPurchase(
     tripId: string, 
-    seatsToBuy: number
+    seatsToBuy: number,
+    passengers: any[] = []
   ): Promise<{ success: boolean; message: string; transaction?: any }> {
     try {
       const currentUser = await this.validateUserLogin();
@@ -249,12 +250,12 @@ export class TravelReservationsService {
         const { userDoc, userData } = await this.getUserDetails(currentUser, transaction);
         const userTripDoc = await this.getUserTripDocument(currentUser, tripDoc, transaction);
   
-        const purchaseData = this.createPurchaseData(currentUser, tripData, tripDoc, seatsToBuy);
-        const { currentTotalSeats, currentPurchases } = this.getPreviousPurchaseDetails(userTripDoc);
+        const purchaseData = this.createPurchaseData(currentUser, tripData, tripDoc, seatsToBuy, passengers);
+        const { currentTotalSeats, currentPurchases, currentPassengers } = this.getPreviousPurchaseDetails(userTripDoc);
         
         await this.updateTripAvailableSeats(transaction, tripRef, tripData.availableSeats - seatsToBuy);
         await this.recordPurchase(transaction, purchaseData);
-        await this.updateUserTripCollection(transaction, currentUser, tripData, purchaseData, currentTotalSeats, currentPurchases, seatsToBuy);
+        await this.updateUserTripCollection(transaction, currentUser, tripData, purchaseData, currentTotalSeats, currentPurchases, currentPassengers, seatsToBuy);
         await this.updateUserProfile(transaction, currentUser, userData, purchaseData);
   
         return { 
@@ -331,7 +332,7 @@ export class TravelReservationsService {
 
 
   //CREA OBJETO CON LOS DATOS DE LA COMPRA
-  private createPurchaseData(currentUser: any, tripData: SpaceTrip, tripDoc: any, seatsToBuy: number) {
+  private createPurchaseData(currentUser: any, tripData: SpaceTrip, tripDoc: any, seatsToBuy: number, passengers: any[]) {
     return {
       userId: currentUser.uid,
       userEmail: currentUser.email,
@@ -339,6 +340,7 @@ export class TravelReservationsService {
       tripTitle: tripData.title,
       tripDeparture: tripData.departure,
       seatsPurchased: seatsToBuy,
+      passengers: passengers,
       pricePerSeat: tripData.priceByPassanger,
       totalPrice: tripData.priceByPassanger * seatsToBuy,
       purchaseDate: new Date()
@@ -355,7 +357,11 @@ export class TravelReservationsService {
       ? userTripDoc.data().purchases || [] 
       : [];
   
-    return { currentTotalSeats, currentPurchases };
+    const currentPassengers = userTripDoc.exists 
+      ? userTripDoc.data().passengers || [] 
+      : [];
+  
+    return { currentTotalSeats, currentPurchases, currentPassengers };
   }
   
   //ACTUALIZA LA CANTIDAD DE ASIENTOS
@@ -377,6 +383,7 @@ export class TravelReservationsService {
     purchaseData: any,
     currentTotalSeats: number,
     currentPurchases: any[],
+    currentPassengers: any[],
     seatsToBuy: number
   ) {
     const userTripRef = this.firestore
@@ -396,6 +403,7 @@ export class TravelReservationsService {
         totalSeats: currentTotalSeats + seatsToBuy,
         totalInvested: (currentTotalSeats + seatsToBuy) * tripData.priceByPassanger,
         lastPurchase: purchaseData,
+        passengers: [...currentPassengers, ...purchaseData.passengers],
         purchases: [...currentPurchases, purchaseData]
       },
       { merge: true }
