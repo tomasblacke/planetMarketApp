@@ -2,15 +2,16 @@
     <h3>Mis Notificaciones</h3>
 
 
-    <!-- Parte de las notificaciones, si hay muestra, si no. no -->
+    <!-- Parte de las notificaciones, si hay muestra, si no , no -->
     <div class="notifications-grid" *ngIf=" (upcomingTrips$ | async) as trips">
         <div *ngIf="trips.length > 0" class="notifications-list">
-            <div class="notification-card" *ngFor="let trip of trips">
+            <div class="notification-card" *ngFor="let trip of trips" [class.cancelada]="trip.cancelado">
                 <div class="notification-details">
                     <h4>{{ trip.tripTitle }}</h4>
                     <!--<p>Fecha de Salida: {{ trip.formattedDeparture }}</p>-->
                     <p class="tickets">{{ trip.totalSeats }} {{ trip.totalSeats === 1 ? "pasaje" : "pasajes" }}</p>
-                    <p class="countdown">¡Tu viaje sale en {{ trip.daysUntilDeparture }} días!</p>
+                    <p class="cancelado" *ngIf="trip.cancelado">Este viaje fue cancelado. Comunicate con nosotros para gestionar la devolución.</p>
+                    <p class="countdown" *ngIf="!trip.cancelado">¡Tu viaje sale en {{ trip.daysUntilDeparture }} días!</p>
                 </div>
             </div>
         </div>
