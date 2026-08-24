@@ -88,7 +88,12 @@
                 <button class="toggle-trip-button" (click)="toggleTripListSection()">Dar de Baja un Viaje</button>
             </h3>
             <div *ngIf="showTripListSection" class="trip-list">
-                <div *ngFor="let trip of trips" class="trip-row">
+                <div class="manifiesto-orden">
+                    <button class="action-button" (click)="cambiarOrdenBaja('proximos')" [class.orden-activo]="ordenBaja === 'proximos'">Próximos</button>
+                    <button class="action-button" (click)="cambiarOrdenBaja('todos')" [class.orden-activo]="ordenBaja === 'todos'">Todos</button>
+                </div>
+
+                <div *ngFor="let trip of viajesBaja" class="trip-row">
                     <div class="trip-row-info">
                         <span class="trip-row-title">{{ trip.title }}</span>
                         <span class="trip-row-detail">{{ trip.destination }} · {{ getFormattedDate(trip.departure) }} · {{ trip.availableSeats }} asientos</span>
@@ -96,7 +101,7 @@
                     </div>
                     <button class="action-button" (click)="deleteTrip(trip)" [disabled]="trip.active === false">Dar de baja</button>
                 </div>
-                <p *ngIf="trips.length === 0" class="message">No hay viajes cargados.</p>
+                <p *ngIf="viajesBaja.length === 0" class="message">No hay viajes para mostrar.</p>
                 <p *ngIf="deleteTripMessage" class="message">{{ deleteTripMessage }}</p>
             </div>
         </div>
