@@ -32,7 +32,7 @@ const routes: Routes = [
     component: AdminManagementComponent,
   canActivate:[AdminGuard] 
 },
-  {path:'purchases', component: PurchasesComponent},
+  {path:'purchases', component: PurchasesComponent, canActivate:[AdminGuard]},
   {path:'register',component: RegisterComponent},
 
   {
