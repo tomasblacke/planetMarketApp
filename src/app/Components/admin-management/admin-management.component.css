@@ -56,7 +56,7 @@ h2 {
 }
 
 /* Entradas */
-input, textarea {
+input, textarea, select {
   width: 100%;
   padding: 10px;
   border: 1px solid #cccccc;
@@ -67,7 +67,7 @@ input, textarea {
   color: #333333;
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   border-color: #4a90e2;
   outline: none;
   box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
