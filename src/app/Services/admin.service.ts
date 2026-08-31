@@ -11,7 +11,7 @@ export class AdminService {
   private purchasesCollection = 'purchases';
 
   constructor(private firestore: AngularFirestore) {
-    this.initializeAdminsCollection();
+    //this.initializeAdminsCollection();//esto ya se uso una vez para cargar el primer admin en firebase
   }
 
   // Inicializar la colección de administradores
