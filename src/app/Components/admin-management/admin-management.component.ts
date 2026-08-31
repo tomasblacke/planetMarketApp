@@ -34,6 +34,17 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
   };
   addTripMessage: string | null = null;
 
+  //IMAGENES QUE YA ESTAN EN LA CARPETA assets. Agregar bajo el mismo formato nuevas
+  imagenesViajes = [
+    { nombre: 'Marte', ruta: '/assets/planet-travel-mars.webp' },
+    { nombre: 'Venus', ruta: '/assets/planet-travel-venus.png' },
+    { nombre: 'Jupiter', ruta: '/assets/planet-travel-jupiter.webp' },
+    { nombre: 'Luna', ruta: '/assets/planet-travel-moon.png' },
+    {nombre:'Ship', ruta: '/assets/imagen-interior-nave.png'},
+    {nombre:'Luxury Ship', ruta:'/assets/imagen-interior-nave-luxury.png'},
+    {nombre: 'Nave En Espacio', ruta:'/assets/spaceship-traveling.jpg'}
+  ];
+
   //PROPIEDADES DE ADMIN PARA DAR DE BAJA VIAJES
   showTripListSection: boolean = false;
   trips: SpaceTrip[] = [];

@@ -73,8 +73,11 @@
                             name="priceByPassanger" required min="0">
                     </div>
                     <div>
-                        <label for="imageUrl">URL de la Imagen:</label>
-                        <input id="imageUrl" [(ngModel)]="newTrip.imageUrl" name="imageUrl" required>
+                        <label for="imageUrl">Imagen del Viaje:</label>
+                        <select id="imageUrl" [(ngModel)]="newTrip.imageUrl" name="imageUrl" required>
+                            <option value="">Elegir una imagen</option>
+                            <option *ngFor="let imagen of imagenesViajes" [value]="imagen.ruta">{{ imagen.nombre }}</option>
+                        </select>
                     </div>
                     <button type="submit" class="submit-button">Agregar Viaje</button>
                 </form>
