@@ -4,15 +4,19 @@ text-align: center;
 .content-wrapper{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;/*si no entran los dos al lado, el de la derecha baja en vez de pisarse*/
     justify-content: space-between;/*con space around en 100% se chocan, es este modo se repelen*/
+    gap: 40px;
 }
 .image-container{
-    width: 200px;
+    width: 500px;
+    max-width: 100%;
     height: auto;
     margin-right: 10px;
 }
 .operational-container{
-    margin-left: 100px; 
+    flex: 1;/*ocupa el espacio que sobra al lado de la imagen*/
+    min-width: 300px;/*si no le quedan 300px se va debajo de la imagen*/
 }
 .price-tag{
     font-weight: bold;
@@ -20,22 +24,66 @@ text-align: center;
     margin-top: 50px;
 }
 img{
-    width: 500px;  
+    width: 100%;  
     height: 500px; 
     object-fit: cover; 
     border-radius: 8px; 
 }
+.purchase-form{
+    margin-top: 30px;
+}
+.input-group{
+    display: flex;
+    flex-direction: column;/*la etiqueta arriba y el input debajo, asi no se sale*/
+    gap: 5px;
+}
+.input-group label{
+    color: whitesmoke;
+    font-weight: bold;
+}
+.input-group input{
+    width: 100%;
+    box-sizing: border-box;/*para que el padding no lo haga mas ancho que el contenedor*/
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.price-summary{
+    margin-top: 15px;
+}
 .button-purchase{
-    font-size: 18px !important;
+    margin-top: 20px;
+}
+.purchase-button{
+    font-size: 18px;
     display: block;
+    width: 100%;
     margin: 0 auto; /* Centra el botón */
     padding: 10px 20px;
-    background-color: #ff5722; 
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
     text-align: center;
+}
+.purchase-button:disabled{
+    background-color: #9e9e9e;
+    cursor: not-allowed;
+}
 
+/* Media queries para responsividad */
+@media (max-width: 900px) {
+    .content-wrapper{
+        flex-direction: column;
+        gap: 20px;
+    }
 
+    .image-container{
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .operational-container{
+        min-width: 0;
+    }
+
+    img{
+        height: 300px;
+    }
 }

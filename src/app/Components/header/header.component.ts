@@ -37,7 +37,7 @@ export class HeaderComponent {
       })
     ).subscribe(results => {
       this.searchResults = results;
-      this.showResults = results.length > 0;
+      this.showResults = true; // si llegamos aca es porque se busco algo, asi que mostramos el desplegable aunque no haya resultados
     });
 
     // Suscribirse al estado de autenticación
