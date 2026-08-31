@@ -14,6 +14,7 @@ import { map, Observable, of, switchMap } from 'rxjs';
 })
 export class AuthService {
   user$: Observable<any>;
+  private readonly DURACION_SESION = 2 * 60 * 60 * 1000;// duracion de sesion (2 HORAS)
 
   constructor(private fireauth: AngularFireAuth, private router: Router, private firestore: AngularFirestore) {
     this.user$ = this.fireauth.authState.pipe(
@@ -31,17 +32,31 @@ export class AuthService {
         return of(null); // Si no hay usuario, retorna null
       })
     );
+    this.controlarDuracionSesion();
   }
-  //login method
+
+  // Si la sesion arranco hace mas de 2 horas la cerramos
+  private controlarDuracionSesion() {
+    const horaLogin = sessionStorage.getItem('loginTime');
+    if (horaLogin && (Date.now() - Number(horaLogin)) > this.DURACION_SESION) {
+      console.log('La sesion caduco, se cierra');
+      this.logout();
+    }
+  }
+  //login 
   login(email: string, password: string) {
-    this.fireauth.signInWithEmailAndPassword(email, password)
-      .then(() => {
-        localStorage.setItem('token', 'true');
-        this.router.navigate(['']);
-      }, err => {
-        alert(err.message)
-        this.router.navigate(['/login']);
-      })
+    // Con session se mantiene abierta hasta que cierre
+    this.fireauth.setPersistence('session').then(() => {
+      this.fireauth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          localStorage.setItem('token', 'true');
+          sessionStorage.setItem('loginTime', Date.now().toString()); // Guardamos hora para ver comparar y cerrar
+          this.router.navigate(['']);
+        }, err => {
+          alert(err.message)
+          this.router.navigate(['/login']);
+        })
+    })
   }
 
 
@@ -82,6 +97,7 @@ export class AuthService {
   logout() {
     this.fireauth.signOut().then(() => {
       localStorage.removeItem('token');
+      sessionStorage.removeItem('loginTime');
       this.router.navigate(['/login']);
     }, err => {
       alert(err.message);
@@ -95,8 +111,8 @@ export class AuthService {
     );
   }
   
-  //FOR STATE MANAGEMENT
-  // Nuevo método para observar el estado de autenticación
+
+  // Método para observar el estado de autenticación
   getAuthState(): Observable<any> {
     return this.fireauth.authState;
   }
