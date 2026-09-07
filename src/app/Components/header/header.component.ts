@@ -73,7 +73,8 @@ export class HeaderComponent {
     ]).then(([planets, trips]) => {
       return [
         ...planets.map(p => ({ ...p, type: 'planet' })),
-        ...trips.map(t => ({ ...t, type: 'trip' }))
+        //el viaje guarda su nombre en title, asi que lo copiamos a name para que el desplegable lo muestre igual que el planeta
+        ...trips.map(t => ({ ...t, name: t.title, type: 'trip' }))
       ];
     });
   }

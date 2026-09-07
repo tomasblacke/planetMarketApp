@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdminService } from '../../Services/admin.service'; 
 import {Router} from '@angular/router';
 import { TravelReservationsService,SpaceTrip } from 'src/app/Services/travel-reservations.service';
+import { PlanetService, Planet } from 'src/app/Services/planet.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -62,8 +63,40 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
   pasajerosDelViaje: any[] = [];
   private purchasesSubscription?: Subscription;
 
+  //PROPIEDADES DE ADMIN PARA GESTIONAR PLANETAS
+  showPlanetSection: boolean = false;
+  planets: Planet[] = [];
+  addPlanetMessage: string | null = null;
+  buscandoImagen: boolean = false;
+  planetaEditando: number | null = null;
+  editPlanetMessage: string | null = null;
+  private planetsSubscription?: Subscription;
 
-  constructor(private adminService: AdminService,private router:Router,private travelReservationsService: TravelReservationsService) {}
+  // Planeta nuevo del formulario de alta
+  newPlanet: any = {
+    name: '',
+    type: '',
+    diameter: 0,
+    distanceFromSun: 0,
+    description: '',
+    price: 0,
+    totalKilometers: 0,
+    imageUrl: '',
+    available: true
+  };
+
+  // Copia del planeta que se esta editando, para no tocar el de la lista hasta guardar
+  planetEdit: any = {
+    name: '',
+    type: '',
+    description: '',
+    price: 0,
+    imageUrl: '',
+    available: true
+  };
+
+
+  constructor(private adminService: AdminService,private router:Router,private travelReservationsService: TravelReservationsService,private planetService: PlanetService) {}
 
   ngOnInit(): void {
     // El admin ve todos los viajes, incluidos los dados de baja y los que ya salieron
@@ -77,11 +110,17 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
     this.purchasesSubscription = this.adminService.getPurchases().subscribe(purchases => {
       this.purchases = purchases;
     });
+
+    // Los planetas para la seccion de gestion del catalogo
+    this.planetsSubscription = this.planetService.getPlanets().subscribe(planets => {
+      this.planets = planets;
+    });
   }
 
   ngOnDestroy(): void {
     this.tripsSubscription?.unsubscribe();
     this.purchasesSubscription?.unsubscribe();
+    this.planetsSubscription?.unsubscribe();
   }
 
   toggleAdminSection() {
@@ -253,6 +292,106 @@ export class AdminManagementComponent implements OnInit, OnDestroy {
               });
             }
           });
+      }
+
+      //GESTION DE PLANETAS: ALTA, EDICION Y BAJA DEL CATALOGO
+      togglePlanetSection() {
+        this.showPlanetSection = !this.showPlanetSection;
+        // Al abrir o cerrar la seccion no queda ningun planeta en edicion
+        this.planetaEditando = null;
+      }
+
+      // Busca la imagen en la NASA y la deja en el campo, para que el admin la pueda ver o cambiar
+      buscarImagenNasa() {
+        if (!this.newPlanet.name) {
+          this.addPlanetMessage = 'Escribi primero el nombre del planeta.';
+          return;
+        }
+        this.buscandoImagen = true;
+        this.planetService.getPlanetImage(this.newPlanet.name).subscribe(imageUrl => {
+          this.buscandoImagen = false;
+          if (imageUrl) {
+            this.newPlanet.imageUrl = imageUrl;
+            this.addPlanetMessage = 'Imagen encontrada en la NASA.';
+          } else {
+            this.addPlanetMessage = 'No se encontro imagen, cargala a mano.';
+          }
+        });
+      }
+
+      addPlanet() {
+        if (!this.newPlanet.name || !this.newPlanet.type || this.newPlanet.totalKilometers <= 0) {
+          this.addPlanetMessage = 'Completa el nombre, el tipo y la superficie total.';
+          return;
+        }
+
+        this.planetService.addNewPlanet(this.newPlanet).then(() => {
+          this.addPlanetMessage = 'Planeta agregado exitosamente.';
+          // Limpiar el formulario
+          this.newPlanet = {
+            name: '',
+            type: '',
+            diameter: 0,
+            distanceFromSun: 0,
+            description: '',
+            price: 0,
+            totalKilometers: 0,
+            imageUrl: '',
+            available: true
+          };
+        }).catch(error => {
+          this.addPlanetMessage = 'Error al agregar el planeta: ' + error.message;
+        });
+      }
+
+      // Abre el formulario de edicion con los datos del planeta elegido
+      editarPlaneta(planet: Planet) {
+        if (this.planetaEditando === planet.id) {
+          this.planetaEditando = null;
+          return;
+        }
+        this.planetaEditando = planet.id;
+        this.editPlanetMessage = null;
+        this.planetEdit = {
+          name: planet.name,
+          type: planet.type,
+          description: planet.description,
+          price: planet.price,
+          imageUrl: planet.imageUrl,
+          available: planet.available
+        };
+      }
+
+      cancelarEdicion() {
+        this.planetaEditando = null;
+        this.editPlanetMessage = null;
+      }
+
+      // No dejamos editar la superficie total porque ya hay kilometros vendidos sobre ese numero
+      guardarPlaneta(planet: Planet) {
+        this.planetService.updatePlanet(planet.id, this.planetEdit).then(() => {
+          this.editPlanetMessage = `Planeta "${this.planetEdit.name}" actualizado.`;
+          this.planetaEditando = null;
+        }).catch(error => {
+          this.editPlanetMessage = 'Error al actualizar el planeta: ' + error.message;
+        });
+      }
+
+      eliminarPlaneta(planet: Planet) {
+        if (!confirm(`¿Seguro que querés eliminar "${planet.name}" del catálogo?`)) {
+          return;
+        }
+        this.planetService.deletePlanet(planet.id).then(() => {
+          this.editPlanetMessage = `Planeta "${planet.name}" eliminado.`;
+          this.planetaEditando = null;
+        }).catch(error => {
+          this.editPlanetMessage = 'Error al eliminar el planeta: ' + error.message;
+        });
+      }
+
+      // Cuantos km2 se vendieron, para mostrarlo en la lista
+      kilometrosVendidos(planet: Planet): number {
+        return planet.totalKilometers - planet.availableKilometers;
       }
 
       getFormattedDate(date: any): string {

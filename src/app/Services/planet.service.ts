@@ -306,16 +306,30 @@ export class PlanetService {
     try {
       const planets = await this.firestore.collection(this.COLLECTION_NAME)
         .get().toPromise();
-      const nextId = (planets?.docs.length || 0) + 1;
-      
-      // Obtener imagen de la NASA
-      const imageUrl = await this.getPlanetImage(planet.name).toPromise();
+
+      // El id nuevo sale del mayor que ya existe y no de la cantidad,
+      // porque si antes se borro un planeta la cantidad repite un id que ya esta usado
+      let mayorId = 0;
+      planets?.docs.forEach(doc => {
+        const id = parseInt(doc.id);
+        if (!isNaN(id) && id > mayorId) {
+          mayorId = id;
+        }
+      });
+      const nextId = mayorId + 1;
+
+      // Si el admin cargo una imagen a mano la respetamos, si no la buscamos en la NASA
+      let imageUrl = planet.imageUrl;
+      if (!imageUrl) {
+        imageUrl = await this.getPlanetImage(planet.name).toPromise() || '';
+      }
       
       const newPlanet = {
         name: planet.name,
         type: planet.type,
         diameter: planet.diameter,
         distanceFromSun: planet.distanceFromSun,
+        description: planet.description,
         price: planet.price,
         available: planet.available,
         totalKilometers: planet.totalKilometers,
@@ -354,10 +368,12 @@ export class PlanetService {
         .collection(this.COLLECTION_NAME)
         .doc(id.toString());
       
-      // Si se está actualizando el nombre, actualizamos también la imagen
-      if (updates.name) {
+      // Si se cambia el nombre y no cargaron una imagen a mano, la buscamos de nuevo
+      if (updates.name && !updates.imageUrl) {
         const imageUrl = await this.getPlanetImage(updates.name).toPromise();
-        updates.imageUrl = imageUrl || '';
+        if (imageUrl) {
+          updates.imageUrl = imageUrl; // si la NASA no responde dejamos la que ya tenia
+        }
       }
   
       await planetRef.update(updates);

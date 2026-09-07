@@ -109,6 +109,100 @@
             </div>
         </div>
 
+        <!-- Sección para gestionar el catálogo de planetas -->
+        <div class="admin-action">
+            <h3>
+                <button class="toggle-trip-button" (click)="togglePlanetSection()">Gestionar Planetas</button>
+            </h3>
+            <div *ngIf="showPlanetSection" class="add-trip-form">
+
+                <!-- Alta de un planeta nuevo -->
+                <form (ngSubmit)="addPlanet()">
+                    <div>
+                        <label for="planetName">Nombre:</label>
+                        <input id="planetName" [(ngModel)]="newPlanet.name" name="planetName" required>
+                    </div>
+                    <div>
+                        <label for="planetType">Tipo:</label>
+                        <input id="planetType" [(ngModel)]="newPlanet.type" name="planetType" placeholder="Terrestrial, Gas Giant..." required>
+                    </div>
+                    <div>
+                        <label for="planetDescription">Descripción:</label>
+                        <textarea id="planetDescription" [(ngModel)]="newPlanet.description" name="planetDescription"></textarea>
+                    </div>
+                    <div>
+                        <label for="planetDiameter">Diámetro (km):</label>
+                        <input type="number" id="planetDiameter" [(ngModel)]="newPlanet.diameter" name="planetDiameter" min="0">
+                    </div>
+                    <div>
+                        <label for="planetDistance">Distancia al Sol (millones de km):</label>
+                        <input type="number" id="planetDistance" [(ngModel)]="newPlanet.distanceFromSun" name="planetDistance" min="0">
+                    </div>
+                    <div>
+                        <label for="planetTotalKm">Superficie Total (km²):</label>
+                        <input type="number" id="planetTotalKm" [(ngModel)]="newPlanet.totalKilometers" name="planetTotalKm" required min="1">
+                    </div>
+                    <div>
+                        <label for="planetPrice">Precio por km²:</label>
+                        <input type="number" id="planetPrice" [(ngModel)]="newPlanet.price" name="planetPrice" required min="0">
+                    </div>
+                    <div>
+                        <label for="planetImage">Imagen (URL):</label>
+                        <input id="planetImage" [(ngModel)]="newPlanet.imageUrl" name="planetImage" placeholder="Se busca sola en la NASA si la dejás vacía">
+                        <button type="button" class="action-button" (click)="buscarImagenNasa()" [disabled]="buscandoImagen">
+                            {{ buscandoImagen ? 'Buscando...' : 'Buscar en la NASA' }}
+                        </button>
+                    </div>
+                    <button type="submit" class="submit-button">Agregar Planeta</button>
+                </form>
+                <p *ngIf="addPlanetMessage" class="message">{{ addPlanetMessage }}</p>
+
+                <!-- Listado del catálogo para editar o eliminar -->
+                <div class="trip-list">
+                    <div *ngFor="let planet of planets" class="trip-item">
+                        <div class="trip-row">
+                            <div class="trip-row-info">
+                                <span class="trip-row-title">{{ planet.name }}</span>
+                                <span class="trip-row-detail">{{ planet.type }} · ${{ planet.price | number }} por km² · {{ kilometrosVendidos(planet) | number }} km² vendidos</span>
+                                <span class="trip-row-status">{{ planet.available ? 'Disponible' : 'Sin superficie' }}</span>
+                            </div>
+                            <button class="action-button" (click)="editarPlaneta(planet)">Editar</button>
+                            <button class="action-button" (click)="eliminarPlaneta(planet)">Eliminar</button>
+                        </div>
+
+                        <!-- Formulario de edición, se abre con el botón -->
+                        <div class="manifiesto" *ngIf="planetaEditando === planet.id">
+                            <div>
+                                <label>Nombre:</label>
+                                <input [(ngModel)]="planetEdit.name" name="editName">
+                            </div>
+                            <div>
+                                <label>Tipo:</label>
+                                <input [(ngModel)]="planetEdit.type" name="editType">
+                            </div>
+                            <div>
+                                <label>Descripción:</label>
+                                <textarea [(ngModel)]="planetEdit.description" name="editDescription"></textarea>
+                            </div>
+                            <div>
+                                <label>Precio por km²:</label>
+                                <input type="number" [(ngModel)]="planetEdit.price" name="editPrice" min="0">
+                            </div>
+                            <div>
+                                <label>Imagen (URL):</label>
+                                <input [(ngModel)]="planetEdit.imageUrl" name="editImage">
+                            </div>
+                            <!-- La superficie total no se edita porque ya hay kilometros vendidos sobre ese numero -->
+                            <button class="action-button" (click)="guardarPlaneta(planet)">Guardar</button>
+                            <button class="action-button" (click)="cancelarEdicion()">Cancelar</button>
+                        </div>
+                    </div>
+                    <p *ngIf="planets.length === 0" class="message">No hay planetas cargados.</p>
+                    <p *ngIf="editPlanetMessage" class="message">{{ editPlanetMessage }}</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Sección para ver los pasajeros de cada viaje -->
         <div class="admin-action">
             <h3>
