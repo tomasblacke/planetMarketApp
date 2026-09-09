@@ -17,6 +17,7 @@ import { PlanetInitializerComponent } from './Components/planet-initializar/plan
 import { AdminManagementComponent } from './Components/admin-management/admin-management.component';
 import { PurchasesComponent } from './Components/purchases/purchases.component';
 import { AdminGuard } from './guards/admin.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { UserNotificationsComponent } from './Components/user-notifications/user-notifications.component';
 
 const routes: Routes = [
@@ -38,6 +39,7 @@ const routes: Routes = [
   {
     path: 'profile',
     component: UserProfileComponent,
+    canActivate:[AuthGuard],
     children: [
       { path: '', redirectTo: 'info', pathMatch: 'full' }, // Ruta por defecto
 
