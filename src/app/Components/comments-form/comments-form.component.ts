@@ -1,9 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommentServiceService } from '../../Services/comment-service.service';
 import { Comment } from '../../Interfaces/coments.interface';
-import { environment } from 'src/app/Environments/environments';
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
 
 @Component({
   selector: 'app-comments-form',

@@ -4,7 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "dist/planet-market-app/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

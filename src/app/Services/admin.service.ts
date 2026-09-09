@@ -11,7 +11,10 @@ export class AdminService {
   private purchasesCollection = 'purchases';
 
   constructor(private firestore: AngularFirestore) {
-    this.initializeAdminsCollection();
+    // No la llamamos mas: leia la coleccion admins apenas arrancaba el servicio y
+    // sin sesion iniciada las reglas la rechazan, tiraba un error en cada ficha con comentarios.
+    // Si algun dia queda vacia, el admin se carga a mano desde la consola de Firebase.
+    // this.initializeAdminsCollection();
   }
 
   // Inicializar la colección de administradores

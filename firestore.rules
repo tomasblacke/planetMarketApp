@@ -3,17 +3,88 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // This rule allows anyone with your Firestore database reference to view, edit,
-    // and delete all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Firestore database will be denied until you Update
-    // your rules
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+    // El que esta logueado es admin si su mail figura en la coleccion admins.
+    // Cada documento de admins tiene el mail como ID, por eso lo busco asi.
+    function esAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
     }
+
+    // Simplemente si esta logueado o no
+    function estaLogueado() {
+      return request.auth != null;
+    }
+
+    // Los campos que se estan por modificar en un update.
+    // Lo uso para dejar que la compra toque solo lo justo y nada mas.
+    function camposQueCambian() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+
+    // PLANETAS
+    // Los ve cualquiera aunque no este logueado, es el catalogo.
+    // Al comprar, un usuario logueado solo puede tocar los km disponibles
+    // y el cartel de disponible. El precio y el resto no los puede cambiar.
+    match /planets/{planetId} {
+      allow read: if true;
+      allow update: if esAdmin() ||
+                       (estaLogueado() &&
+                        camposQueCambian().hasOnly(['availableKilometers', 'available']));
+      allow create, delete: if esAdmin();
+    }
+
+
+    // VIAJES
+    // Igual que los planetas: los ve cualquiera y la compra solo baja los asientos.
+    // Crear un viaje y darlo de baja (active) es cosa del admin.
+    match /trips/{tripId} {
+      allow read: if true;
+      allow update: if esAdmin() ||
+                       (estaLogueado() &&
+                        camposQueCambian().hasOnly(['availableSeats']));
+      allow create, delete: if esAdmin();
+    }
+
+
+    // USUARIOS
+    // Cada uno entra solo a lo suyo, comparando el uid del logueado con el del documento.
+    // El match de adentro hace que valga igual para purchasedPlanets y purchasedTrips.
+    match /users/{userId} {
+      allow read, write: if estaLogueado() && request.auth.uid == userId;
+
+      match /{documento=**} {
+        allow read, write: if estaLogueado() && request.auth.uid == userId;
+      }
+    }
+
+
+    // COMPRAS
+    // Las crea el usuario cuando compra, pero la lista la ve solo el admin
+    // (es la pantalla /purchases y el manifiesto de pasajeros).
+    match /purchases/{purchaseId} {
+      allow read: if esAdmin();
+      allow create: if estaLogueado();
+      allow update, delete: if esAdmin();
+    }
+
+
+    // ADMINS
+    // Cada logueado puede leer SU propio documento, que es como la app se entera
+    // de si es admin o no. La lista completa y agregar o borrar admins, solo un admin.
+    match /admins/{email} {
+      allow read: if esAdmin() ||
+                     (estaLogueado() && request.auth.token.email == email);
+      allow write: if esAdmin();
+    }
+
+
+    // COMENTARIOS
+    // Quedan abiertos a propósito: cualquiera puede leerlos y dejar uno sin loguearse. Borra si es solo del admin.
+    match /comments/{commentId} {
+      allow read, create: if true;
+      allow update, delete: if esAdmin();
+    }
+
   }
 }

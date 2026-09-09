@@ -1,49 +1,48 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Comment } from '../Interfaces/coments.interface';
-import { Firestore, collection, getDocs, addDoc, query, where, Timestamp, getFirestore,deleteDoc,doc } from 'firebase/firestore'; // Importa Timestamp aquí
-import { initializeApp } from 'firebase/app';
-import { environment } from 'src/app/Environments/environments';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentServiceService {
-  private db: Firestore;
 
-  constructor() {
-    const app = initializeApp(environment.firebaseConfig);
-    this.db = getFirestore(app);
-  }
+  // Usamos AngularFirestore como el resto de los servicios. Antes este servicio
+  // se armaba su propia conexion con initializeApp/getFirestore y esa conexion no
+  // tenia la sesion del usuario, asi que el borrado del admin llegaba sin identificar
+  // y las reglas lo rechazaban.
+  constructor(private firestore: AngularFirestore) { }
 
   // Obtener comentarios desde Firestore
   getComments(itemId: number, itemType: 'planet' | 'trip'): Observable<Comment[]> {
-    const commentsCollection = collection(this.db, 'comments');
-    const q = query(
-      commentsCollection,
-      where('itemId', '==', itemId),
-      where('itemType', '==', itemType)
+    const consulta = this.firestore.collection('comments', ref =>
+      ref.where('itemId', '==', itemId)
+         .where('itemType', '==', itemType)
     );
 
     return new Observable<Comment[]>(observer => {
-      getDocs(q).then(querySnapshot => {
+      consulta.get().subscribe(querySnapshot => {
         const comments: Comment[] = [];
         querySnapshot.forEach(doc => {
           const commentData = doc.data() as Comment;
-          
-          // Verificación y conversión de fecha
-          const date = commentData.date instanceof Timestamp
-            ? commentData.date.toDate()
-            : new Date();
+
+          // Verificación y conversión de fecha. El timestamp que devuelve
+          // AngularFirestore no pasa el instanceof, asi que preguntamos si trae toDate().
+          const fechaGuardada = commentData.date as any;
+          const date = fechaGuardada && typeof fechaGuardada.toDate === 'function'
+            ? fechaGuardada.toDate()
+            : new Date(fechaGuardada);
 
           comments.push({
             ...commentData,
+            id: doc.id, // el id no viene adentro de data(), lo sacamos del documento asi el admin lo puede borrar
             date: date,
           });
         });
         observer.next(comments);
         observer.complete();
-      }).catch(error => {
+      }, error => {
         console.error('Error al cargar comentarios:', error);
         observer.error(error);
       });
@@ -52,10 +51,8 @@ export class CommentServiceService {
 
   // Agregar un nuevo comentario a Firestore
   addComment(comment: Comment): Observable<Comment> {
-    const commentsCollection = collection(this.db, 'comments');
-
     return new Observable<Comment>(observer => {
-        addDoc(commentsCollection, {
+        this.firestore.collection('comments').add({
             itemId: comment.itemId,
             itemType: comment.itemType,
             userName: comment.userName,
@@ -78,10 +75,8 @@ export class CommentServiceService {
 
 
   deleteComment(commentId: string): Observable<void> {
-    const commentDoc = doc(this.db, 'comments', commentId);
-    
     return new Observable<void>(observer => {
-      deleteDoc(commentDoc).then(() => {
+      this.firestore.collection('comments').doc(commentId).delete().then(() => {
         observer.next();
         observer.complete();
       }).catch(error => {

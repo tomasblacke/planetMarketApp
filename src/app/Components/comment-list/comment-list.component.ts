@@ -33,18 +33,18 @@ export class CommentListComponent implements OnInit {
       .subscribe(comments => this.comments = comments);
     console.log('Loading comments for:', this.itemId, this.itemType);
   }
-  async checkIfUserIsAdmin() {
-    try {
-      const user = await this.authService.getCurrentUser();
+  // Escuchamos el estado de la sesion como en el header, porque al recargar la pagina
+  // el usuario actual todavia puede venir vacio y el admin no llegaba a ver el boton de borrar
+  checkIfUserIsAdmin() {
+    this.authService.getAuthState().subscribe(user => {
       if (user && user.email) {
         this.authService.isAdmin(user.email).subscribe(isAdmin => {
           this.isAdmin = isAdmin;
-        
         });
+      } else {
+        this.isAdmin = false;
       }
-    } catch (error) {
-      console.error('Error al verificar si el usuario es admin:', error);
-    }
+    });
   }
 
     // Método para formatear la fecha
@@ -60,8 +60,14 @@ export class CommentListComponent implements OnInit {
   }
   deleteComment(commentId: string) {
     if (this.isAdmin) { // Verifica si el usuario es admin antes de eliminar
+      if (!confirm('¿Seguro que querés eliminar este comentario?')) {
+        return;
+      }
       this.commentServiceService.deleteComment(commentId).subscribe(() => {
         this.comments = this.comments.filter(comment => comment.id !== commentId); // Elimina el comentario de la lista
+      }, error => {
+        console.error('Error al eliminar comentario:', error);
+        alert('No se pudo eliminar el comentario.');
       });
     } else {
       console.error('No tienes permiso para eliminar comentarios.'); // Manejo de error si no es admin
